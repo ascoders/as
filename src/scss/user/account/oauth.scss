@@ -1,0 +1,42 @@
+#user-account-oauth {
+	.acc-item {
+		width: 50px;
+		height: 50px;
+		background: url(/static/img/social.png) no-repeat 0 0;
+		display: inline-block;
+	}
+	.qzone {
+		background-position: 0 -60px;
+	}
+	.tqq {
+		background-position: 0 -180px;
+	}
+	.tsina {
+		background-position: 0 -0px;
+	}
+	.baidu {
+		background-position: 0 -300px;
+	}
+	.kaixin {
+		background-position: 0 -240px;
+	}
+	.renren {
+		background-position: 0 -120px;
+	}
+	.buttonbox {
+		padding: 0 10px;
+		width: 140px;
+		display: inline-block;
+		text-align: center;
+		vertical-align: top;
+	}
+	.headurl {
+		width: 60px;
+		height: 60px;
+	}
+	.extend {
+		border: 1px solid #ddd;
+		padding: 10px;
+		margin-top: 10px;
+	}
+}

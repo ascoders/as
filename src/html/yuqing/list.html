@@ -1,0 +1,44 @@
+<div id='yuqing-list' ms-controller='yuqingList'>
+	<div class='g-hd'>
+		<div class='f-cb f-ct'>
+			<div class='f-fl'>
+				<span class='f-fs20 f-fwb'>{[{categoryName}]}</span>
+			</div>
+			<ul class='f-fr crumb'>
+				<li>
+					<a href='#!//'>首页</a>
+				</li>
+				<li>&gt;</li>
+				<li>
+					<a href='#!/yuqing'>舆情分析</a>
+				</li>
+				<li>&gt;</li>
+				<li class='active'>{[{categoryName}]}</li>
+			</ul>
+		</div>
+	</div>
+
+	<div class='f-ct g-bd f-mt20 f-p20'>
+		<span class='word noun'>名词</span>
+		<span class='word verb'>动词</span>
+		<span class='word adjective'>形容词</span>
+		<span class='word degree'>副词</span>
+		<span class='word negavite'>否定词</span>
+		<span class='word preposition'>介词</span>
+		<span class='word auxiliary'>语气助词</span>
+		<span class='word good'>正面</span>
+		<span class='word bad'>负面</span>
+		<span class='word degreeGroup'>否定词组</span>
+		<div class='f-fr'>
+			<input id='yuqing-list-debug' ms-duplex-checked='debug' type='checkbox' ms-change='debugChange'>
+			<label class='f-ml5' for='yuqing-list-debug'>调试模式</label>
+		</div>
+	</div>
+
+	<div class='f-ct g-bd f-mt20 f-mb20'>
+		<div class='list' ms-class='bad-bg:el.g < 0' ms-class-1='good-bg:el.g > 0' ms-repeat='lists' data-repeat-rendered='listsRendered'>
+			{[{el.word | html}]}
+			<div ms-if='el.g != 0' class='right-bar' ms-class='bad-bg-deep:el.g < 0' ms-class-1='good-bg-deep:el.g > 0'><span ms-if='el.g > 0'>+</span>{[{el.g}]}</div>
+		</div>
+	</div>
+</div>

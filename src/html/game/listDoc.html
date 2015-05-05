@@ -1,0 +1,49 @@
+<div class="f-cb" id='game-list-doc' ms-controller='gameListDoc'>
+	<div class='g-sd menu'>
+		<!-- 搜索框 -->
+		<div class='input-group f-wm f-mb10'>
+	    <span class='input-addon f-bln f-btn'>搜索</span>
+	    <input class='f-wm f-brn f-btn' ms-duplex='searchDoc' maxlength='25' placeholder='搜索文档内容'>
+	  </div>
+
+	  <!-- 文档树 -->
+		<ul class='draggable' id='tree' ms-each-el="tree">
+			<li>
+        <span ms-if='el._folder && el._show' class="folder f-pr" ms-click='getChild(el)' ms-mousedown='docMouseDown($event, el)' ms-mouseup='docMouseUp($event, el)' ms-attr-parent-id='el.$parent.id' ms-attr-doc-id='el.id' ms-class='active:el._active'>
+        	<i class="fa fa-folder f-mr5"></i>{[{el.name | html}]}
+        	<span ms-if='el._loading'><i class="fa fa-refresh fa-spin f-mr5"></i></span>
+        	<span class='folder-bar'><i class="fa" ms-class='fa-caret-right:!el._expend' ms-class-1='fa-caret-down:el._expend'></i></span>
+        </span>
+        <a ms-if='!el._folder && el._show' ms-href='#!/g/{[{game.Id}]}/{[{category}]}/doc/{[{el.id}]}' ms-mousedown='docMouseDown($event, el)' ms-mouseup='docMouseUp($event, el)' class="file" ms-class='active:el.id == nowTopicId'><i class="fa fa-file-o f-mr5"></i>{[{el.name | html}]}</a>
+				<div ms-include="'tmpl'" ms-visible="el.child.length && el._expend"></div>
+			</li>
+		</ul>
+
+	  <!-- 树节点模版 -->
+		<script type="avalon" id="tmpl">
+			<ul class='draggable' ms-each-el="el.child">
+				<li>
+					<span ms-if='el._folder && el._show' class="folder f-pr" ms-click='getChild(el)' ms-mousedown='docMouseDown($event, el)' ms-mouseup='docMouseUp($event, el)' ms-attr-parent-id='el.$parent.id' ms-attr-doc-id='el.id' ms-class='active:el._active'>
+						<i class="fa fa-folder f-mr5"></i>{[{el.name | html}]}
+						<span ms-if='el._loading'><i class="fa fa-refresh fa-spin f-mr5"></i></span>
+						<span class='folder-bar'><i class="fa" ms-class='fa-caret-right:!el._expend' ms-class-1='fa-caret-down:el._expend'></i></span>
+					</span>
+        	<a ms-if='!el._folder && el._show' ms-href='#!/g/{[{game.Id}]}/{[{category}]}/doc/{[{el.id}]}' ms-mousedown='docMouseDown($event, el)' ms-mouseup='docMouseUp($event, el)' class="file" ms-class='active:el.id == nowTopicId'><i class="fa fa-file-o f-mr5"></i>{[{el.name | html}]}</a>
+					<div ms-include="'tmpl'" ms-visible="el.child.length && el._expend"></div>
+				</li>
+			</ul>
+		</script>
+
+    <!-- 新增组件 -->
+    <div ms-visible='add.show' class='add'>
+    	<i class="fa f-mr5" ms-class='fa-folder:add.type == "folder"' ms-class-1='fa-file-o:add.type == "file"'></i>
+    	<input ms-if='!add.titleReady' ms-duplex='add.title' id='add-title' ms-blur='add.titleBlur' ms-keyup='add.keyUp' type='text' maxlength='25'>
+    </div>
+
+    <p class='menu-info'>鼠标右键操作</p>
+	</div>
+
+	<div class='g-mn paper'>
+		<div ms-view='gameListDocContainer'></div>
+	</div>
+</div>

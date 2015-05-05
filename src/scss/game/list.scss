@@ -1,0 +1,17 @@
+#game-list {
+	.input-addon {
+		background: whitesmoke;
+		width: auto;
+		line-height: 31px;
+	}
+	.input {
+		width: 300px;
+		height: 33px;
+	}
+	.loading {
+		position: absolute;
+		top: 0;
+		left: 0;
+		opacity: 0.5;
+	}
+}

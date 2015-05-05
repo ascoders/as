@@ -1,0 +1,128 @@
+<div class="g-bdg f-ct f-cb f-mt20 f-mb20" id='game-page' ms-controller='gamePage'>
+  <div class="g-mng">
+    <div class="g-mngc f-cb">
+      <!-- 主体内容 -->
+      <div class='g-bd f-pr' id='content'>
+        <!-- 标题 -->
+        <div class='f-tac f-fs20 f-pt20'>{[{topic.Title}]}</div>
+        <!-- 标签 -->
+        <span class="label label-info mark" ms-if='topic.Top != 0'>置顶</span>
+        <span class="label label-warning mark" ms-if='topic.Top == 0 && topic.Good'>加精</span>
+        <div class='f-cb'>
+          <!-- 顶部左侧文章信息 -->
+          <div class='f-fl f-pl20'>
+            <img class='authorImage' ms-src='topic.AuthorImage'>
+            <span class='f-fs14 text-muted'>{[{topic.AuthorName}]}</span>
+            <span class='timeago f-fs14 text-muted f-ml10' ms-attr-title='{[{topic.Time}]}'></span>
+            <span class='f-fs14 text-muted f-ml10'>评论({[{topic.Reply}]})</span>
+            <span class='f-fs14 text-muted f-ml10'>
+              <i class="fa fa-eye f-mr5"></i>{[{topic.Views}]}
+            </span>
+          </div>
+          <!-- 顶部右侧操作按钮 -->
+          <div class='f-fr f-pr20 f-cb f-pr f-fs16'>
+            <select class='operate-input f-fl f-mr5' ms-change='changeCategory'>
+              <option ms-repeat='categorys' ms-attr-value='el.Id' ms-attr-selected='topic.Category == el.Id'>{[{el.CategoryName}]}</option>
+            </select>
+            <button class='btn btn-default f-fl operate-btn' ms-class='active:inputEdit' ms-click='toggleEdit'>
+              <i class="f-hvc fa fa-pencil f-mr5"></i>编辑
+            </button>
+            <button class='btn btn-default f-fl operate-btn f-ml5' ms-class='active:topic.Top != 0' ms-click="operate('top',topic.Id)">
+              <i class="f-hvc fa fa-eject f-mr5"></i>置顶
+            </button>
+            <button class='btn btn-default f-fl operate-btn f-ml5' ms-class='active:topic.Good' ms-click="operate('good',topic.Id)">
+              <i class="f-hvc fa fa-star f-mr5"></i>加精
+            </button>
+            <button class='btn btn-default f-fl operate-btn f-ml5' ms-click="operate('delete',topic.Id)">
+              <i class="f-hvc-danger fa fa-trash f-mr5"></i>删除
+            </button>
+          </div>
+        </div>
+        <hr>
+        <!-- 标签 -->
+        <div class='f-ml20 f-mr20 f-cb'>
+          <button ms-repeat='topic.Tag' ms-click='jumpOrRemove(el)' class='btn f-br3 f-fl f-mr5' ms-class='btn-default:!rTag' ms-class-1='btn-danger:rTag'><i class='fa fa-tag f-mr5'></i>{[{el}]}<i class='fa fa-close f-ml5' ms-if='rTag'></i></button>
+          <input class='btn-height f-fl' id='tag-input' ms-duplex='addTagInput' ms-visible='tag' maxlength='15'>
+          <button class='btn btn-default f-fl f-bln' ms-visible='tag' ms-click='addTag'><i class='fa fa-check'></i></button>
+          <button class='btn btn-danger f-fl f-bln f-mr5' ms-visible='tag' ms-click='toggleTag'><i class='fa fa-close'></i></button>
+          <button class='btn btn-default f-br3 f-fl f-mr5' ms-click='toggleTag' ms-if='!tag && topic.Tag.size() < 5 && !rTag && (my.id == topic.Author || my.id == game.Manager || isManagers)'><i class='fa fa-plus'></i></button>
+          <button class='btn btn-default f-br3 f-fl jbox' ms-if='!tag && (my.id == topic.Author || my.id == game.Manager || isManagers)' ms-click='toggleRemoveTag' title='删除标签'><i class='fa fa-close'></i></button>
+        </div>
+        <!-- 正文 -->
+        <div class='f-p20 f-wwb'>{[{topic.MarkedContent | html}]}</div>
+        <!-- 回复 repeat -->
+        <div class='reply' ms-repeat='replys' data-repeat-rendered='rendered'>
+          <!-- 头部 -->
+          <div class='header'>
+            <!-- 回帖人头像和昵称 -->
+            <img class='img' ms-src='el.AuthorImage'>
+            <div class='f-fs12 name'>{[{el.AuthorName}]}</div>
+            <!-- 右侧内容 -->
+            <div class='f-fr f-pr10'>
+              <div class='operate f-hvc jbox' title='评论' ms-class='text-muted:$index == inputReply' ms-click='toggleReply($index)'>
+                <i class="fa fa-comment"></i>
+              </div>
+              <div class='operate f-hvc-danger jbox' title='删除' ms-click="deleteReply($index)">
+                <i class="fa fa-trash"></i>
+              </div>
+            </div>
+          </div>
+          <!-- 主体 -->
+          <div class='f-pr f-wwb replyContent'>
+            {[{el.Content | html}]}
+          </div>
+          <!-- 嵌套评论 -->
+          <div class='rReply' ms-visible='el.ReplyCache.size() != 0'>
+            <div class="g-bd5 f-cb rReply_content f-pr" ms-repeat-elem='el.ReplyCache'>
+              <div class="g-sd51">
+                <img class="rimg" ms-src="elem.AuthorImage"/>
+              </div>
+              <div class="g-mn5">
+                <div class="g-mn5c f-wwb">
+                <span>{[{elem.AuthorName}]}</span>：{[{elem.Content}]}
+                </div>
+              </div>
+              <div class="g-sd52 f-pr f-tar">
+                <div class='f-hvc-danger f-pl10 jbox' title='删除' ms-click="deleteReply(elem.Id, $index, $outer.$index)">
+                <i class="fa fa-trash"></i>
+                </div>
+              </div>
+              <!-- 评论时间 -->
+              <div class='time text-muted timeago' ms-attr-title='{[{elem.Time}]}'></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 回帖/编辑/嵌套评论框，有权限才显示 -->
+      <div id='editContent' class='g-bd f-cb editContentAlone'>
+        <div class="g-bd1 f-cb">
+          <textarea id='text' ms-duplex='inputContent' maxlength='10000'></textarea>
+          <button class='btn btn-default f-mt10' ms-click='submit'>提交</button>
+          <button class='btn btn-default f-hvc f-mt10 f-ml10' ms-if='inputEdit && inputReply == -1' ms-click='toggleEdit'><i ms-class="f-mr5 fa fa-remove f-ml5"></i>取消编辑</button>
+          <button class='btn btn-default f-hvc f-mt10 f-ml10' ms-if='!inputEdit && inputReply > -1' ms-click='toggleReply(inputReply)'><i ms-class="f-mr5 fa fa-remove f-ml5"></i>取消回帖</button>
+        </div>
+      </div>
+
+      <!-- 分页按纽 -->
+      <div ms-if='pagin != ""' class="g-bd f-mt20 f-cb">
+        {[{pagin | html}]}
+      </div>
+    </div>
+  </div>
+  <div class="g-sdg">
+    <div class='g-sdbd f-mb20'>
+      <div class='g-sdgh'>
+        <i class='fa fa-qrcode f-mr5'></i>扫码阅读
+      </div>
+      <div class='f-p10 f-tac' id='j-qrcode'></div>
+    </div>
+    <div class='g-sdbd f-mb20'>
+      <div class='g-sdgh'>
+        相关内容
+      </div>
+      <a ms-repeat='same' class='g-sdgl j-ajax' ms-href='#!/g/{[{game.Id}]}/{[{el.Id}]}'>{[{el.Title}]}</a>
+      <p class='f-p10 f-tac text-muted' ms-if="same.size() == 0">添加<i class='fa fa-tag f-ml5 f-mr5'></i>标签以搜索相关内容</p>
+    </div>
+  </div>
+</div>

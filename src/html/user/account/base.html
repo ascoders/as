@@ -1,0 +1,20 @@
+<div class='f-cb' ms-controller='userAccountBase'>
+	<div class='f-w6'>
+		<!-- 账户类型 -->
+		<span class='f-fwb'>{[{my.typeName}]}</span>
+		<div class='f-fr'>
+			<div class='btn btn-default api-info f-fl jbox' ms-attr-title='my.id'>
+				<i class="fa fa-files-o f-mr5"></i>Openid
+			</div>
+			<div class='btn btn-default api-info f-fl f-bln jbox' ms-attr-title='my.token'>
+				<i class="fa fa-files-o f-mr5"></i>Secret Key
+			</div>
+		</div>
+		<p>邮箱：{[{my.email}]}</p>
+		<hr>
+		<p>昵称：{[{my.nickName}]}</p>
+		<hr>
+		<p>账户余额：{[{my.money}]}元</p>
+		<p>上次登录时间：<span class='timeago' ms-attr-title='my.lastTime'></span></p>
+	</div>
+</div>

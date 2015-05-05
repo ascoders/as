@@ -1,0 +1,72 @@
+<div class='g-hd'>
+	<div class='f-cb f-ct'>
+		<div class='f-fl'>
+			<span class='f-fs20 f-fwb'>创建网站</span>
+		</div>
+		<ul class='f-fr crumb'>
+			<li>
+				<a href='#!//'>首页</a>
+			</li>
+			<li>&gt;</li>
+			<li class='active'>创建网站</li>
+		</ul>
+	</div>
+</div>
+
+<div class='g-bd f-ct f-mt20 f-mb20 f-p50' ms-controller='create' id='create'>
+	<!--
+	<table class="table table-condensed f-mt50">
+		<thead>
+			<tr>
+				<th>月收益</th>
+				<th>手续费</th>
+				<th>API请求</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>≤2000</td>
+				<td class='success' style='font-weight:700;color:#11AA14'>免费</td>
+				<td class='success' rowspan='3' style='vertical-align:middle;font-weight:700;color:#11AA14'>免费</td>
+			</tr>
+			<tr>
+				<td>≤10000</td>
+				<td>超出部分收取10%手续费</td>
+			</tr>
+			<tr>
+				<td>>10000</td>
+				<td>超出部分收取15%手续费</td>
+			</tr>
+		</tbody>
+	</table>
+	-->
+	<div class='f-cb'>
+		<div class='f-w6 f-pr10'>
+			<input class='large-input' ms-duplex='name' placeholder='网站名称'>
+		</div>
+		<div class='f-w6 f-pl10'>
+			<input class='large-input' ms-duplex='path'  placeholder='个性域名'>
+		</div>
+	</div>
+
+	<div class='f-tac f-mt20'>
+		<input type='radio' name='type' ms-duplex-number='type' id='type1' value='1' checked>
+		<label class='f-ml5 f-mr5 f-lh30' for='type1'>智益休闲</label>
+
+		<input type='radio' name='type' ms-duplex-number='type' id='type2' value='2'>
+		<label class='f-ml5 f-mr5 f-lh30' for='type2'>养成RPG</label>
+
+		<input type='radio' name='type' ms-duplex-number='type' id='type3' value='3'>
+		<label class='f-ml5 f-mr5 f-lh30' for='type3'>竞技类</label>
+
+		<input type='radio' name='type' ms-duplex-number='type' id='type4' value='4'>
+		<label class='f-ml5 f-mr5 f-lh30' for='type4'>棋牌类</label>
+
+		<input type='radio' name='type' ms-duplex-number='type' id='type0' value='0'>
+		<label class='f-ml5 f-lh30' for='type0'>非游戏</label>
+	</div>
+
+	<div class='f-tac f-mt20'>
+		<button class='btn btn-default large-btn' ms-click='submit'>创建</button>
+	</div>
+</div>

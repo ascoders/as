@@ -1,0 +1,44 @@
+#game-admin-base {
+	.g-sd51 {
+		position: relative;
+		float: left;
+		width: 120px;
+		margin-right: -120px;
+	}
+	.g-mn5 {
+		float: right;
+		width: 100%;
+	}
+	.g-mn5c {
+		margin-left: 130px;
+	}
+	.box {
+		margin-top: 20px;
+	}
+	//正方形上传图片
+	.square {
+		width: 100px;
+		height: 100px;
+		border: 3px dotted #DDD;
+	}
+	//长方形
+	.rectangular {
+		width: 100px;
+		height: 160px;
+		border: 3px dotted #DDD;
+		margin: 20px;
+	}
+	//新增截图按钮
+	.screenshot-button {
+		width: 100px;
+		height: 160px;
+		line-height: 120px;
+		padding: 20px;
+		margin: 20px 0 0 20px;
+	}
+	//标题
+	.title {
+		font-size: 16px;
+		font-weight: bold;
+	}
+}

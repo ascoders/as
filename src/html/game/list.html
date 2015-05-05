@@ -1,0 +1,116 @@
+<div class="g-bdg f-ct f-cb f-mt20 f-mb20" id='game-list' ms-controller='gameList'>
+  <div class="g-mng">
+    <div class="g-mngc f-cb">
+      <div id='main-content' class='g-bd' ms-if='lists.size() > 0' ms-each-el='lists'>
+        <div class='list'>
+          <div class='g-bd2 f-cb'>
+            <div class="g-mn2">
+              <div class="g-mn2c">
+                <div class="g-bd1 f-cb">
+                  <div class="g-sd1">
+                    <div class='views'>
+                      <i class="fa fa-comment-o f-mr5"></i>{[{el.Reply}]}
+                    </div>
+                  </div>
+                  <div class="g-mn1">
+                    <div class="g-mn1c">
+                      <!-- 标题 -->
+                      <a class='title j-ajax' ms-href='#!/g/{[{game.Id}]}/{[{el.Id}]}' ms-attr-name='el.Id'>{[{el.Title}]}</a>
+                    </div>
+                  </div>
+                </div>
+                <!-- 简介 -->
+                <div class='description'>{[{el.Content | cleanmark}]}</div>
+                <!-- 缩略图 -->
+                <div ms-if='el.Images.size() > 0' class='f-vab'>
+                  <img class='thumbnail' ms-class='f-ml10:!$first' ms-repeat-elem='el.Images' ms-if-loop='elem != ""' ms-src='elem'>
+                </div>
+                <!-- 标签 -->
+                <div class='f-cb'>
+                  <a ms-repeat-elem='el.Tag' ms-href='#!/g/{[{game.Id}]}/tag?tag={[{elem}]}' class='btn f-mr5 f-br3' ms-class='btn-default:elem != searchTag' ms-class-1='btn-primary:elem == searchTag'><i class='fa fa-tag f-mr5'></i>{[{elem}]}</a>
+                </div>
+              </div>
+            </div>
+            <div class="g-sd2">
+              <span class="label label-info mark" ms-if='el.Top != 0'>置顶</span>
+              <span class="label label-warning mark" ms-if='el.Top == 0 && el.Good'>加精</span>
+              <img class='managerImage f-dn' src='/static/img/game/manager.png'>
+              <img class='img' ms-src='{[{el.AuthorImage}]}'>
+              <span class='authorName' ms-attr-aid='{[{ms.Author}]}' ms-attr-title='{[{el.AuthorName}]}'>{[{el.AuthorName}]}</span>
+              <div class='timeago f-fr' ms-attr-title='{[{el.LastTime}]}'></div>
+              <!-- 最后回复 -->
+              <i class="fa fa-refresh lastImage" ms-if='el.LastReplyName != ""'></i>
+              <span class='lastName' ms-if='el.LastReplyName != ""' ms-attr-title='{[{el.LastReplyName}]}'>{[{el.LastReplyName}]}</span>
+              <!-- 操作按钮，（管理员、作者可见） -->
+              <div class='operate' ms-if='my.Id == game.Manager' class='show' ms-hover='show'>
+                <i class="fa fa-gear" ms-hover='fa-spin'></i>
+                <div class='group'>
+                  <i class="f-hvc fa fa-eject f-ml5 tooltip" title='置顶' ms-class='text-muted:el.Top != 0' ms-click="operate(el.Id, 'top', el.Top==0, $index)"></i>
+                  <i class="f-hvc fa fa-star f-ml5 tooltip" title='加精' ms-class='text-muted:el.Good' ms-click="operate(el.Id, 'good', !el.Good, $index)"></i>
+                  <i class="f-hvc-danger fa fa-trash f-ml5 tooltip" title='删除' ms-click="operate(el.Id, 'delete', null, $index)"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <hr class='f-m0' ms-if='!$last'>
+      </div>
+      <div ms-visible='!loading' ms-if='lists.size() == 0' class='f-p50 f-tac g-bd text-muted'>
+        暂无内容
+      </div>
+
+      <!-- loading -->
+      <div id='loading' class='g-bd loading' ms-visible='loading'>
+        <i class="fa fa-refresh fa-spin f-mr5"></i>loading
+      </div>
+
+      <!-- 分页按纽 -->
+      <div ms-if='pagin != ""' class="g-bd f-mt20 f-cb">
+        {[{pagin | html}]}
+      </div>
+
+      <!-- 发帖框，有权限才显示 -->
+      <div ms-visible='!searchTag' class='g-bd f-mt20 f-cb f-p20'>
+        <div class="g-bd1 f-cb">
+          <div class='f-cb f-wm f-mb20' id='j-title'>
+            <span class='input-addon f-fl'>发帖</span>
+            <input class='input f-fl f-mr10' ms-duplex='inputTitle' placeholder='标题可不填' maxlength='25'>
+
+            <button ms-repeat='tagArray' ms-click='RemoveTag(el)' class='btn btn-danger f-br3 f-fl f-mr5'><i class='fa fa-tag f-mr5'></i>{[{el}]}<i class='fa fa-close f-ml5'></i></button>
+            <input class='btn-height f-fl' id='tag-input' ms-duplex='addTagInput' ms-visible='tag' maxlength='15'>
+            <button class='btn btn-default f-fl f-bln' ms-visible='tag' ms-click='addTag'><i class='fa fa-check'></i></button>
+            <button class='btn btn-danger f-fl f-bln f-mr5' ms-visible='tag' ms-click='toggleTag'><i class='fa fa-close'></i></button>
+            <button class='btn btn-default f-br3 f-fl jbox f-mr5' ms-click='toggleTag' ms-if='!tag && tagArray.size() < 5' title='添加标签'><i class='fa fa-plus'></i></button>
+          </div>
+          <textarea id='text' ms-duplex='inputContent' maxlength='10000'></textarea>
+          <div class='rightHeader f-mb20 f-dn text-muted f-pr'>
+            <button class='btn btn-default active' id='j-reply-button'>回复</button>
+            <button class='btn btn-default' id='j-edit-button'>编辑</button>
+          </div>
+          <button class='btn btn-default f-mt10' ms-click='submit'>提交</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="g-sdg">
+    <!-- 分类推荐 -->
+    <div ms-visible='searchTag == ""' class='g-sdbd f-mb20' ms-repeat='categorys'>
+      <div class='g-sdgh'>
+        <i ms-class="f-mr5 fa fa-{[{el.Icon}]}" ms-if="el.Icon != ''"></i>{[{el.CategoryName}]}
+      </div>
+      <a ms-repeat-child='el.News' class='g-sdgl j-ajax' ms-href='#!/g/{[{game.Id}]}/{[{child.Id}]}'>{[{child.Title}]}</a>
+      <p class='f-p10 f-tac text-muted' ms-if="el.News.size() == 0">暂无内容</p>
+    </div>
+
+    <!-- 热门标签 -->
+    <div ms-visible='searchTag != ""' class='g-sdbd f-mb20'>
+      <div class='g-sdgh'>
+        热门标签
+      </div>
+      <a ms-repeat='hotTags' class='g-sdgl j-ajax' ms-class='active:searchTag == el.Name' ms-href='#!/g/{[{game.Id}]}/tag?tag={[{el.Name}]}'>
+        <i ms-class="f-mr5 fa fa-tag"></i>{[{el.Name}]}
+        <span class='g-sdgr f-pr10'>{[{el.Count}]}</span>
+      </a>
+    </div>
+  </div>
+</div>

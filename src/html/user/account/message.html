@@ -1,0 +1,10 @@
+<div id='user-account-message' ms-controller='userAccountMessage'>
+	<div class='box' ms-repeat='lists'>
+		<div class='head f-fwb'>{[{el.Title}]}</div>
+		<div class='body'>{[{el.Content | html}]}</div>
+	</div>
+	<!-- 分页按纽 -->
+	<div class="g-bd f-mt20 f-cb pagin" ms-if='pagin != ""'>
+	  {[{pagin | html}]}
+	</div>
+</div>

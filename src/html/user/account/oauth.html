@@ -1,0 +1,19 @@
+<div class='f-pr f-cb f-tac' id='user-account-oauth' ms-controller='userAccountOauth'>
+	<div class='f-tac buttonbox' ms-repeat='lists' data-repeat-rendered='rendered'>
+		<div class='acc-item' ms-class='{[{el.icon}]}'></div>
+		<button ms-if='!el.bind' class='btn btn-default f-wm f-mt10' ms-click='submit(el.name)'>绑定</button>
+		<button ms-if='el.bind' class='btn btn-default f-wm f-mt10 disabled'><i class="fa fa-link f-mr5"></i>已绑定</button>
+		<div class='extend' ms-if='el.bind'>
+			<label ms-attr-for='account-other-image-{[{el.name}]}'><img class='headurl f-mt10' ms-src='el.image'></label>
+			<br>
+			<input ms-attr-id='account-other-image-{[{el.name}]}' type='radio' name='changeimage' ms-attr-value='el.image' ms-change='changeImage' ms-duplex-string='image'>
+			<div class='text-muted f-mt20 f-fs14'>
+				<span ms-if='!el.old'>
+					过期:<span class='timeago' ms-attr-title='el.time'></span>
+				</span>
+				<span ms-if='el.old'>已过期</span>
+			</div>
+			<button class='btn btn-default f-wm f-mt10' ms-click='submit(el.name)'><i class="fa fa-refresh f-mr5"></i>更新授权</button>
+		</div>
+	</div>
+</div>

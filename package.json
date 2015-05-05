@@ -1,0 +1,45 @@
+{
+	"name": "woku",
+	"title": "woku",
+	"description": "woku",
+	"version": "",
+	"main": "woku",
+	"homepage": "http://wokugame.com/",
+	"author": {
+		"name": "ascoders(翱翔大空) and other contributors",
+		"url": ""
+	},
+	"repository": {
+		"type": "git",
+		"url": ""
+	},
+	"keywords": [],
+	"bugs": {
+		"url": ""
+	},
+	"licenses": [{
+		"type": "MIT",
+		"url": "https://github.com/jquery/jquery/blob/master/LICENSE.txt"
+	}],
+	"dependencies": {},
+	"devDependencies": {
+		"del": "1.1.1",
+		"grunt-contrib-watch": "0.6.1",
+		"gulp": "^3.8.11",
+		"gulp-concat": "2.4.3",
+		"gulp-htmlmin": "1.0.0",
+		"gulp-imagemin": "2.2.1",
+		"gulp-jshint": "1.9.2",
+		"gulp-minify-css": "0.4.5",
+		"gulp-rename": "1.2.0",
+		"gulp-replace": "0.5.2",
+		"gulp-sass": "",
+		"gulp-uglify": "1.1.0"
+	},
+	"scripts": {
+		"build": "npm install && gulp"
+	},
+	"commitplease": {
+		"components": []
+	}
+}

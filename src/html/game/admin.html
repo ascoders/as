@@ -1,0 +1,16 @@
+<div class="g-bdg f-ct f-cb f-mt20 f-mb20" id='game-admin' ms-controller='gameAdmin'>
+  <div class="g-mng">
+    <!-- 引用模版 -->
+    <div class="g-mngc f-cb g-bd" ms-view='gameAdminContainer'></div>
+  </div>
+  <div class="g-sdg">
+    <div class='g-sdbd f-mb20'>
+      <div class='g-sdgh'>
+        网站管理
+      </div>
+      <a class='g-sdgl' ms-class='active:info == ""' ms-href="#!/g/{[{game.Id}]}/admin">总览</a>
+      <a class='g-sdgl' ms-class='active:info == "base"' ms-href="#!/g/{[{game.Id}]}/admin/base">基础配置</a>
+      <a class='g-sdgl' ms-class='active:info == "category"' ms-href="#!/g/{[{game.Id}]}/admin/category">分类管理</a>
+    </div>
+  </div>
+</div>

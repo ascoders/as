@@ -1,0 +1,33 @@
+<div id='user-yuqing-operate' ms-controller='userYuqingOperate'>
+	<button class='btn btn-default operate' ms-click='loadSego' ms-attr-disabled='segoLoading || rssLoading || resultLoading'>
+		<p>
+			<i ms-if='!segoLoading' class='fa fa-book f-fs30'></i>
+			<i ms-if='segoLoading' class='fa fa-refresh fa-spin f-fs30'></i>
+		</p>
+		载入分词词库
+	</button>
+
+	<button class='btn btn-default operate' ms-click='loadAnaylse' ms-attr-disabled='anaylseLoading || rssLoading || resultLoading || segoLoading'>
+		<p>
+			<i ms-if='!anaylseLoading' class='fa fa-book f-fs30'></i>
+			<i ms-if='anaylseLoading' class='fa fa-refresh fa-spin f-fs30'></i>
+		</p>
+		载入分析词库
+	</button>
+
+	<button class='btn btn-default operate' ms-click='getRss' ms-attr-disabled='rssLoading || segoLoading || anaylseLoading || resultLoading'>
+		<p>
+			<i ms-if='!rssLoading' class='fa fa-cloud-download f-fs30'></i>
+			<i ms-if='rssLoading' class='fa fa-refresh fa-spin f-fs30'></i>
+		</p>
+		抓取信息
+	</button>
+
+	<button class='btn btn-default operate' ms-click='freshResult' ms-attr-disabled='resultLoading || segoLoading || anaylseLoading || rssLoading'>
+		<p>
+			<i ms-if='!resultLoading' class='fa fa-refresh f-fs30'></i>
+			<i ms-if='resultLoading' class='fa fa-refresh fa-spin f-fs30'></i>
+		</p>
+		更新已抓取信息
+	</button>
+</div>

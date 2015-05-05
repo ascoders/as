@@ -1,0 +1,94 @@
+#yuqing-list {
+	.list {
+		line-height: 80px;
+		padding-left: 20px;
+		position: relative;
+		z-index: 1;
+		&+.list {
+			border-top: 1px dotted #ddd;
+		}
+		.right-bar {
+			position: absolute;
+			right: 0;
+			top: 0;
+			width: 100px;
+			text-align: center;
+		}
+		&:hover {
+			z-index: 2;
+			box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+		}
+	}
+	.bad-bg {
+		background: #FFF5F5;
+	}
+	.bad-bg-deep {
+		background: #E69393;
+		color: white;
+		font-size: 25px;
+	}
+	.good-bg {
+		background: #F3FEF3;
+	}
+	.good-bg-deep {
+		background: #92D892;
+		color: white;
+		font-size: 25px;
+	}
+	.good {
+		border-top: 3px solid #59BE59;
+	}
+	.bad {
+		border-top: 3px solid #FF6F6F;
+	}
+	// 词语
+	.word {
+		padding: 3px 5px;
+		margin: 0 2px;
+		color: #333;
+	}
+	// 否定词
+	.negavite {
+		background: #8F8F8F;
+		color: #fff;
+	}
+	// 程度
+	.degree {
+		background: #F0F180;
+	}
+	// 否定词组
+	.degreeGroup {
+		border-bottom: 5px solid #ccc;
+		padding-bottom: 10px;
+	}
+	.degreeGroupGood {
+		border-color: #C3E8C3;
+	}
+	.degreeGroupBad {
+		border-color: #F3C5C5;
+	}
+	// 形容词
+	.adjective {
+		background: #E7BDF1;
+	}
+	// 名词
+	.noun {
+		background: whitesmoke;
+	}
+	// 断句
+	.break {
+		color: #666;
+	}
+	// 介词
+	.preposition {
+		background: #C7EDF0;
+	}
+	// 动词
+	.verb {
+		background: #DDD4EE;
+	}
+	// 语气助词
+	.auxiliary {
+		background: #C8E3F0;
+	}
+}

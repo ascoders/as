@@ -1,0 +1,106 @@
+<div id='game-admin-category' class='f-p20' ms-controller='gameAdminCategory'>
+	<div class='btn btn-default f-mb20' ms-class='disabled:game.Categorys == 20' ms-click='openAddModal'>
+		<i class='fa fa-plus f-mr5'></i>
+		新增 
+		<span ms-class='red:game.Categorys == 20'>{[{game.Categorys}]}</span>
+		/ 20
+	</div>
+	<div class='category-box' ms-repeat='categorys'>
+		<div class='category-title f-cb'>
+			<span class='addon f-fl'>名称</span>
+			<input class='addon-input f-fl' ms-duplex='el.CategoryName' ms-change='hasChange($index)'>
+
+			<span class='addon f-fl f-ml10'>url路径</span>
+			<input class='addon-input f-fl' ms-duplex='el.Category' ms-change='hasChange($index)'>
+			<div class='f-fr'>
+				<button class='btn btn-default title-btn' ms-click='save($index)' ms-attr-id='save{[{$index}]}'>保存</button>
+				<button class='btn btn-danger title-btn f-ml5' ms-click='deleteCategory($index)'><i class="fa fa-trash-o f-mr5"></i>删除</button>
+			</div>
+		</div>
+		<div class='category-body f-cb'>
+			<div class='f-w6'>
+				<div>
+					<span class='addon f-fl'>推荐数量</span>
+					<input class='addon-input' type='number' ms-duplex='el.Recommend' ms-change='hasChange($index)'>
+				</div>
+
+				<div class='f-mt10 f-cb'>
+					<span class='addon f-fl'>类型</span>
+					<select class='f-fl' ms-duplex-string='el.Type' ms-change='hasChange($index)'>
+						<option value='0'>论坛</option>
+						<option value='1'>文档</option>
+					</select>
+				</div>
+
+				<div class='f-mt10 f-cb'>
+					<span class='addon f-fl'>发帖限制</span>
+					<select class='f-fl' ms-duplex-string='el.Add' ms-change='hasChange($index)'>
+						<option value='0'>仅限管理组</option>
+						<option value='1'>登陆用户</option>
+					</select>
+				</div>
+
+				<div class='f-mt10 f-cb'>
+					<span class='addon f-fl'>回帖限制</span>
+					<select class='f-fl' ms-duplex-string='el.Reply' ms-change='hasChange($index)'>
+						<option value='0'>仅限管理组</option>
+						<option value='1'>登陆用户</option>
+					</select>
+				</div>
+			</div>
+			<div class='f-w5'>
+				&nbsp;
+				<!--
+				<div class='f-mb10'>图标</div>
+				<div>{[{el.Icon}]}</div>
+				-->
+			</div>
+			<div class='f-w1'>
+				<i class="fa fa-caret-square-o-up f-fs20 jbox" ms-class='f-hvc:$index != 0' ms-class-1='text-muted:$index == 0' ms-click='changeLay($index, 1)' title='上移一层'></i>
+				<i class="fa fa-caret-square-o-down f-fs20 f-hvc jbox" ms-class='f-hvc:!$last' ms-class-1='text-muted:$last' ms-click='changeLay($index, 0)' title='下移一层'></i>
+			</div>
+		</div>
+	</div>
+
+	<!-- 新增分类弹框 -->
+	<div class='f-dn' id='modal' ms-controller='gameAdminCategory'>
+		<div class='add-item f-cb'>
+			<span class='input-addon f-fl'>名称</span>
+			<input class='f-fl' ms-duplex-string='add.name'>
+		</div>
+
+		<div class='add-item f-cb'>
+			<span class='input-addon f-fl'>路径</span>
+			<input class='f-fl' ms-duplex-string='add.path'>
+		</div>
+
+		<div class='add-item f-cb'>
+			<span class='input-addon f-fl'>推荐数量</span>
+			<input class='f-fl' type='number' ms-duplex-int='add.number'>
+		</div>
+
+		<div class='add-item f-cb'>
+			<span class='input-addon f-fl'>类型</span>
+			<select class='f-fl' ms-duplex-string='add.type'>
+				<option value='0'>论坛</option>
+				<option value='1'>文档</option>
+			</select>
+		</div>
+
+		<div class='add-item f-cb'>
+			<span class='input-addon f-fl'>发帖限制</span>
+			<select class='f-fl' ms-duplex-string='add.add'>
+				<option value='0'>仅限管理组</option>
+				<option value='1'>登陆用户</option>
+			</select>
+		</div>
+
+		<div class='add-item f-cb'>
+			<span class='input-addon f-fl'>回帖限制</span>
+			<select class='f-fl' ms-duplex-string='add.reply'>
+				<option value='0'>仅限管理组</option>
+				<option value='1'>登陆用户</option>
+			</select>
+		</div>
+	</div>
+</div>
