@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"newWoku/lib/response"
 )
 
@@ -19,6 +20,7 @@ func (this *Base) Gets() (int, []byte) {
 }
 
 func (this *Base) Get() (int, []byte) {
+	fmt.Println("zhixingle")
 	return response.Success("Get success!")
 }
 

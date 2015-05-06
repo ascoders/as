@@ -24,7 +24,7 @@ func Route() martini.Router {
 	*/
 
 	// 注册注解路由
-	//CommentParse(r, user.)
+	CommentParse(r, &user.User{})
 
 	// 最后匹配的是全局内容
 	globalFile, err := os.Open(conf.GLOBAL_PATH)
