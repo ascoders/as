@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"fmt"
 	"newWoku/lib/response"
 )
 
@@ -13,6 +12,7 @@ type BaseController interface {
 	Add() (int, []byte)
 	Update() (int, []byte)
 	Delete() (int, []byte)
+	Count() (int, []byte)
 }
 
 func (this *Base) Gets() (int, []byte) {
@@ -20,7 +20,6 @@ func (this *Base) Gets() (int, []byte) {
 }
 
 func (this *Base) Get() (int, []byte) {
-	fmt.Println("zhixingle")
 	return response.Success("Get success!")
 }
 
@@ -34,4 +33,8 @@ func (this *Base) Update() (int, []byte) {
 
 func (this *Base) Delete() (int, []byte) {
 	return response.Success("Delete success!")
+}
+
+func (this *Base) Count() (int, []byte) {
+	return response.Success("Count")
 }

@@ -3,21 +3,23 @@ package models
 type Base struct{}
 
 type BaseModel interface {
-	Gets() []*Base
-	Get(id int) *Base
-	Add(this *Base) error
-	Update(this *Base) error
+	Gets() []*BaseModel
+	Get(id int) *BaseModel
+	Add(this *BaseModel) error
+	Update(this *BaseModel) error
 	Delete(id int) error
 }
 
-func (this *Base) Gets() []*Base {
-	var r []*Base
+func (this *Base) Gets() []*BaseModel {
+	var r []*BaseModel
 
 	return r
 }
 
-func (this *Base) Get(id int) *Base {
-	return this
+func (this *Base) Get(id int) *BaseModel {
+	var r *BaseModel
+
+	return r
 }
 
 func (this *Base) Add() error {

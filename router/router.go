@@ -5,7 +5,9 @@ import (
 	"io/ioutil"
 	"net/http"
 	"newWoku/conf"
+	"newWoku/controllers/article"
 	"newWoku/controllers/user"
+	"newWoku/lib/autoRouter"
 	"os"
 )
 
@@ -23,8 +25,14 @@ func Route() martini.Router {
 		r.Delete(`/user/:id`, user.User.Delete)
 	*/
 
-	// 注册注解路由
-	CommentParse(r, &user.User{})
+	// 生成注解路由
+	autoRouter.Parse(
+		&user.User{},
+		&article.Article{},
+	)
+
+	// 加入注解路由
+	AutoRoute(r)
 
 	// 最后匹配的是全局内容
 	globalFile, err := os.Open(conf.GLOBAL_PATH)
