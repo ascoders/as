@@ -1,3 +1,9 @@
+/*==================================================
+	配置文件
+
+	Copyright (c) 2015 翱翔大空 and other contributors
+ ==================================================*/
+
 package conf
 
 const (
@@ -12,4 +18,10 @@ const (
 
 	// 全局文件路径
 	GLOBAL_PATH string = "static/static/html/public/global.html"
+
+	// redis地址
+	REDIS_ADDRESS string = "127.0.0.1:6379"
+
+	// 缓存时间
+	CACHE_EXPIRE int64 = 60 * 60
 )

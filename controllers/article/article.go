@@ -10,6 +10,6 @@ type Article struct {
 }
 
 // @router /article [Get]
-func (this *Article) Other() (int, []byte) {
+func (this *Article) Other() []byte {
 	return response.Success("Delete success!")
 }

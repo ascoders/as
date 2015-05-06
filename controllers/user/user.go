@@ -10,11 +10,11 @@ type User struct {
 }
 
 // @router /other [Get]
-func (this *User) Other() (int, []byte) {
+func (this *User) Other() []byte {
 	return response.Success("Delete success!")
 }
 
 // @router /xxx [Post]
-func (this *User) Xxxx() (int, []byte) {
+func (this *User) Xxxx() []byte {
 	return response.Success("Delete success!")
 }

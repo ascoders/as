@@ -1,3 +1,13 @@
+/*==================================================
+	计划任务
+
+	scheduled.Run(22, 32, 30, func() {
+		fmt.Println("oh!")
+	})
+
+	Copyright (c) 2015 翱翔大空 and other contributors
+ ==================================================*/
+
 package scheduled
 
 import (

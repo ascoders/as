@@ -1,3 +1,10 @@
+/*==================================================
+	总路由
+	内部引用了auto.go（注解路由/自动路由）
+
+	Copyright (c) 2015 翱翔大空 and other contributors
+ ==================================================*/
+
 package router
 
 import (
@@ -7,7 +14,7 @@ import (
 	"newWoku/conf"
 	"newWoku/controllers/article"
 	"newWoku/controllers/user"
-	"newWoku/lib/autoRouter"
+	"newWoku/lib/router"
 	"os"
 )
 
@@ -26,7 +33,7 @@ func Route() martini.Router {
 	*/
 
 	// 生成注解路由
-	autoRouter.Parse(
+	router.Auto(
 		&user.User{},
 		&article.Article{},
 	)

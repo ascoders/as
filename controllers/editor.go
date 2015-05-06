@@ -9,6 +9,6 @@ type Editor struct{}
 type EditorController interface {
 }
 
-func (this *Editor) Gets() (int, []byte) {
+func (this *Editor) Gets() []byte {
 	return response.Success("Gets success!")
 }

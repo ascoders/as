@@ -1,3 +1,9 @@
+/*==================================================
+	统一输出接口
+
+	Copyright (c) 2015 翱翔大空 and other contributors
+ ==================================================*/
+
 package response
 
 import (
@@ -10,12 +16,12 @@ type Format struct {
 	Data    interface{} `json:"data"`
 }
 
-func Success(data interface{}) (int, []byte) {
+func Success(data interface{}) []byte {
 	enc := encoder.JsonEncoder{}
-	return 200, encoder.Must(enc.Encode(Format{true, "", data}))
+	return encoder.Must(enc.Encode(Format{true, "", data}))
 }
 
-func Error(message string) (int, []byte) {
+func Error(message string) []byte {
 	enc := encoder.JsonEncoder{}
-	return 200, encoder.Must(enc.Encode(Format{false, message, nil}))
+	return encoder.Must(enc.Encode(Format{false, message, nil}))
 }

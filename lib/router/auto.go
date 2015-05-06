@@ -1,4 +1,12 @@
-package autoRouter
+/*==================================================
+	注解路由
+	根据控制器的注释自动生成路由文件
+	router/auto.go
+
+	Copyright (c) 2015 翱翔大空 and other contributors
+ ==================================================*/
+
+package router
 
 import (
 	"errors"
@@ -49,7 +57,7 @@ func init() {
 }
 
 // 自动路由解析入口
-func Parse(controls ...interface{}) {
+func Auto(controls ...interface{}) {
 	for _, c := range controls {
 		skip := make(map[string]bool, 10)
 		reflectVal := reflect.ValueOf(c)
@@ -99,7 +107,8 @@ func parserPkg(pkgRealpath string, pkgpath string) error {
 				switch specDecl := d.(type) {
 				case *ast.FuncDecl:
 					if specDecl.Recv != nil {
-						parserComments(specDecl.Doc, specDecl.Name.String(), fmt.Sprint(specDecl.Recv.List[0].Type.(*ast.StarExpr).X), pkgpath)
+						parserComments(specDecl.Doc, specDecl.Name.String(),
+							fmt.Sprint(specDecl.Recv.List[0].Type.(*ast.StarExpr).X), pkgpath)
 					}
 				}
 			}
@@ -141,7 +150,8 @@ func parserComments(comments *ast.CommentGroup, funcName, controllerName, pkgpat
 					keyval := strings.Split(strings.Trim(e1[1], "[]"), " ")
 					for _, kv := range keyval {
 						kk := strings.Split(kv, ":")
-						cc.Params = append(cc.Params, map[string]string{strings.Join(kk[:len(kk)-1], ":"): kk[len(kk)-1]})
+						cc.Params = append(cc.Params,
+							map[string]string{strings.Join(kk[:len(kk)-1], ":"): kk[len(kk)-1]})
 					}
 				}
 
@@ -155,8 +165,6 @@ func parserComments(comments *ast.CommentGroup, funcName, controllerName, pkgpat
 
 func genRouterCode() {
 	os.Mkdir(path.Join(workPath, "router"), 0755)
-	fmt.Println("generate router from comments")
-	fmt.Println(genInfoList)
 
 	var globalInfo string
 	var packageInfo string
@@ -169,7 +177,6 @@ func genRouterCode() {
 	`
 
 		// init obj
-		fmt.Println(packageName)
 		globalInfo = globalInfo + `
     ` + packageName + ` := &` + packageName + `.` + pathAndControllerName[1] + `{}`
 
@@ -178,7 +185,8 @@ func genRouterCode() {
 				// add func
 				for _, m := range c.AllowHTTPMethods {
 					globalInfo = globalInfo + `
-    r.` + strings.TrimSpace(m) + `("` + c.Router + `", ` + packageName + `.` + strings.TrimSpace(c.Method) + `)`
+    r.` + strings.TrimSpace(m) + `("` + c.Router + `", ` + packageName + `.Before ,` +
+						packageName + `.` + strings.TrimSpace(c.Method) + `)`
 				}
 			}
 		}
