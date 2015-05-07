@@ -44,11 +44,11 @@ controllers
 
 ~~~ go
 user := &user.User{}
-r.Get("/users", user.Before ,user.Gets)
-r.Get("/users/:id", user.Before ,user.Get)
-r.Post("/users", user.Before ,user.Add)
-r.Put("/users", user.Before ,user.Update)
-r.Delete("/users/:id", user.Before ,user.Delete)
+r.Get	("/api/users", 		user.Before, user.Gets)
+r.Get	("/api/users/:id", 	user.Before, user.Get)
+r.Post	("/api/users", 		user.Before, user.Add)
+r.Put	("/api/users", 		user.Before, user.Update)
+r.Delete("/api/users/:id", 	user.Before, user.Delete)
 ~~~
 
 覆写`Before`方法，可以做权限验证等处理：

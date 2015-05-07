@@ -22,6 +22,9 @@ const (
 	// redis地址
 	REDIS_ADDRESS string = "127.0.0.1:6379"
 
+	// mongodb地址
+	MONGODB_ADDRESS string = "127.0.0.1:11578"
+
 	// 缓存时间
 	CACHE_EXPIRE int64 = 60 * 60
 )

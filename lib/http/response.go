@@ -9,6 +9,7 @@ package http
 import (
 	"net/http"
 	"newWoku/lib/redis"
+	"strings"
 )
 
 func NewResponseWriter(req *http.Request, res http.ResponseWriter) *ResponseWriter {
@@ -29,7 +30,7 @@ func (this *ResponseWriter) Header() http.Header {
 
 func (this *ResponseWriter) Write(c []byte) (int, error) {
 	// GET请求写入缓存
-	if this.Req.Method == "GET" && this.Res.Header().Get("Content-Type") != "text/html; charset=utf-8" {
+	if strings.HasPrefix(this.Req.URL.String(), "/api") && this.Req.Method == "GET" {
 		redis.Set("url-"+this.Req.URL.String(), c)
 	}
 

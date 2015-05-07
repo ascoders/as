@@ -15,6 +15,7 @@ import (
 	"newWoku/lib/redis"
 	"newWoku/router"
 	"strconv"
+	"strings"
 )
 
 func main() {
@@ -37,8 +38,8 @@ func main() {
 		res := _http.NewResponseWriter(req, w)
 		c.MapTo(res, (*http.ResponseWriter)(nil))
 
-		// GET请求读取缓存
-		if req.Method == "GET" {
+		// API && GET请求读取缓存
+		if strings.HasPrefix(req.URL.String(), "/api") && req.Method == "GET" {
 			// 缓存没过期
 			if cache, err := redis.Get("url-" + req.URL.String()); err == nil {
 				w.Write(cache)

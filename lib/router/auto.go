@@ -191,7 +191,7 @@ func genRouterCode() {
 
 		for _, rest := range restful {
 			globalInfo = globalInfo + `
-    r.` + rest[0] + `("/` + packageName + `s` + rest[1] + `", ` + packageName + `.Before ,` +
+    r.` + rest[0] + `("/api/` + packageName + `s` + rest[1] + `", ` + packageName + `.Before ,` +
 				packageName + `.` + rest[2] + `)`
 		}
 
@@ -201,7 +201,7 @@ func genRouterCode() {
 				// add func
 				for _, m := range c.AllowHTTPMethods {
 					globalInfo = globalInfo + `
-    r.` + strings.TrimSpace(m) + `("` + c.Router + `", ` + packageName + `.Before ,` +
+    r.` + strings.TrimSpace(m) + `("/api` + c.Router + `", ` + packageName + `.Before ,` +
 						packageName + `.` + strings.TrimSpace(c.Method) + `)`
 				}
 			}
