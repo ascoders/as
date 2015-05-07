@@ -1,5 +1,5 @@
 /*==================================================
-	复写http.ResponseWriter
+	复写http.Response
 
 	Copyright (c) 2015 翱翔大空 and other contributors
  ==================================================*/
@@ -27,9 +27,11 @@ func (this *ResponseWriter) Header() http.Header {
 	return this.Res.Header()
 }
 
-// 写入res.body之前，先写入缓存
 func (this *ResponseWriter) Write(c []byte) (int, error) {
-	redis.Set("url-"+this.Req.URL.String(), c)
+	// GET请求写入缓存
+	if this.Req.Method == "GET" {
+		redis.Set("url-"+this.Req.URL.String(), c)
+	}
 
 	return this.Res.Write(c)
 }

@@ -37,13 +37,13 @@ func main() {
 		res := _http.NewResponseWriter(req, w)
 		c.MapTo(res, (*http.ResponseWriter)(nil))
 
-		// 获取缓存
-		cache, err := redis.Get("url-" + req.URL.String())
-
-		// 缓存没过期
-		if err == nil {
-			w.Write(cache)
-			return
+		// GET请求读取缓存
+		if req.Method == "GET" {
+			// 缓存没过期
+			if cache, err := redis.Get("url-" + req.URL.String()); err == nil {
+				w.Write(cache)
+				return
+			}
 		}
 	})
 

@@ -1,7 +1,7 @@
 # as
 martini 轻巧脚手架
 
-### 依赖
+# 依赖
 
 ~~~ go
 go get github.com/go-martini/martini
@@ -10,7 +10,7 @@ go get github.com/hoisie/redis
 go get github.com/martini-contrib/sessions
 ~~~
 
-### 自动路由
+# 自动路由
 
 自动路由最强悍的地方就是每次运行程序，都会根据`controllers`中的注释生成路由文件`router/auto.go`。为了享受自动生成路由带来的便利，你可以如下编写注释：
 
@@ -26,9 +26,9 @@ func (this *Article) Other() []byte {
 
 ~~~
 
-### 自动缓存
+# 自动缓存
 
-脚手架使用`martini`映射接口的特性，覆盖了`http.ResponseWriter`并重写`write()`方法，在其调用前生成以当前`url`作为`key`，当前输出内容为`value`的缓存，并在http请求发生前优先使用缓存。如果路由遵循`restful`规范，每个非`Get`请求都会清除缓存（因为数据可能发生了变化），这一切都是自动的。
+脚手架使用`martini`映射接口的特性，覆盖了`http.ResponseWriter`并重写`write()`方法，在其调用前生成以当前`url`作为`key`，当前输出内容为`value`的缓存，并在http请求发生前优先使用缓存。如果路由遵循`restful`规范，只有`get`请求会使用缓存（因为其他操作数据可能发生了变化），这一切都是自动的。
 
 需要注意如下两点：
 
