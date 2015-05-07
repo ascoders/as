@@ -33,7 +33,7 @@ func main() {
 
 	// 缓存
 	m.Use(func(c martini.Context, req *http.Request, w http.ResponseWriter) {
-		// 覆盖ResponseWriter接口
+		// 覆写ResponseWriter接口
 		res := _http.NewResponseWriter(req, w)
 		c.MapTo(res, (*http.ResponseWriter)(nil))
 

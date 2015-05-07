@@ -29,7 +29,7 @@ func (this *ResponseWriter) Header() http.Header {
 
 func (this *ResponseWriter) Write(c []byte) (int, error) {
 	// GET请求写入缓存
-	if this.Req.Method == "GET" {
+	if this.Req.Method == "GET" && this.Res.Header().Get("Content-Type") != "text/html; charset=utf-8" {
 		redis.Set("url-"+this.Req.URL.String(), c)
 	}
 
