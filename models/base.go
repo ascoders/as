@@ -7,10 +7,10 @@
 package models
 
 import (
+	"fmt"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 	"newWoku/conf"
-	"time"
 )
 
 var (
@@ -37,30 +37,36 @@ type Base struct {
 type BaseModel interface {
 	Gets() []*BaseModel
 	Get(id interface{})
-	Add(this *BaseModel) error
-	Update(this *BaseModel) error
+	Add() error
+	Update(id interface{}, update map[string]interface{}) error
 	Delete(id interface{}) error
 }
 
 func (this *Base) Gets() []*BaseModel {
 	var r []*BaseModel
 
+	fmt.Println("执行了models.Gets")
+
 	return r
 }
 
+// 根据id获取某个资源
 func (this *Base) Get(id interface{}) {
 	this.db.FindId(id).One(this)
 }
 
+// 新增资源
 func (this *Base) Add() error {
 	this.Id = bson.NewObjectId()
 	return this.db.Insert(this)
 }
 
-func (this *Base) Update() error {
-	return nil
+// 根据id更新某个资源
+func (this *Base) Update(id interface{}, update map[string]interface{}) error {
+	return this.db.UpdateId(id, update)
 }
 
+// 根据id删除某个资源
 func (this *Base) Delete(id interface{}) error {
 	return this.db.RemoveId(id)
 }

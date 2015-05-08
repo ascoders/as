@@ -7,11 +7,11 @@
 package controllers
 
 import (
+	"github.com/go-martini/martini"
 	"net/http"
 	"newWoku/lib/response"
+	"newWoku/models"
 )
-
-type Base struct{}
 
 type BaseController interface {
 	Before(w http.ResponseWriter) []byte
@@ -22,12 +22,19 @@ type BaseController interface {
 	Delete() []byte
 }
 
+type Base struct {
+	Model models.BaseModel
+}
+
 // 逻辑之前执行
 // 子类复写后可以做公共初始化或验证
 // w.write(),之后逻辑路由不会执行
-func (this *Base) Before(w http.ResponseWriter) {}
+func (this *Base) Before(w http.ResponseWriter) {
+
+}
 
 func (this *Base) Gets() []byte {
+	this.Model.Gets()
 	return response.Success("Gets success!")
 }
 
@@ -39,7 +46,7 @@ func (this *Base) Add() []byte {
 	return response.Success("Add success!")
 }
 
-func (this *Base) Update() []byte {
+func (this *Base) Update(params martini.Params) []byte {
 	return response.Success("Update success!")
 }
 

@@ -185,7 +185,7 @@ func genRouterCode() {
 			[]string{"Get", "", "Gets"},
 			[]string{"Get", "/:id", "Get"},
 			[]string{"Post", "", "Add"},
-			[]string{"Put", "", "Update"},
+			[]string{"Patch", "", "Update"},
 			[]string{"Delete", "/:id", "Delete"},
 		}
 

@@ -1,20 +1,22 @@
 package user
 
 import (
+	"net/http"
 	"newWoku/controllers"
 	"newWoku/lib/response"
+	"newWoku/models"
 )
 
 type User struct {
 	controllers.Base
 }
 
-// @router /other [Get]
-func (this *User) Other() []byte {
-	return response.Success("Delete success!")
+func (this *User) Before(w http.ResponseWriter) {
+	this.Model = &models.User{}
 }
 
-// @router /xxx [Post]
-func (this *User) Xxxx() []byte {
-	return response.Success("Delete success!")
+// @router /bb [Get]
+func (this *User) Other() []byte {
+	this.Model.Gets()
+	return response.Success("bb!")
 }

@@ -46,7 +46,7 @@ user := &user.User{}
 r.Get	("/api/users", 		user.Before, user.Gets)
 r.Get	("/api/users/:id", 	user.Before, user.Get)
 r.Post	("/api/users", 		user.Before, user.Add)
-r.Put	("/api/users", 		user.Before, user.Update)
+r.Patch	("/api/users", 		user.Before, user.Update)
 r.Delete("/api/users/:id", 	user.Before, user.Delete)
 ~~~
 

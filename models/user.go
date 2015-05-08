@@ -4,7 +4,7 @@ import (
 	"time"
 )
 
-type Member struct {
+type User struct {
 	Base
 
 	Nickname string  `bson:"n" json:"nickname"` // 昵称
