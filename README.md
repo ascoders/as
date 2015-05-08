@@ -8,6 +8,7 @@ go get github.com/go-martini/martini
 go get github.com/martini-contrib/encoder
 go get github.com/hoisie/redis
 go get github.com/martini-contrib/sessions
+go get gopkg.in/mgo.v2
 ~~~
 
 # 自动路由
@@ -26,21 +27,38 @@ func (this *Article) Other() []byte {
 
 ~~~
 
-**控制器规范**
+> 第一次执行程序会生成自动路由文件，但无法调用它，第二次启动就能自动加载第一次生成的路由文件了。
 
-控制器结构如下
+**控制器规范**
 
 ~~~
 controllers
-	|-- user
-	|	|-- user.go
-	|   |-- extend.go
-	|-- article
-	|	|-- article.go
+|-- user
+|	|-- user.go
+|	|-- extend.go
+|-- article
+|	|-- article.go
+
+每个`package`对应一个资源，并自动开启`restful Api`，需要权限验证或禁用某些api，可以复写`restful`方法。以`user`为例，自动生成的`restful api`如下：
+
+~~~ go
+user := &user.User{}
+r.Get	("/api/users", 		user.Before, user.Gets)
+r.Get	("/api/users/:id", 	user.Before, user.Get)
+r.Post	("/api/users", 		user.Before, user.Add)
+r.Put	("/api/users", 		user.Before, user.Update)
+r.Delete("/api/users/:id", 	user.Before, user.Delete)
 ~~~
 
-控制器下每个`package`对应一个资源，例如对`user`，自动路由会添加如下`restful`方法：
-	
+覆写`Before`方法，可以做权限验证等处理：
+
+~~~ go
+func (this *User) Before(w http.ResponseWriter) {
+	// 只要有输出语句，后面的路由逻辑不会执行
+	w.Write([]byte("没有权限"))
+}
+~~~
+
 # 自动缓存
 
 脚手架使用`martini`映射接口的特性，覆盖了`http.ResponseWriter`并重写`write()`方法，在其调用前生成以当前`url`作为`key`，当前输出内容为`value`的缓存，并在http请求发生前优先使用缓存。如果路由遵循`restful`规范，只有`get`请求会使用缓存（因为其他操作数据可能发生了变化），这一切都是自动的。

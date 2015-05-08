@@ -9,7 +9,7 @@ type Article struct {
 	controllers.Base
 }
 
-// @router /article [Get]
+// @router /aa [Get]
 func (this *Article) Other() []byte {
 	return response.Success("Delete success!")
 }

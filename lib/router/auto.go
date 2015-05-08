@@ -180,12 +180,28 @@ func genRouterCode() {
 		globalInfo = globalInfo + `
     ` + packageName + ` := &` + packageName + `.` + pathAndControllerName[1] + `{}`
 
+		// restful api
+		restful := [][]string{
+			[]string{"Get", "", "Gets"},
+			[]string{"Get", "/:id", "Get"},
+			[]string{"Post", "", "Add"},
+			[]string{"Put", "", "Update"},
+			[]string{"Delete", "/:id", "Delete"},
+		}
+
+		for _, rest := range restful {
+			globalInfo = globalInfo + `
+    r.` + rest[0] + `("/api/` + packageName + `s` + rest[1] + `", ` + packageName + `.Before ,` +
+				packageName + `.` + rest[2] + `)`
+		}
+
+		// 注释路由
 		for _, c := range cList {
 			if len(c.AllowHTTPMethods) > 0 {
 				// add func
 				for _, m := range c.AllowHTTPMethods {
 					globalInfo = globalInfo + `
-    r.` + strings.TrimSpace(m) + `("` + c.Router + `", ` + packageName + `.Before ,` +
+    r.` + strings.TrimSpace(m) + `("/api` + c.Router + `", ` + packageName + `.Before ,` +
 						packageName + `.` + strings.TrimSpace(c.Method) + `)`
 				}
 			}
