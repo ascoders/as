@@ -26,6 +26,21 @@ func (this *Article) Other() []byte {
 
 ~~~
 
+**控制器规范**
+
+控制器结构如下
+
+~~~
+controllers
+	|-- user
+	|	|-- user.go
+	|   |-- extend.go
+	|-- article
+	|	|-- article.go
+~~~
+
+控制器下每个`package`对应一个资源，例如对`user`，自动路由会添加如下`restful`方法：
+	
 # 自动缓存
 
 脚手架使用`martini`映射接口的特性，覆盖了`http.ResponseWriter`并重写`write()`方法，在其调用前生成以当前`url`作为`key`，当前输出内容为`value`的缓存，并在http请求发生前优先使用缓存。如果路由遵循`restful`规范，只有`get`请求会使用缓存（因为其他操作数据可能发生了变化），这一切都是自动的。
