@@ -11,8 +11,10 @@ import (
 	"github.com/go-martini/martini"
 	"io/ioutil"
 	"newWoku/conf"
+	"newWoku/controllers/app"
 	"newWoku/controllers/article"
 	"newWoku/controllers/user"
+	"newWoku/lib/response"
 	"newWoku/lib/router"
 	"os"
 )
@@ -25,10 +27,16 @@ func Route() martini.Router {
 	router.Auto(
 		&user.User{},
 		&article.Article{},
+		&app.App{},
 	)
 
 	// 加入注解路由
 	AutoRoute(r)
+
+	// 匹配未定义的api
+	r.Get("/api/**", func() []byte {
+		return response.Error("这个api走丢了")
+	})
 
 	// 最后匹配的是全局内容
 	globalFile, err := os.Open(conf.GLOBAL_PATH)

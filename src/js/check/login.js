@@ -29,11 +29,11 @@ define("checkLogin", ['jquery'], function ($) {
 		},
 		submit: function () { //点击登陆按钮
 			if (avalon.vmodels.checkLogin.account == '') {
-				notice('账号不能为空', 'red');
+				wk.notice('账号不能为空', 'red');
 				return;
 			}
 			if (avalon.vmodels.checkLogin.password == '') {
-				notice('密码不能为空', 'red');
+				wk.notice('密码不能为空', 'red');
 				return;
 			}
 			post('/api/check/login', {

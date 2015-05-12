@@ -1,21 +1,25 @@
 /*==================================================
-	文章
+	应用
 
 	Copyright (c) 2015 翱翔大空 and other contributors
  ==================================================*/
 
-package article
+package app
 
 import (
 	"newWoku/controllers"
-	"newWoku/lib/response"
+	"newWoku/models"
 )
 
-type Article struct {
+type App struct {
 	controllers.Base
 }
 
-// @router /aa [Get]
-func (this *Article) Other() []byte {
-	return response.Success("Delete success!")
+func (this *App) Before() {
+	this.NewModel(models.NewApp())
+}
+
+// @router /app/xx [Get]
+func (this *App) Other() []byte {
+	return this.Success("bb!")
 }

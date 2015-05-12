@@ -34,10 +34,10 @@ var paths = {
 		image: 'src/img/**/*'
 	},
 	dist: {
-		html: 'static/static/html',
-		css: 'static/static/css',
-		js: 'static/static/js',
-		image: 'static/static/img'
+		html: 'static/html',
+		css: 'static/css',
+		js: 'static/js',
+		image: 'static/img'
 	}
 };
 

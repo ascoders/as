@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // avalon
@@ -7,7 +7,7 @@
 //改变模板标签
 avalon.config({
 	interpolate: ["{[{", "}]}"]
-});
+})
 
 //过滤markdown标签
 avalon.filters.cleanmark = function (str) {
@@ -20,16 +20,16 @@ avalon.filters.cleanmark = function (str) {
 		.replace(/\]/g, "")
 		.replace(/\#/g, "")
 		.replace(/\-/g, "")
-		.replace(/\>/g, "");
+		.replace(/\>/g, "")
 
-	return str;
-};
+	return str
+}
 
 //处理小数点
 avalon.filters.toFixed = function (str, number) {
-	str = str.toFixed(number);
+	str = str.toFixed(number)
 
-	return str;
+	return str
 };
 
 require.config({
@@ -110,14 +110,19 @@ require.config({
 			exports: "echarts"
 		}
 	}
-});
+})
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
-// 自定义函数
+// wk函数
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
-//封装提示框
-function notice(text, color) {
+var wk = wk || {}
+
+// csrf参数
+wk.csrf = ''
+
+// 提示框
+wk.notice = function (text, color) {
 	require(['jquery', 'jquery.jbox'], function ($) {
 		new jBox('Notice', {
 			content: text,
@@ -127,12 +132,12 @@ function notice(text, color) {
 			},
 			animation: 'flip',
 			color: color
-		});
-	});
+		})
+	})
 }
 
-//封装选择框
-function confirm(content, callback) {
+// 选择框
+wk.confirm = function (content, callback) {
 	require(['jquery', 'jquery.jbox'], function ($) {
 		var myModal = new jBox('Confirm', {
 			minWidth: '200px',
@@ -145,12 +150,12 @@ function confirm(content, callback) {
 			}
 		});
 
-		myModal.open();
-	});
+		myModal.open()
+	})
 }
 
 //调整用户头像图片路径
-function userImage(str) {
+wk.userImage = function (str) {
 	if (str != undefined && str != "") {
 		if (!isNaN(str)) {
 			return "/static/img/user/" + str + ".jpg";
@@ -160,8 +165,55 @@ function userImage(str) {
 	return;
 }
 
-//自带_xsrf的post提交，整合了error处理
-function post(url, params, success, error, callback, errorback) {
+// 短链接
+wk.ajax = function (method, opts) {
+	var defaultOpts = {
+		url: '',
+		data: '',
+		success: function (data) {},
+		error: function () {}
+	}
+	opts = $.extend(defaultOpts, opts)
+
+
+	require(['jquery'], function ($) {
+		return $.ajax({
+				url: opts.url,
+				type: method,
+				traditional: true, // 便于传数组
+				data: opts.data
+			})
+			.done(function (data, status, xhr) {
+				// 更新csrf
+				wk.csrf = xhr.getResponseHeader('X-CSRFToken')
+
+				if (data.ok) {
+					opts.success(data.data)
+				} else {
+					wk.notice(data.message, 'red')
+					opts.error()
+				}
+			});
+	})
+}
+wk.get = function (opts) {
+	return wk.ajax('GET', opts)
+}
+wk.post = function (opts) {
+	return wk.ajax('POST', opts)
+}
+wk.put = function (opts) {
+	return wk.ajax('PUT', opts)
+}
+wk.patch = function (opts) {
+	return wk.ajax('PATCH', opts)
+}
+wk.delete = function (opts) {
+	return wk.ajax('DELETE', opts)
+}
+
+/*
+wk.ajax = function (url, params, success, error, callback, errorback) {
 	require(['jquery', 'jquery.cookie'], function ($) {
 		//获取xsrftoken
 		var xsrf = $.cookie("_xsrf");
@@ -202,113 +254,10 @@ function post(url, params, success, error, callback, errorback) {
 			});
 	});
 }
-
-//创建分页DOM内容
-function createPagin(from, number, count, params) {
-	//计算总页数
-	if (count == 0) {
-		return '';
-	}
-	var allPage = Math.ceil(parseFloat(count) / parseFloat(number));
-
-	//如果总页数是1，返回空
-	if (allPage == 1) {
-		return '';
-	}
-
-	//当前页数
-	var page = 1;
-
-	from = parseInt(from);
-	number = parseInt(number);
-
-	if (from != 0) {
-		page = from / number + 1;
-	}
-
-	//中间内容
-	var list = "";
-
-	//附加参数
-	var paramString = '';
-	for (var key in params) {
-		paramString += '&' + key + '=' + params[key];
-	}
-
-
-	var path = window.location.pathname + '?number=' + number + paramString;
-
-	//根据页数计算from
-	var _from = function (i) {
-		return ((i - 1) * number);
-	}
-
-	//首部箭头
-	if (page == 1) {
-		list += "<li><a class='disabled f-bln' href='#'><i class='fa fa-arrow-left'></i></a></li>";
-	} else {
-		list += "<li><a class='f-bln' href='#!" + path + "&from=" + (from - number) + "'><i class='fa fa-arrow-left'></i></a></li>";
-	}
-
-	//中间部分
-	if (allPage < 7) {
-		for (var i = 1; i <= allPage; i++) {
-			if (i == page) {
-				list += "<li><a class='active' href='#'>" + i + "</a></li>";
-			} else {
-				list += "<li><a href='#!" + path + "&from=" + _from(i) + "'>" + i + "</a></li>";
-			}
-		}
-	} else {
-		if (page < 6) {
-			for (var i = 1; i <= 6; i++) {
-				if (i == page) {
-					list += "<li><a class='active' href='#'>" + i + "</a></li>";
-				} else {
-					list += "<li><a href='#!" + path + "&from=" + _from(i) + "'>" + i + "</a></li>";
-				}
-			}
-			list += "<li><a class='disabled' href='#'>...</a></li>";
-			list += "<li><a href='#!" + path + "&from=" + _from(allPage) + "'>" + allPage + "</a></li>";
-		} else {
-			list += "<li><a href='#!" + path + "&from=" + _from(1) + "'>1</a></li>";
-			list += "<li><a href='#!" + path + "&from=" + _from(2) + "'>2</a></li>";
-			list += "<li><a class='disabled' href='#'>...</a></li>";
-			if (allPage - page < 6) {
-				for (var i = allPage - 6; i <= allPage; i++) {
-					if (i == page) {
-						list += "<li><a class='active' href='#'>" + i + "</a></li>";
-					} else {
-						list += "<li><a href='#!" + path + "&from=" + _from(i) + "'>" + i + "</a></li>";
-					}
-				}
-			} else {
-				for (var i = page - 2; i <= page + 3; i++) {
-					if (i == page) {
-						list += "<li><a class='active' href='#'>" + i + "</a></li>";
-					} else {
-						list += "<li><a href='#!" + path + "&from=" + _from(i) + "'>" + i + "</a></li>";
-					}
-				}
-				list += "<li><a class='disabled' href='#'>...</a></li>";
-				list += "<li><a href='#!" + path + "&from=" + _from(allPage - 1) + "'>" + (allPage - 1) + "</a></li>";
-				list += "<li><a href='#!" + path + "&from=" + _from(allPage) + "'>" + allPage + "</a></li>";
-			}
-		}
-	}
-
-	//末尾箭头
-	if (page == allPage) {
-		list += "<li><a class='disabled f-brn' href='javascript:void(0);'><i class='fa fa-arrow-right'></i></a></li>";
-	} else {
-		list += "<li><a class='f-brn' href='#!" + path + "&from=" + (from + number) + "'><i class='fa fa-arrow-right'></i></a></li>";
-	}
-
-	return "<ul class='g-pa f-pr'>" + list + "</ul>";
-}
+*/
 
 //字符串截取方法，支持中文
-function subStr(str, start, end) {
+wk.subStr = function (str, start, end) {
 	var _start = 0;
 	for (var i = 0; i < start; i++) {
 		if (escape(str.charCodeAt(i)).indexOf("%u") >= 0) {
@@ -329,8 +278,8 @@ function subStr(str, start, end) {
 	return r;
 }
 
-//dropzone统一外包一层规范
-function createDropzone(obj, url, params, accept, callback) {
+// 上传组件
+wk.createDropzone = function (obj, url, data, accept, callback) {
 	require(['jquery', 'dropzone', 'md5', 'jquery.jbox'], function ($, Dropzone, md5) {
 		//上传框组
 		var modals = {};
@@ -340,7 +289,7 @@ function createDropzone(obj, url, params, accept, callback) {
 			url: url,
 			maxFiles: 10,
 			maxFilesize: 0.5,
-			method: 'post',
+			method: 'POST',
 			acceptedFiles: accept,
 			autoProcessQueue: false,
 			init: function () {
@@ -369,15 +318,20 @@ function createDropzone(obj, url, params, accept, callback) {
 					var _this = this;
 
 					//获取上传到七牛的token
-					post('/api/qiniu/createUpToken', params, null, '', function (data) {
-						_this.options.params['token'] = data;
+					wk.get({
+						url: '/api/qiniu/token',
+						data: data,
+						success: function (data) {
+							_this.options.params['token'] = data;
 
-						// 开始上传
-						_this.processQueue();
-					}, function () { //失败撤销上传框
-						modals[md5(file.name)].close();
-					});
-				});
+							// 开始上传
+							_this.processQueue();
+						},
+						error: function () {
+							modals[md5(file.name)].close();
+						}
+					})
+				})
 				this.on("thumbnail", function (file, img) { //文件内容,缩略图base64
 					//如果模态框被关闭,return
 					if (!modals[md5(file.name)]) {
@@ -442,7 +396,7 @@ function createDropzone(obj, url, params, accept, callback) {
 }
 
 // 判断ie9及其以下版本
-function ieVersion() {
+wk.ieVersion = function () {
 	var v = 3,
 		div = document.createElement('div'),
 		all = div.getElementsByTagName('i');
@@ -451,7 +405,7 @@ function ieVersion() {
 }
 
 // 倒计时
-function timediff(element, options, callback) {
+wk.timediff = function (element, options, callback) {
 	// 初始化
 	var defaults = {
 		second: 0
@@ -493,7 +447,7 @@ function timediff(element, options, callback) {
 }
 
 // jbox插件渲染dom
-function jbox() {
+wk.jbox = function () {
 	require(['jquery', 'jquery.jbox'], function ($) {
 		// jbox插件
 		$('.jbox').each(function () {
@@ -705,14 +659,18 @@ var global = avalon.define({
 require(['jquery', 'mmState'], function ($) {
 	//获取登陆用户信息
 	global.temp.myDeferred = $.Deferred();
-	post('/api/currentUser', null, null, null, function (data) {
-		data.image = userImage(data.image);
-		global.my = data;
-		global.myLogin = true;
-		global.temp.myDeferred.resolve(); // 信息获取完毕 用户已登录
-	}, function () {
-		global.temp.myDeferred.resolve(); // 信息获取完毕 用户未登录
-	});
+	wk.get({
+		url: '/api/users/current',
+		success: function () {
+			data.image = userImage(data.image);
+			global.my = data;
+			global.myLogin = true;
+			global.temp.myDeferred.resolve(); // 已登录
+		},
+		error: function () {
+			global.temp.myDeferred.resolve(); // 未登录
+		}
+	})
 
 	//找不到的页面跳转到404
 	avalon.router.error(function () {

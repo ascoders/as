@@ -2,27 +2,37 @@ package router
 
 import (
     "github.com/go-martini/martini"
+	"newWoku/lib/csrf"
     "newWoku/controllers/user"
 	"newWoku/controllers/article"
+	"newWoku/controllers/app"
 	
 )
 
 func AutoRoute(r martini.Router) {
     
     user := &user.User{}
-    r.Get("/api/users", user.Before ,user.Gets)
-    r.Get("/api/users/:id", user.Before ,user.Get)
-    r.Post("/api/users", user.Before ,user.Add)
-    r.Patch("/api/users", user.Before ,user.Update)
-    r.Delete("/api/users/:id", user.Before ,user.Delete)
-    r.Get("/api/bb", user.Before ,user.Other)
+    r.Get("/api/bb", csrf.Validate, user.Before, user.Other)
+    r.Get("/api/users", csrf.Validate, user.Before, user.Gets)
+    r.Get("/api/users/:id", csrf.Validate, user.Before, user.Get)
+    r.Post("/api/users", csrf.Validate, user.Before, user.Add)
+    r.Patch("/api/users/:id", csrf.Validate, user.Before, user.Update)
+    r.Delete("/api/users/:id", csrf.Validate, user.Before, user.Delete)
 	
     article := &article.Article{}
-    r.Get("/api/articles", article.Before ,article.Gets)
-    r.Get("/api/articles/:id", article.Before ,article.Get)
-    r.Post("/api/articles", article.Before ,article.Add)
-    r.Patch("/api/articles", article.Before ,article.Update)
-    r.Delete("/api/articles/:id", article.Before ,article.Delete)
-    r.Get("/api/aa", article.Before ,article.Other)
+    r.Get("/api/aa", csrf.Validate, article.Before, article.Other)
+    r.Get("/api/articles", csrf.Validate, article.Before, article.Gets)
+    r.Get("/api/articles/:id", csrf.Validate, article.Before, article.Get)
+    r.Post("/api/articles", csrf.Validate, article.Before, article.Add)
+    r.Patch("/api/articles/:id", csrf.Validate, article.Before, article.Update)
+    r.Delete("/api/articles/:id", csrf.Validate, article.Before, article.Delete)
+	
+    app := &app.App{}
+    r.Get("/api/app/xx", csrf.Validate, app.Before, app.Other)
+    r.Get("/api/apps", csrf.Validate, app.Before, app.Gets)
+    r.Get("/api/apps/:id", csrf.Validate, app.Before, app.Get)
+    r.Post("/api/apps", csrf.Validate, app.Before, app.Add)
+    r.Patch("/api/apps/:id", csrf.Validate, app.Before, app.Update)
+    r.Delete("/api/apps/:id", csrf.Validate, app.Before, app.Delete)
 	
 }

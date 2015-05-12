@@ -7,6 +7,8 @@
 package conf
 
 const (
+	DEBUG bool = true
+
 	// 本机地址
 	HOST string = "127.0.0.1"
 
@@ -17,7 +19,7 @@ const (
 	STATIC_DIR string = "static"
 
 	// 全局文件路径
-	GLOBAL_PATH string = "static/static/html/public/global.html"
+	GLOBAL_PATH string = "static/html/public/global.html"
 
 	// redis地址
 	REDIS_ADDRESS string = "127.0.0.1:6379"
@@ -27,4 +29,7 @@ const (
 
 	// 缓存时间
 	CACHE_EXPIRE int64 = 60 * 60
+
+	// 错误类型
+	ERROR_TYPE string = "类型错误"
 )

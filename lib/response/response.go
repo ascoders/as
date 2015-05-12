@@ -25,3 +25,11 @@ func Error(message string) []byte {
 	enc := encoder.JsonEncoder{}
 	return encoder.Must(enc.Encode(Format{false, message, nil}))
 }
+
+func Must(data interface{}, err error) []byte {
+	if err == nil {
+		return Success(data)
+	} else {
+		return Error(err.Error())
+	}
+}
