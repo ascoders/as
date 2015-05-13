@@ -39,6 +39,7 @@ controllers
 |	|-- extend.go
 |-- article
 |	|-- article.go
+~~~
 
 每个`package`对应一个资源，并自动开启`restful Api`，需要权限验证或禁用某些api，可以复写`restful`方法。以`user`为例，自动生成的`restful api`如下：
 
@@ -65,30 +66,32 @@ func (this *User) Before(w http.ResponseWriter) {
 在控制器的每个函数上，按照规范添加注释，可以自动生成注释路由文件。
 
 最基础的写法，默认响应`get`请求：
-~~~js
+~~~go
 // @router /example
 ~~~
 
 url可以带参数：
-~~~js
+~~~go
 // @router /example/:id
 ~~~
 
 设置响应类型，多个用`,`分隔：
-~~~js
+~~~go
 // @router /example [post]
 ~~~
 
 设置响应前执行的函数，下例先执行`Csrf`方法，例如做权限控制，多个用`,`分隔：
+~~~go
 // @router /example (csrf)
+~~~
 
 也可以混合使用
-~~~js
+~~~go
 // @router /example (csrf,before) [put,delete]
 ~~~
 
 如果开启了自动`restful路由`，可以复写注释路由替换默认的`restful路由`，使用`this.Restful.[RestfulApi]`：
-~~~js
+~~~go
 // @router /users (before) [get]
 func (this *User) Gets() []byte {
 	return this.Restful.Gets()
