@@ -193,7 +193,7 @@ func Generate(opts *Options) martini.Handler {
 					RawExpires: expire.Format(time.UnixDate),
 					MaxAge:     0,
 					Secure:     opts.Secure,
-					HttpOnly:   false,
+					HttpOnly:   true,
 					Raw:        fmt.Sprintf("%s=%s", opts.Cookie, x.Token),
 					Unparsed:   []string{fmt.Sprintf("token=%s", x.Token)},
 				}
@@ -213,14 +213,8 @@ func Generate(opts *Options) martini.Handler {
 // using ValidToken. If this validation fails, custom Error is sent in the reply.
 // If neither a header or form value is found, http.StatusBadRequest is sent.
 func Validate(r *http.Request, w http.ResponseWriter, x CSRF) {
-	if token := r.Header.Get(x.GetHeaderName()); token != "" {
-		if !x.ValidToken(token) {
-			x.Error(w)
-		}
-		return
-	}
-	if token := r.FormValue(x.GetFormName()); token != "" {
-		if !x.ValidToken(token) {
+	if ex, err := r.Cookie(opts.Cookie); err == nil && ex.Value != "" {
+		if !x.ValidToken(ex.Value) {
 			x.Error(w)
 		}
 		return

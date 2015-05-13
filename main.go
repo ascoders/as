@@ -45,8 +45,7 @@ func NewClassic() *martini.ClassicMartini {
 	m.Use(csrf.Generate(&csrf.Options{
 		Secret:     "V&2Xa6IAKZg5QjX8",
 		SessionKey: "id", // 根据用户id，为每个用户设置不同的csrf
-		Header:     "X-CSRFToken",
-		SetHeader:  true,
+		Cookie:     "_csrf",
 		ErrorFunc: func(w http.ResponseWriter) {
 			w.Header().Del("X-Csrftoken")
 			http.Error(w, "Bad Request", 400)
