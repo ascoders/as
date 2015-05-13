@@ -28,7 +28,6 @@ var (
 
 import (
     "github.com/go-martini/martini"
-	"newWoku/lib/csrf"
     {{.packageInfo}}
 )
 
@@ -136,15 +135,6 @@ func parserComments(comments *ast.CommentGroup, funcName, controllerName, pkgpat
 				cc := ControllerComments{}
 				cc.Method = funcName
 
-				if len(el) == 2 && el[1] != "" {
-					keyval := strings.Split(strings.Trim(el[1], "[]"), " ")
-					for _, kv := range keyval {
-						kk := strings.Split(kv, ":")
-						cc.Params = append(cc.Params,
-							map[string]string{strings.Join(kk[:len(kk)-1], ":"): kk[len(kk)-1]})
-					}
-				}
-
 				// 第一个固定为路由地址
 				cc.Router = el[0]
 
@@ -167,8 +157,6 @@ func parserComments(comments *ast.CommentGroup, funcName, controllerName, pkgpat
 					cc.AllowHTTPMethods = append(cc.AllowHTTPMethods, "Get")
 				}
 
-				fmt.Println("路由", cc.Router, "前缀", cc.PrefixMethods, "类型", cc.AllowHTTPMethods)
-
 				genInfoList[key] = append(genInfoList[key], cc)
 			}
 		}
@@ -182,6 +170,9 @@ func genRouterCode() {
 
 	var globalInfo string
 	var packageInfo string
+
+	// 是否引了csrf包
+	var useCsrf bool
 
 	for k, cList := range genInfoList {
 		pathAndControllerName := strings.Split(k, ":")
@@ -197,11 +188,24 @@ func genRouterCode() {
 		// 注释路由
 		for _, c := range cList {
 			if len(c.AllowHTTPMethods) > 0 {
+				// 解析前缀路由
+				var prefix = ""
+				for pk, _ := range c.PrefixMethods {
+					switch strings.ToLower(c.PrefixMethods[pk]) {
+					case "csrf":
+						prefix += "csrf.Validate, "
+						useCsrf = true
+					case "before":
+					default:
+						prefix += packageName + "." + strings.Title(strings.ToLower(c.PrefixMethods[pk])) + ", "
+					}
+				}
+
 				// add func
 				for _, m := range c.AllowHTTPMethods {
 					globalInfo = globalInfo + `
-    r.` + strings.TrimSpace(m) + `("/api` + c.Router + `", ` +
-						`csrf.Validate, ` +
+    r.` + strings.Title(strings.ToLower(strings.TrimSpace(m))) + `("/api` + c.Router + `", ` +
+						prefix +
 						packageName + `.Before, ` +
 						packageName + `.` + strings.TrimSpace(c.Method) + `)`
 				}
@@ -219,13 +223,16 @@ func genRouterCode() {
 		for _, rest := range restful {
 			globalInfo = globalInfo + `
     r.` + rest[0] + `("/api/` + packageName + `s` + rest[1] + `", ` +
-				`csrf.Validate, ` +
 				packageName + `.Before, ` +
 				packageName + `.` + rest[2] + `)`
 		}
 
 		globalInfo = globalInfo + `
 	`
+	}
+
+	if useCsrf {
+		packageInfo += `"newWoku/lib/csrf"`
 	}
 
 	if globalInfo != "" && packageInfo != "" {

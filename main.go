@@ -48,7 +48,6 @@ func NewClassic() *martini.ClassicMartini {
 		Header:     "X-CSRFToken",
 		SetCookie:  true,
 		Cookie:     "_csrf", // cookie里设置csrf以便客户端取值
-		Secure:     true,    // 这个cookie不会发送给服务器
 		ErrorFunc: func(w http.ResponseWriter) {
 			w.Header().Del("X-Csrftoken")
 			http.Error(w, "Bad Request", 400)

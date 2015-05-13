@@ -19,6 +19,11 @@ func (this *User) Before() {
 	this.NewModel(models.NewUser())
 }
 
+// @router /users (before) [get]
+func (this *User) Gets() []byte {
+	return this.Restful.Gets()
+}
+
 // @router /example
 func (this *User) Other1() []byte {
 	return this.Success("bb!")
@@ -29,12 +34,12 @@ func (this *User) Other2() []byte {
 	return this.Success("bb!")
 }
 
-// @router /example [post,put]
+// @router /example [POST,pUT]
 func (this *User) Other3() []byte {
 	return this.Success("bb!")
 }
 
-// @router /example (csrf,before) [delete]
+// @router /example (csrf,before) [DELETE]
 func (this *User) Other4() []byte {
 	return this.Success("bb!")
 }
