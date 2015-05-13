@@ -9,7 +9,7 @@ import (
 	"strings"
 	"time"
 
-	"code.google.com/p/xsrftoken"
+	"github.com/ascoders/xsrftoken"
 	"github.com/go-martini/martini"
 	"github.com/martini-contrib/sessions"
 )
@@ -193,7 +193,7 @@ func Generate(opts *Options) martini.Handler {
 					RawExpires: expire.Format(time.UnixDate),
 					MaxAge:     0,
 					Secure:     opts.Secure,
-					HttpOnly:   true,
+					HttpOnly:   false,
 					Raw:        fmt.Sprintf("%s=%s", opts.Cookie, x.Token),
 					Unparsed:   []string{fmt.Sprintf("token=%s", x.Token)},
 				}

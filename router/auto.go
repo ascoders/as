@@ -12,7 +12,12 @@ import (
 func AutoRoute(r martini.Router) {
     
     user := &user.User{}
-    r.Get("/api/bb", csrf.Validate, user.Before, user.Other)
+    r.Get("/api/example", csrf.Validate, user.Before, user.Other1)
+    r.Get("/api/example/:id", csrf.Validate, user.Before, user.Other2)
+    r.post("/api/example", csrf.Validate, user.Before, user.Other3)
+    r.put("/api/example", csrf.Validate, user.Before, user.Other3)
+    r.delete("/api/example", csrf.Validate, user.Before, user.Other4)
+    r.Get("/api/example", csrf.Validate, user.Before, user.Other5)
     r.Get("/api/users", csrf.Validate, user.Before, user.Gets)
     r.Get("/api/users/:id", csrf.Validate, user.Before, user.Get)
     r.Post("/api/users", csrf.Validate, user.Before, user.Add)

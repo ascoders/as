@@ -4,11 +4,12 @@ martini 轻巧脚手架
 # 依赖
 
 ~~~ go
-go get github.com/go-martini/martini
-go get github.com/martini-contrib/encoder
-go get github.com/hoisie/redis
-go get github.com/martini-contrib/sessions
-go get gopkg.in/mgo.v2
+go get -u github.com/go-martini/martini
+go get -u github.com/martini-contrib/encoder
+go get -u github.com/hoisie/redis
+go get -u github.com/martini-contrib/sessions
+go get -u github.com/ascoders/xsrftoken
+go get -u gopkg.in/mgo.v2
 ~~~
 
 # 自动路由

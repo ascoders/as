@@ -43,6 +43,7 @@ type ControllerComments struct {
 	Method           string
 	Router           string
 	AllowHTTPMethods []string
+	PrefixMethods    []string
 	Params           []map[string]string
 }
 
@@ -125,36 +126,48 @@ func parserComments(comments *ast.CommentGroup, funcName, controllerName, pkgpat
 			t := strings.TrimSpace(strings.TrimLeft(c.Text, "//"))
 			if strings.HasPrefix(t, "@router") {
 				elements := strings.TrimLeft(t, "@router ")
-				e1 := strings.SplitN(elements, " ", 2)
+				el := strings.SplitN(elements, " ", 3)
 
-				if len(e1) < 1 {
+				if len(el) < 1 {
 					return errors.New("you should has router infomation")
 				}
 
 				key := pkgpath + ":" + controllerName
 				cc := ControllerComments{}
 				cc.Method = funcName
-				cc.Router = e1[0]
 
-				if len(e1) == 2 && e1[1] != "" {
-					e1 = strings.SplitN(e1[1], " ", 2)
-					if len(e1) >= 1 {
-						cc.AllowHTTPMethods = strings.Split(strings.Trim(e1[0], "[]"), ",")
-					} else {
-						cc.AllowHTTPMethods = append(cc.AllowHTTPMethods, "Get")
-					}
-				} else {
-					cc.AllowHTTPMethods = append(cc.AllowHTTPMethods, "Get")
-				}
-
-				if len(e1) == 2 && e1[1] != "" {
-					keyval := strings.Split(strings.Trim(e1[1], "[]"), " ")
+				if len(el) == 2 && el[1] != "" {
+					keyval := strings.Split(strings.Trim(el[1], "[]"), " ")
 					for _, kv := range keyval {
 						kk := strings.Split(kv, ":")
 						cc.Params = append(cc.Params,
 							map[string]string{strings.Join(kk[:len(kk)-1], ":"): kk[len(kk)-1]})
 					}
 				}
+
+				// 第一个固定为路由地址
+				cc.Router = el[0]
+
+				// 如果长度为3,第三个为[method],第二个为(prefix)
+				if len(el) == 3 {
+					cc.AllowHTTPMethods = strings.Split(strings.Trim(el[2], "[]"), ",")
+					cc.PrefixMethods = strings.Split(strings.Trim(el[1], "()"), ",")
+				} else if len(el) == 2 {
+					// 长度为2,第二个为(perfix)或[method]
+					if strings.HasPrefix(el[1], "(") {
+						// prefix
+						cc.PrefixMethods = strings.Split(strings.Trim(el[1], "()"), ",")
+						cc.AllowHTTPMethods = append(cc.AllowHTTPMethods, "Get")
+					} else {
+						// method
+						cc.AllowHTTPMethods = strings.Split(strings.Trim(el[1], "[]"), ",")
+					}
+				} else {
+					// 长度为1,默认get方法
+					cc.AllowHTTPMethods = append(cc.AllowHTTPMethods, "Get")
+				}
+
+				fmt.Println("路由", cc.Router, "前缀", cc.PrefixMethods, "类型", cc.AllowHTTPMethods)
 
 				genInfoList[key] = append(genInfoList[key], cc)
 			}
