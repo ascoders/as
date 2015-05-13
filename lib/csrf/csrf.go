@@ -213,8 +213,9 @@ func Generate(opts *Options) martini.Handler {
 // using ValidToken. If this validation fails, custom Error is sent in the reply.
 // If neither a header or form value is found, http.StatusBadRequest is sent.
 func Validate(r *http.Request, w http.ResponseWriter, x CSRF) {
-	if ex, err := r.Cookie(opts.Cookie); err == nil && ex.Value != "" {
-		if !x.ValidToken(ex.Value) {
+	// request.header 获取xsrf
+	if token := r.Header.Get(x.GetHeaderName()); token != "" {
+		if !x.ValidToken(token) {
 			x.Error(w)
 		}
 		return
