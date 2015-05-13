@@ -9,10 +9,17 @@ package article
 import (
 	"newWoku/controllers"
 	"newWoku/lib/response"
+	"newWoku/models"
 )
 
 type Article struct {
 	controllers.Base
+}
+
+func New() *Article {
+	controller := &Article{}
+	controller.NewModel(models.NewUser())
+	return controller
 }
 
 // @router /aa [Get]

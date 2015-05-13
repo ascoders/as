@@ -183,7 +183,7 @@ func genRouterCode() {
 
 		// init obj
 		globalInfo = globalInfo + `
-    ` + packageName + ` := &` + packageName + `.` + pathAndControllerName[1] + `{}`
+    ` + packageName + ` := ` + packageName + `.New()`
 
 		// 注释路由
 		for _, c := range cList {
@@ -195,7 +195,6 @@ func genRouterCode() {
 					case "csrf":
 						prefix += "csrf.Validate, "
 						useCsrf = true
-					case "before":
 					default:
 						prefix += packageName + "." + strings.Title(strings.ToLower(c.PrefixMethods[pk])) + ", "
 					}
@@ -206,13 +205,12 @@ func genRouterCode() {
 					globalInfo = globalInfo + `
     r.` + strings.Title(strings.ToLower(strings.TrimSpace(m))) + `("/api` + c.Router + `", ` +
 						prefix +
-						packageName + `.Before, ` +
 						packageName + `.` + strings.TrimSpace(c.Method) + `)`
 				}
 			}
 		}
 
-		// restful api （最后匹配）
+		// restful api （最后匹配 且设置了自动restful）
 		restful := [][]string{
 			[]string{"Get", "", "Gets"},
 			[]string{"Get", "/:id", "Get"},
@@ -220,10 +218,17 @@ func genRouterCode() {
 			[]string{"Patch", "/:id", "Update"},
 			[]string{"Delete", "/:id", "Delete"},
 		}
+	restfulLoop:
 		for _, rest := range restful {
+			// 跳过手动复写的方法
+			for _, c := range cList {
+				if strings.ToLower(rest[2]) == strings.ToLower(c.Method) {
+					continue restfulLoop
+				}
+			}
+
 			globalInfo = globalInfo + `
     r.` + rest[0] + `("/api/` + packageName + `s` + rest[1] + `", ` +
-				packageName + `.Before, ` +
 				packageName + `.` + rest[2] + `)`
 		}
 

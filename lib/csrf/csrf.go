@@ -4,9 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
-	"regexp"
 	//	"strconv"
-	"strings"
 	"time"
 
 	"github.com/ascoders/xsrftoken"
@@ -177,21 +175,14 @@ func Generate(opts *Options) martini.Handler {
 		} else {
 			x.Token = xsrftoken.Generate(x.Secret, x.ID, "POST")
 			if opts.SetCookie {
-				expire := time.Now().AddDate(0, 0, 1)
-				// Verify the domain is valid. If it is not, set as empty.
-				domain := strings.Split(r.Host, ":")[0]
-				if ok, err := regexp.Match(domainReg, []byte(domain)); !ok || err != nil {
-					domain = ""
-				}
-
 				cookie := &http.Cookie{
 					Name:       opts.Cookie,
 					Value:      x.Token,
 					Path:       "/",
-					Domain:     domain,
-					Expires:    expire,
-					RawExpires: expire.Format(time.UnixDate),
-					MaxAge:     0,
+					Domain:     "",
+					Expires:    time.Now().AddDate(0, 0, 1),
+					RawExpires: "",
+					MaxAge:     86400,
 					Secure:     opts.Secure,
 					HttpOnly:   false,
 					Raw:        fmt.Sprintf("%s=%s", opts.Cookie, x.Token),

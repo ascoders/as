@@ -7,6 +7,7 @@
 package user
 
 import (
+	"github.com/go-martini/martini"
 	"newWoku/controllers"
 	"newWoku/models"
 )
@@ -15,13 +16,15 @@ type User struct {
 	controllers.Base
 }
 
-func (this *User) Before() {
-	this.NewModel(models.NewUser())
+func New() *User {
+	controller := &User{}
+	controller.NewModel(models.NewUser())
+	return controller
 }
 
-// @router /users (before) [get]
-func (this *User) Gets() []byte {
-	return this.Restful.Gets()
+// @router /users/:id (csrf) [get]
+func (this *User) Get(param martini.Params) []byte {
+	return this.Restful.Get(param)
 }
 
 // @router /example
@@ -39,7 +42,7 @@ func (this *User) Other3() []byte {
 	return this.Success("bb!")
 }
 
-// @router /example (csrf,before) [DELETE]
+// @router /example (csrf) [DELETE]
 func (this *User) Other4() []byte {
 	return this.Success("bb!")
 }

@@ -41,6 +41,15 @@ controllers
 |	|-- article.go
 ~~~
 
+每个控制器主文件必写`New`方法，供初始化路由时使用，如：
+~~~go
+func New() *User {
+	controller := &User{}
+	controller.NewModel(models.NewUser()) // 初始化数据模型
+	return controller
+}
+~~~
+
 每个`package`对应一个资源，并自动开启`restful Api`，需要权限验证或禁用某些api，可以复写`restful`方法。以`user`为例，自动生成的`restful api`如下：
 
 ~~~ go
@@ -90,15 +99,13 @@ url可以带参数：
 // @router /example (csrf,before) [put,delete]
 ~~~
 
-如果开启了自动`restful路由`，可以复写注释路由替换默认的`restful路由`，使用`this.Restful.[RestfulApi]`：
+如果开启了自动`restful路由`，可以复写注释路由替换默认的`restful路由`，替换`Gets` `Get` `Add` `Update` `Delete`方法，使用`this.Restful.[RestfulApi]`：
 ~~~go
 // @router /users (before) [get]
-func (this *User) Gets() []byte {
-	return this.Restful.Gets()
+func (this *User) Gets(req *http.Request) []byte {
+	return this.Restful.Gets(req)
 }
 ~~~
-
-复写
 
 注释路由的参数**对大小写不敏感**
 

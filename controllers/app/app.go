@@ -15,8 +15,10 @@ type App struct {
 	controllers.Base
 }
 
-func (this *App) Before() {
-	this.NewModel(models.NewApp())
+func New() *App {
+	controller := &App{}
+	controller.NewModel(models.NewUser())
+	return controller
 }
 
 // @router /app/xx [Get]

@@ -30,7 +30,7 @@ func (this *Base) Before() {
 }
 
 func (this *Base) Gets(req *http.Request) []byte {
-	return this.Restful.Gets(req, this.Model.NewSlice())
+	return this.Restful.Gets(req)
 }
 
 func (this *Base) Get(param martini.Params) []byte {

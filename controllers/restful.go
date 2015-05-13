@@ -19,7 +19,9 @@ type Restful struct {
 	Model models.BaseModel
 }
 
-func (this *Restful) Gets(req *http.Request, objs interface{}) []byte {
+func (this *Restful) Gets(req *http.Request) []byte {
+	objs := this.Model.NewSlice()
+
 	req.ParseForm()
 	lastId := req.Form.Get("lastId")
 	page, _ := strconv.Atoi(req.Form.Get("page"))

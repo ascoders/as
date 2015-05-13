@@ -2,41 +2,41 @@ package router
 
 import (
     "github.com/go-martini/martini"
-    "newWoku/controllers/article"
+    "newWoku/controllers/user"
+	"newWoku/controllers/article"
 	"newWoku/controllers/app"
-	"newWoku/controllers/user"
 	"newWoku/lib/csrf"
 )
 
 func AutoRoute(r martini.Router) {
     
-    article := &article.Article{}
-    r.Get("/api/aa", article.Before, article.Other)
-    r.Get("/api/articles", article.Before, article.Gets)
-    r.Get("/api/articles/:id", article.Before, article.Get)
-    r.Post("/api/articles", article.Before, article.Add)
-    r.Patch("/api/articles/:id", article.Before, article.Update)
-    r.Delete("/api/articles/:id", article.Before, article.Delete)
+    user := user.New()
+    r.Get("/api/users/:id", csrf.Validate, user.Get)
+    r.Get("/api/example", user.Other1)
+    r.Get("/api/example/:id", user.Other2)
+    r.Post("/api/example", user.Other3)
+    r.Put("/api/example", user.Other3)
+    r.Delete("/api/example", csrf.Validate, user.Other4)
+    r.Get("/api/example", csrf.Validate, user.Other5)
+    r.Get("/api/users", user.Gets)
+    r.Post("/api/users", user.Add)
+    r.Patch("/api/users/:id", user.Update)
+    r.Delete("/api/users/:id", user.Delete)
 	
-    app := &app.App{}
-    r.Get("/api/app/xx", app.Before, app.Other)
-    r.Get("/api/apps", app.Before, app.Gets)
-    r.Get("/api/apps/:id", app.Before, app.Get)
-    r.Post("/api/apps", app.Before, app.Add)
-    r.Patch("/api/apps/:id", app.Before, app.Update)
-    r.Delete("/api/apps/:id", app.Before, app.Delete)
+    article := article.New()
+    r.Get("/api/aa", article.Other)
+    r.Get("/api/articles", article.Gets)
+    r.Get("/api/articles/:id", article.Get)
+    r.Post("/api/articles", article.Add)
+    r.Patch("/api/articles/:id", article.Update)
+    r.Delete("/api/articles/:id", article.Delete)
 	
-    user := &user.User{}
-    r.Get("/api/example", user.Before, user.Other1)
-    r.Get("/api/example/:id", user.Before, user.Other2)
-    r.Post("/api/example", user.Before, user.Other3)
-    r.Put("/api/example", user.Before, user.Other3)
-    r.Delete("/api/example", csrf.Validate, user.Before, user.Other4)
-    r.Get("/api/example", csrf.Validate, user.Before, user.Other5)
-    r.Get("/api/users", user.Before, user.Gets)
-    r.Get("/api/users/:id", user.Before, user.Get)
-    r.Post("/api/users", user.Before, user.Add)
-    r.Patch("/api/users/:id", user.Before, user.Update)
-    r.Delete("/api/users/:id", user.Before, user.Delete)
+    app := app.New()
+    r.Get("/api/app/xx", app.Other)
+    r.Get("/api/apps", app.Gets)
+    r.Get("/api/apps/:id", app.Get)
+    r.Post("/api/apps", app.Add)
+    r.Patch("/api/apps/:id", app.Update)
+    r.Delete("/api/apps/:id", app.Delete)
 	
 }

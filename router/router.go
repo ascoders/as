@@ -34,7 +34,7 @@ func Route() martini.Router {
 	AutoRoute(r)
 
 	// 匹配未定义的api
-	r.Get("/api/**", func() []byte {
+	r.Any("/api/**", func() []byte {
 		return response.Error("这个api走丢了")
 	})
 

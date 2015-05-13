@@ -118,9 +118,6 @@ require.config({
 
 var wk = wk || {}
 
-// csrf参数
-wk.csrf = ''
-
 // 提示框
 wk.notice = function (text, color) {
 	require(['jquery', 'jquery.jbox'], function ($) {
@@ -176,17 +173,22 @@ wk.ajax = function (method, opts) {
 	opts = $.extend(defaultOpts, opts)
 
 
-	require(['jquery'], function ($) {
+	require(['jquery', 'jquery.cookie'], function ($) {
+		var csrf = $.cookie("_csrf")
+		if (!csrf) {
+			return
+		}
+
 		return $.ajax({
 				url: opts.url,
 				type: method,
 				traditional: true, // 便于传数组
-				data: opts.data
+				data: opts.data,
+				beforeSend: function (xhr) {
+					xhr.setRequestHeader('X-CSRFToken', csrf);
+				},
 			})
 			.done(function (data, status, xhr) {
-				// 更新csrf
-				wk.csrf = xhr.getResponseHeader('X-CSRFToken')
-
 				if (data.ok) {
 					opts.success(data.data)
 				} else {
