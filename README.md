@@ -117,3 +117,10 @@ func (this *User) Gets(req *http.Request) []byte {
 
 1. 手动清除缓存：引入`lib/redis`，调用`redis.Delete`方法。
 2. 在配置文件`conf/conf.go`中修改默认缓存周期`CACHE_EXPIRE`。
+
+# Csrf过滤
+
+如果将 `conf.CSRF_DEFAULT` 设置为 `true`，系统会自动在所有非 `get` 方法添加 `csrf` 验证。也可以在需要的`get`方法中，通过注视路由手动添加，使用 `(crsf)` 关键字，如：
+~~~go
+@router /example (csrf)
+~~~

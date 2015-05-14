@@ -37,6 +37,10 @@ func AutoRoute(r martini.Router) {
 `
 )
 
+type Options struct {
+	AutoCsrf bool
+}
+
 // store the comment for the controller method
 type ControllerComments struct {
 	Method           string
@@ -58,7 +62,7 @@ func init() {
 }
 
 // 自动路由解析入口
-func Auto(controls ...interface{}) {
+func Auto(opts Options, controls ...interface{}) {
 	for _, c := range controls {
 		skip := make(map[string]bool, 10)
 		reflectVal := reflect.ValueOf(c)
@@ -86,7 +90,7 @@ func Auto(controls ...interface{}) {
 		}
 	}
 
-	genRouterCode()
+	genRouterCode(opts)
 }
 
 func parserPkg(pkgRealpath string, pkgpath string) error {
@@ -165,7 +169,7 @@ func parserComments(comments *ast.CommentGroup, funcName, controllerName, pkgpat
 
 }
 
-func genRouterCode() {
+func genRouterCode(opts Options) {
 	os.Mkdir(path.Join(workPath, "router"), 0755)
 
 	var globalInfo string
@@ -173,6 +177,10 @@ func genRouterCode() {
 
 	// 是否引了csrf包
 	var useCsrf bool
+
+	if opts.AutoCsrf {
+		useCsrf = true
+	}
 
 	for k, cList := range genInfoList {
 		pathAndControllerName := strings.Split(k, ":")
@@ -227,8 +235,16 @@ func genRouterCode() {
 				}
 			}
 
+			// 解析前缀路由
+			var prefix = ""
+
+			if opts.AutoCsrf {
+				prefix += "csrf.Validate, "
+			}
+
 			globalInfo = globalInfo + `
     r.` + rest[0] + `("/api/` + packageName + `s` + rest[1] + `", ` +
+				prefix +
 				packageName + `.` + rest[2] + `)`
 		}
 
