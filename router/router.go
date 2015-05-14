@@ -37,8 +37,8 @@ func Route() martini.Router {
 	AutoRoute(r)
 
 	// 匹配未定义的api
-	r.Any("/api/**", func() []byte {
-		return response.Error("这个api走丢了")
+	r.Any("/api/**", func() (int, []byte) {
+		return response.Error("Api Not Found")
 	})
 
 	// 最后匹配的是全局内容
@@ -49,8 +49,8 @@ func Route() martini.Router {
 	globalFileText, err := ioutil.ReadAll(globalFile)
 	globalFile.Close()
 
-	r.Get("/**", func() []byte {
-		return globalFileText
+	r.Get("/**", func() (int, []byte) {
+		return 200, globalFileText
 	})
 
 	return r

@@ -16,14 +16,14 @@ func (this *Base) Parse(obj interface{}, req *http.Request) error {
 	return model.Parse(obj, req)
 }
 
-func (this *Base) Success(data interface{}) []byte {
+func (this *Base) Success(data interface{}) (int, []byte) {
 	return response.Success(data)
 }
 
-func (this *Base) Error(message string) []byte {
+func (this *Base) Error(message string) (int, []byte) {
 	return response.Error(message)
 }
 
-func (this *Base) Must(data interface{}, err error) []byte {
+func (this *Base) Must(data interface{}, err error) (int, []byte) {
 	return response.Must(data, err)
 }

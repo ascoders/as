@@ -9,7 +9,7 @@ package article
 import (
 	"newWoku/controllers"
 	"newWoku/lib/response"
-	"newWoku/models"
+	"newWoku/models/user"
 )
 
 type Controller struct {
@@ -18,11 +18,11 @@ type Controller struct {
 
 func New() *Controller {
 	controller := &Controller{}
-	controller.NewModel(models.NewUser())
+	controller.NewModel(user.New())
 	return controller
 }
 
 // @router /aa [Get]
-func (this *Controller) Other() []byte {
+func (this *Controller) Other() (int, []byte) {
 	return response.Success("Delete success!")
 }

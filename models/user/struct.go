@@ -4,15 +4,17 @@
 	Copyright (c) 2015 翱翔大空 and other contributors
  ==================================================*/
 
-package models
+package user
 
 import (
+	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
+	"newWoku/models"
 	"time"
 )
 
-type User struct {
-	Base          `bson:"-" json:"-"`
+type Model struct {
+	models.Base   `bson:"-" json:"-"`
 	Id            bson.ObjectId `bson:"_id" json:"id"`           // 主键
 	Nickname      string        `bson:"n" json:"nickname"`       // 昵称
 	Password      string        `bson:"p" json:"-"`              // 密码
@@ -36,18 +38,25 @@ type User struct {
 	AppCount      uint8         `bson:"a" json:"appCount" `      // 建立应用数量 !!!!!!!!!g
 }
 
-func NewUser() *User {
-	user := &User{Id: bson.NewObjectId()}
-	user.Collection = Db.C("users")
-	return user
+func New() *Model {
+	model := &Model{Id: bson.NewObjectId()}
+	model.Collection = models.Db.C("users")
+
+	if err := model.Collection.EnsureIndex(mgo.Index{
+		Key:    []string{"e"},
+		Unique: true,
+	}); err != nil {
+		panic(err)
+	}
+	return model
 }
 
-func (this *User) New() interface{} {
-	var r *User
+func (this *Model) NewObj() interface{} {
+	var r *Model
 	return &r
 }
 
-func (this *User) NewSlice() interface{} {
-	var r []*User
+func (this *Model) NewSlice() interface{} {
+	var r []*Model
 	return &r
 }

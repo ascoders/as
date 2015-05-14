@@ -9,45 +9,25 @@ package user
 import (
 	"github.com/go-martini/martini"
 	"newWoku/controllers"
-	"newWoku/models"
+	"newWoku/models/user"
 )
 
 type Controller struct {
 	controllers.Base
 }
 
+var (
+	Model *user.Model
+)
+
 func New() *Controller {
 	controller := &Controller{}
-	controller.NewModel(models.NewUser())
+	Model = user.New()
+	controller.NewModel(Model)
 	return controller
 }
 
 // @router /users/:id (csrf) [get]
-func (this *Controller) Get(param martini.Params) []byte {
+func (this *Controller) Get(param martini.Params) (int, []byte) {
 	return this.Restful.Get(param)
-}
-
-// @router /example
-func (this *Controller) Other1() []byte {
-	return this.Success("bb!")
-}
-
-// @router /example/:id
-func (this *Controller) Other2() []byte {
-	return this.Success("bb!")
-}
-
-// @router /example [POST,pUT]
-func (this *Controller) Other3() []byte {
-	return this.Success("bb!")
-}
-
-// @router /example (csrf) [DELETE]
-func (this *Controller) Other4() []byte {
-	return this.Success("bb!")
-}
-
-// @router /example (csrf)
-func (this *Controller) Other5() []byte {
-	return this.Success("bb!")
 }

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
-	//	"strconv"
+	"strconv"
 	"time"
 
 	"github.com/ascoders/xsrftoken"
@@ -123,8 +123,6 @@ func Generate(opts *Options) martini.Handler {
 			}
 		}
 
-		fmt.Println("执行到了0")
-
 		x := &csrf{
 			Secret:    opts.Secret,
 			Header:    opts.Header,
@@ -133,22 +131,19 @@ func Generate(opts *Options) martini.Handler {
 			ErrorFunc: opts.ErrorFunc,
 		}
 		c.MapTo(x, (*CSRF)(nil))
-		/*
-			uid := s.Get(opts.SessionKey)
-			if uid == nil {
-				return
-			}
-			switch uid.(type) {
-			case string:
-				x.ID = uid.(string)
-			case int64:
-				x.ID = strconv.FormatInt(uid.(int64), 10)
-			default:
-				return
-			}
 
-		*/
-		fmt.Println("执行到了1")
+		uid := s.Get(opts.SessionKey)
+		if uid == nil {
+			return
+		}
+		switch uid.(type) {
+		case string:
+			x.ID = uid.(string)
+		case int64:
+			x.ID = strconv.FormatInt(uid.(int64), 10)
+		default:
+			return
+		}
 
 		if r.Header.Get("Origin") != "" {
 			originUrl, err := url.Parse(r.Header.Get("Origin"))

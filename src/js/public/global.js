@@ -174,10 +174,7 @@ wk.ajax = function (method, opts) {
 
 
 	require(['jquery', 'jquery.cookie'], function ($) {
-		var csrf = $.cookie("_csrf")
-		if (!csrf) {
-			return
-		}
+		var csrf = $.cookie("_csrf") || ''
 
 		return $.ajax({
 				url: opts.url,
@@ -189,12 +186,11 @@ wk.ajax = function (method, opts) {
 				},
 			})
 			.done(function (data, status, xhr) {
-				if (data.ok) {
-					opts.success(data.data)
-				} else {
-					wk.notice(data.message, 'red')
-					opts.error()
-				}
+				opts.success(data)
+			}).fail(function (xhr, status, error) {
+				console.log(arguments)
+				wk.notice(xhr.responseJSON.message, 'red')
+				opts.error()
 			});
 	})
 }

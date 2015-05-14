@@ -35,12 +35,12 @@ type Base struct {
 
 type BaseModel interface {
 	Add(obj interface{}) error
-	GetsById(lastId string, number int, obj interface{}) error
-	GetsByPage(page int, number int, obj interface{}) error
+	GetsById(lastId string, limit int, obj interface{}) error
+	GetsByPage(page int, limit int, obj interface{}) error
 	Get(id string, obj interface{}) error
 	Update(id string, update map[string]interface{}) error
 	Delete(id string) error
-	New() interface{}
+	NewObj() interface{}
 	NewSlice() interface{}
 }
 
@@ -51,27 +51,27 @@ func (this *Base) Add(obj interface{}) error {
 
 // 获取资源集
 // @param {string} id 上一页最后一个id,没有填空
-// @param {Int} number 显示数量
-func (this *Base) GetsById(lastId string, number int, obj interface{}) error {
-	if number == 0 {
-		number = 10
+// @param {Int} limit 显示数量
+func (this *Base) GetsById(lastId string, limit int, obj interface{}) error {
+	if limit == 0 {
+		limit = 10
 	}
 
-	if number < 0 || number > 100 {
+	if limit < 0 || limit > 100 {
 		return errors.New("批量查询数量在1-100之间")
 	}
 
 	if !bson.IsObjectIdHex(lastId) {
-		return this.Collection.Find(nil).Sort("_id").Limit(number).All(obj)
+		return this.Collection.Find(nil).Sort("_id").Limit(limit).All(obj)
 	} else {
-		return this.Collection.Find(bson.M{"_id": bson.M{"$gt": bson.ObjectIdHex(lastId)}}).Sort("_id").Limit(number).All(obj)
+		return this.Collection.Find(bson.M{"_id": bson.M{"$gt": bson.ObjectIdHex(lastId)}}).Sort("_id").Limit(limit).All(obj)
 	}
 }
 
 // 获取资源集
 // @param {int} page 页码
-// @param {Int} number 显示数量
-func (this *Base) GetsByPage(page int, number int, obj interface{}) error {
+// @param {Int} limit 显示数量
+func (this *Base) GetsByPage(page int, limit int, obj interface{}) error {
 	if page == 0 {
 		page = 1
 	}
@@ -80,15 +80,15 @@ func (this *Base) GetsByPage(page int, number int, obj interface{}) error {
 		return errors.New("页数在1-100之间")
 	}
 
-	if number == 0 {
-		number = 10
+	if limit == 0 {
+		limit = 10
 	}
 
-	if number < 0 || number > 100 {
+	if limit < 0 || limit > 100 {
 		return errors.New("批量查询数量在1-100之间")
 	}
 
-	return this.Collection.Find(nil).Sort("_id").Skip((page - 1) * number).Limit(number).All(obj)
+	return this.Collection.Find(nil).Sort("_id").Skip((page - 1) * limit).Limit(limit).All(obj)
 }
 
 // 获取某个资源

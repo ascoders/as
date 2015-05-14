@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 
 define("checkLogin", ['jquery'], function ($) {
 	var vm = avalon.define({
@@ -10,10 +10,10 @@ define("checkLogin", ['jquery'], function ($) {
 				// API key 从应用信息页面获取
 				var AK = 'RqeMWD9G1m8agmxfj6ngCKRG';
 				// 在应用管理页面下的 社会化服务 - 基础设置中设置该地址
-				var redirect_url = 'http://www.wokugame.com/login/oauth';
+				var redirect_url = 'http://www.wokugame.com/login/oauth'
 
 				// 初始化 frontia
-				frontia.init(AK);
+				frontia.init(AK)
 
 				// 初始化登录的配置
 				var options = {
@@ -21,34 +21,37 @@ define("checkLogin", ['jquery'], function ($) {
 					media_type: val,
 					redirect_uri: redirect_url,
 					client_type: 'web'
-				};
+				}
 
 				// 登录
-				frontia.social.login(options);
+				frontia.social.login(options)
 			});
 		},
 		submit: function () { //点击登陆按钮
 			if (avalon.vmodels.checkLogin.account == '') {
-				wk.notice('账号不能为空', 'red');
-				return;
+				return wk.notice('账号不能为空', 'red')
 			}
 			if (avalon.vmodels.checkLogin.password == '') {
-				wk.notice('密码不能为空', 'red');
-				return;
+				return wk.notice('密码不能为空', 'red')
 			}
-			post('/api/check/login', {
-				account: avalon.vmodels.checkLogin.account,
-				password: avalon.vmodels.checkLogin.password
-			}, '登陆成功', '', function (data) {
-				data.image = userImage(data.image);
-				avalon.vmodels.global.my = data;
-				avalon.vmodels.global.myLogin = true;
 
-				// 信息获取完毕
-				avalon.vmodels.global.temp.myDeferred.resolve();
+			wk.get({
+				url: '/api/users/authentication',
+				data: {
+					account: avalon.vmodels.checkLogin.account,
+					password: avalon.vmodels.checkLogin.password
+				},
+				success: function (data) {
+					data.image = userImage(data.image)
+					avalon.vmodels.global.my = data
+					avalon.vmodels.global.myLogin = true
 
-				// 跳回上个页面
-				avalon.router.navigate(avalon.router.getLastPath());
+					// 信息获取完毕
+					avalon.vmodels.global.temp.myDeferred.resolve()
+
+					// 跳回上个页面
+					avalon.router.navigate(avalon.router.getLastPath())
+				}
 			})
 		}
 	});
@@ -57,29 +60,28 @@ define("checkLogin", ['jquery'], function ($) {
 			//如果已登陆，返回首页
 			$.when(global.temp.myDeferred).done(function () { // 此时获取用户信息完毕
 				if (global.myLogin) {
-					avalon.router.navigate('/');
-					return;
+					return avalon.router.navigate('/')
 				}
-			});
+			})
 		}
 		$ctrl.$onRendered = function () {
 			//移动到第三方账号按钮上，下部展开
 			//鼠标移动显示更多第三方登陆
 			$(".other").hover(function () {
-				$(".other-hide").show();
+				$(".other-hide").show()
 			}, function () {
-				$(".other-hide").hide();
-			});
+				$(".other-hide").hide()
+			})
 
 			//Enter提交表单
 			$('#check-login').bind('keyup', function (event) {
 				if (event.keyCode == 13) { //按下Enter
-					avalon.vmodels.checkLogin.submit();
+					avalon.vmodels.checkLogin.submit()
 				}
-			});
+			})
 
 			//账号获取焦点
-			$('#check-login #account').focus();
+			$('#check-login #account').focus()
 		}
 	});
 });

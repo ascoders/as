@@ -29,22 +29,22 @@ func (this *Base) Before() {
 
 }
 
-func (this *Base) Gets(req *http.Request) []byte {
+func (this *Base) Gets(req *http.Request) (int, []byte) {
 	return this.Restful.Gets(req)
 }
 
-func (this *Base) Get(param martini.Params) []byte {
+func (this *Base) Get(param martini.Params) (int, []byte) {
 	return this.Restful.Get(param)
 }
 
-func (this *Base) Add(req *http.Request) []byte {
+func (this *Base) Add(req *http.Request) (int, []byte) {
 	return this.Restful.Add(req)
 }
 
-func (this *Base) Update(param martini.Params, req *http.Request) []byte {
+func (this *Base) Update(param martini.Params, req *http.Request) (int, []byte) {
 	return this.Restful.Update(param, req)
 }
 
-func (this *Base) Delete(params martini.Params) []byte {
+func (this *Base) Delete(params martini.Params) (int, []byte) {
 	return this.Restful.Delete(params)
 }

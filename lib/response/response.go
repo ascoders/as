@@ -10,23 +10,19 @@ import (
 	"github.com/martini-contrib/encoder"
 )
 
-type Format struct {
-	Ok      bool        `json:"ok"`
-	Message string      `json:"message"`
-	Data    interface{} `json:"data"`
-}
-
-func Success(data interface{}) []byte {
+func Success(data interface{}) (int, []byte) {
 	enc := encoder.JsonEncoder{}
-	return encoder.Must(enc.Encode(Format{true, "", data}))
+	return 200, encoder.Must(enc.Encode(data))
 }
 
-func Error(message string) []byte {
+func Error(message string) (int, []byte) {
 	enc := encoder.JsonEncoder{}
-	return encoder.Must(enc.Encode(Format{false, message, nil}))
+	return 400, encoder.Must(enc.Encode(map[string]interface{}{
+		"message": message,
+	}))
 }
 
-func Must(data interface{}, err error) []byte {
+func Must(data interface{}, err error) (int, []byte) {
 	if err == nil {
 		return Success(data)
 	} else {

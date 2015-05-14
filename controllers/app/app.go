@@ -8,7 +8,7 @@ package app
 
 import (
 	"newWoku/controllers"
-	"newWoku/models"
+	"newWoku/models/app"
 )
 
 type Controller struct {
@@ -17,11 +17,11 @@ type Controller struct {
 
 func New() *Controller {
 	controller := &Controller{}
-	controller.NewModel(models.NewUser())
+	controller.NewModel(app.New())
 	return controller
 }
 
 // @router /app/xx [Get]
-func (this *Controller) Other() []byte {
+func (this *Controller) Other() (int, []byte) {
 	return this.Success("bb!")
 }

@@ -238,7 +238,8 @@ func genRouterCode(opts Options) {
 			// 解析前缀路由
 			var prefix = ""
 
-			if opts.AutoCsrf {
+			// 默认开启csrf，只对非get方法有效
+			if opts.AutoCsrf && rest[0] != "Get" {
 				prefix += "csrf.Validate, "
 			}
 

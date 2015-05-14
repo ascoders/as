@@ -68,6 +68,8 @@ gulp.task('css', function () {
 ///////////////////////////////////////////////////////////////////////////////////////////////
 gulp.task('js', function () {
 	return gulp.src(paths.src.js)
+		//.pipe(jshint())
+		//.pipe(jshint.reporter('default'))
 		.pipe(gulp.dest(paths.dist.js));
 });
 
