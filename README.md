@@ -30,7 +30,46 @@ func (this *Article) Other() []byte {
 
 > 第一次执行程序会生成自动路由文件，但无法调用它，第二次启动就能自动加载第一次生成的路由文件了。
 
-**控制器规范**
+# 注释路由
+
+在控制器的每个函数上，按照规范添加注释，可以自动生成注释路由文件。
+
+最基础的写法，默认响应`get`请求：
+~~~go
+// @router /example
+~~~
+
+url可以带参数：
+~~~go
+// @router /example/:id
+~~~
+
+设置响应类型，多个用`,`分隔：
+~~~go
+// @router /example [post]
+~~~
+
+设置响应前执行的函数，下例先执行`Csrf`方法，例如做权限控制，多个用`,`分隔：
+~~~go
+// @router /example (csrf)
+~~~
+
+也可以混合使用
+~~~go
+// @router /example (csrf,before) [put,delete]
+~~~
+
+如果开启了自动`restful路由`，可以复写注释路由替换默认的`restful路由`，替换`Gets` `Get` `Add` `Update` `Delete`方法，使用`this.Restful.[RestfulApi]`：
+~~~go
+// @router /users (before) [get]
+func (this *User) Gets(req *http.Request) []byte {
+	return this.Restful.Gets(req)
+}
+~~~
+
+注释路由的参数**对大小写不敏感**
+
+# 控制器规范
 
 ~~~
 controllers
@@ -70,45 +109,6 @@ func (this *User) Before(w http.ResponseWriter) {
 }
 ~~~
 
-**注释路由**
-
-在控制器的每个函数上，按照规范添加注释，可以自动生成注释路由文件。
-
-最基础的写法，默认响应`get`请求：
-~~~go
-// @router /example
-~~~
-
-url可以带参数：
-~~~go
-// @router /example/:id
-~~~
-
-设置响应类型，多个用`,`分隔：
-~~~go
-// @router /example [post]
-~~~
-
-设置响应前执行的函数，下例先执行`Csrf`方法，例如做权限控制，多个用`,`分隔：
-~~~go
-// @router /example (csrf)
-~~~
-
-也可以混合使用
-~~~go
-// @router /example (csrf,before) [put,delete]
-~~~
-
-如果开启了自动`restful路由`，可以复写注释路由替换默认的`restful路由`，替换`Gets` `Get` `Add` `Update` `Delete`方法，使用`this.Restful.[RestfulApi]`：
-~~~go
-// @router /users (before) [get]
-func (this *User) Gets(req *http.Request) []byte {
-	return this.Restful.Gets(req)
-}
-~~~
-
-注释路由的参数**对大小写不敏感**
-
 # 自动缓存
 
 脚手架使用`martini`映射接口的特性，覆盖了`http.ResponseWriter`并重写`write()`方法，在其调用前生成以当前`url`作为`key`，当前输出内容为`value`的缓存，并在http请求发生前优先使用缓存。如果路由遵循`restful`规范，只有`get`请求会使用缓存（因为其他操作数据可能发生了变化），这一切都是自动的。
@@ -120,7 +120,7 @@ func (this *User) Gets(req *http.Request) []byte {
 
 # Csrf过滤
 
-如果将 `conf.CSRF_DEFAULT` 设置为 `true`，系统会自动在所有非 `get` 方法添加 `csrf` 验证。也可以在需要的`get`方法中，通过注视路由手动添加，使用 `(crsf)` 关键字，如：
+如果将 `conf.CSRF_DEFAULT` 设置为 `true`，系统会自动在所有非 `get` 方法添加 `csrf` 验证。也可以在需要的`get`方法中，通过注释路由手动添加，使用 `(crsf)` 关键字，如：
 ~~~go
 @router /example (csrf)
 ~~~
