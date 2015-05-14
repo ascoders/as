@@ -28,9 +28,9 @@ func Route() martini.Router {
 		router.Options{
 			AutoCsrf: conf.AUTO_SCRF,
 		},
-		&user.User{},
-		&article.Article{},
-		&app.App{},
+		&user.Controller{},
+		&article.Controller{},
+		&app.Controller{},
 	)
 
 	// 加入注解路由

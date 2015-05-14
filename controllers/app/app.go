@@ -11,17 +11,17 @@ import (
 	"newWoku/models"
 )
 
-type App struct {
+type Controller struct {
 	controllers.Base
 }
 
-func New() *App {
-	controller := &App{}
+func New() *Controller {
+	controller := &Controller{}
 	controller.NewModel(models.NewUser())
 	return controller
 }
 
 // @router /app/xx [Get]
-func (this *App) Other() []byte {
+func (this *Controller) Other() []byte {
 	return this.Success("bb!")
 }

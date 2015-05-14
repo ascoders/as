@@ -12,17 +12,17 @@ import (
 	"newWoku/models"
 )
 
-type Article struct {
+type Controller struct {
 	controllers.Base
 }
 
-func New() *Article {
-	controller := &Article{}
+func New() *Controller {
+	controller := &Controller{}
 	controller.NewModel(models.NewUser())
 	return controller
 }
 
 // @router /aa [Get]
-func (this *Article) Other() []byte {
+func (this *Controller) Other() []byte {
 	return response.Success("Delete success!")
 }
