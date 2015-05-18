@@ -32,9 +32,10 @@ func Code() string {
 }
 
 // 校验验证码
-func Check(capid string, cap string) bool {
-	if ok := captcha.VerifyString(capid, cap); !ok {
-		return false
+func Check(req *http.Request, res http.ResponseWriter) {
+	req.ParseForm()
+	if ok := captcha.VerifyString(req.Form.Get("capid"), req.Form.Get("cap")); !ok {
+		res.WriteHeader(400)
+		res.Write([]byte("验证码错误"))
 	}
-	return true
 }

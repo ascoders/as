@@ -175,8 +175,8 @@ func genRouterCode(opts Options) {
 	var globalInfo string
 	var packageInfo string
 
-	// 是否引了csrf包
 	var useCsrf bool
+	var useCaptcha bool
 
 	if opts.AutoCsrf {
 		useCsrf = true
@@ -203,6 +203,9 @@ func genRouterCode(opts Options) {
 					case "csrf":
 						prefix += "csrf.Validate, "
 						useCsrf = true
+					case "captcha":
+						prefix += "captcha.Check, "
+						useCaptcha = true
 					default:
 						prefix += packageName + "." + strings.Title(strings.ToLower(c.PrefixMethods[pk])) + ", "
 					}
@@ -254,7 +257,12 @@ func genRouterCode(opts Options) {
 	}
 
 	if useCsrf {
-		packageInfo += `"newWoku/lib/csrf"`
+		packageInfo += `"newWoku/lib/csrf"
+	`
+	}
+	if useCaptcha {
+		packageInfo += `"newWoku/lib/captcha"
+	`
 	}
 
 	if globalInfo != "" && packageInfo != "" {

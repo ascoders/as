@@ -6,14 +6,16 @@ import (
 	"newWoku/controllers/article"
 	"newWoku/controllers/app"
 	"newWoku/lib/csrf"
+	"newWoku/lib/captcha"
+	
 )
 
 func AutoRoute(r martini.Router) {
     
     user := user.New()
-    r.Get("/api/users/:id", csrf.Validate, user.Get)
     r.Get("/api/users/authentication", user.Authentication)
-    r.Post("/api/users/authentication", user.CreateAuthentication)
+    r.Post("/api/users/authentication", captcha.Check, user.CreateAuthentication)
+    r.Get("/api/users/:id", csrf.Validate, user.Get)
     r.Get("/api/users", user.Gets)
     r.Post("/api/users", csrf.Validate, user.Add)
     r.Patch("/api/users/:id", csrf.Validate, user.Update)

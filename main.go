@@ -41,7 +41,7 @@ func NewClassic() *martini.ClassicMartini {
 	store, _ := sessions.NewRediStore(10, "tcp", "127.0.0.1:6379", "")
 	m.Use(sessions.Sessions("sessionStore", store))
 
-	// csrf防范
+	// csrf
 	m.Use(csrf.Generate(&csrf.Options{
 		Secret:     "V&2Xa6IAKZg5QjX8",
 		SessionKey: "id", // 根据用户id，为每个用户设置不同的csrf
