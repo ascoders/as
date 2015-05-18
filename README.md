@@ -10,6 +10,7 @@ go get -u github.com/hoisie/redis
 go get -u github.com/martini-contrib/sessions
 go get -u github.com/ascoders/xsrftoken
 go get -u gopkg.in/mgo.v2
+go get -u github.com/dchest/captcha
 ~~~
 
 # 自动路由

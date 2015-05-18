@@ -8,6 +8,7 @@ package user
 
 import (
 	"net/http"
+	"newWoku/lib/captcha"
 )
 
 // 登陆（获取授权令牌）
@@ -21,5 +22,9 @@ func (this *Controller) Authentication(res *http.Request) (int, []byte) {
 // @router /users/authentication [post]
 func (this *Controller) CreateAuthentication(res *http.Request) (int, []byte) {
 	res.ParseForm()
-	return this.Must(Model.Authentication(res.Form.Get("account"), res.Form.Get("password")))
+	if ok := captcha.Check(res.Form.Get("capid"), res.Form.Get("cap")); !ok {
+		return this.Error("验证码错误")
+	}
+	//return this.Must(Model.Authentication(res.Form.Get("account"), res.Form.Get("password")))
+	return this.Success("123")
 }

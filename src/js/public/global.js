@@ -188,8 +188,13 @@ wk.ajax = function (method, opts) {
 			.done(function (data, status, xhr) {
 				opts.success(data)
 			}).fail(function (xhr, status, error) {
-				console.log(arguments)
-				wk.notice(xhr.responseJSON.message, 'red')
+				var message = ''
+				if (xhr.responseJSON) {
+					message = xhr.responseJSON.message
+				} else {
+					message = xhr.responseText
+				}
+				wk.notice(message, 'red')
 				opts.error()
 			});
 	})
@@ -209,50 +214,6 @@ wk.patch = function (opts) {
 wk.delete = function (opts) {
 	return wk.ajax('DELETE', opts)
 }
-
-/*
-wk.ajax = function (url, params, success, error, callback, errorback) {
-	require(['jquery', 'jquery.cookie'], function ($) {
-		//获取xsrftoken
-		var xsrf = $.cookie("_xsrf");
-		if (!xsrf) {
-			return;
-		}
-		var xsrflist = xsrf.split("|");
-		var xsrftoken = Base64.decode(xsrflist[0]);
-
-		var postParam = {
-			_xsrf: xsrftoken
-		};
-		postParam = $.extend(postParam, params);
-
-		return $.ajax({
-				url: url,
-				type: 'POST',
-				traditional: true, //为了传数组
-				data: postParam
-			})
-			.done(function (data) {
-				if (data.ok) { //操作成功
-					if (success !== null) {
-						notice(success, 'green');
-					}
-					//执行回调函数
-					if (callback != null) {
-						callback(data.data);
-					}
-				} else { //操作失败
-					if (error !== null) {
-						notice(error + data.data, 'red');
-					}
-					if (errorback != null) {
-						errorback(data.data);
-					}
-				}
-			});
-	});
-}
-*/
 
 //字符串截取方法，支持中文
 wk.subStr = function (str, start, end) {

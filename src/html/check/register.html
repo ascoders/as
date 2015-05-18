@@ -84,7 +84,7 @@
 			<span class='input-addon'>验证码</span>
 			<input class='f-vab' ms-duplex='cap' name="cap" placeholder="请输入您看到的数字" type="text" />
 		</div>
-		<img class='f-mt10 f-vab f-fl' id='captcha-img' ms-if='capid' ms-src="/captcha/{[{capid}]}.png" ms-click='freshCap'>
+		<img class='f-mt10 f-vab f-fl' id='captcha-img' ms-if='capid' ms-src="/api/captcha/{[{capid}]}" ms-click='freshCap'>
 		
 		<div class='alert alert-warning f-dn' id='j-cap-w'></div>
 		<button class='btn btn-default f-wm f-mt10' type='button' ms-click='submit'>
