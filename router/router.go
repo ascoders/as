@@ -11,7 +11,6 @@ import (
 	"github.com/go-martini/martini"
 	"io/ioutil"
 	"newWoku/conf"
-	"newWoku/controllers/app"
 	"newWoku/controllers/article"
 	"newWoku/controllers/user"
 	"newWoku/lib/captcha"
@@ -32,7 +31,6 @@ func Route() martini.Router {
 			},
 			&user.Controller{},
 			&article.Controller{},
-			&app.Controller{},
 		)
 	}
 

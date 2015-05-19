@@ -7,6 +7,7 @@
 package controllers
 
 import (
+	"fmt"
 	"github.com/go-martini/martini"
 	"net/http"
 	"newWoku/lib/model"
@@ -20,49 +21,51 @@ type Restful struct {
 }
 
 func (this *Restful) Gets(req *http.Request) (int, []byte) {
-	objs := this.Model.NewSlice()
+	datas := this.Model.NewDatas()
+	fmt.Println(datas)
 
 	req.ParseForm()
 	lastId := req.Form.Get("lastId")
 	page, _ := strconv.Atoi(req.Form.Get("page"))
-	// 查询数量
 	limit, _ := strconv.Atoi(req.Form.Get("limit"))
 
 	// 优先使用lastId查询
 	if page > 0 && lastId == "" {
-		err := this.Model.GetsByPage(page, limit, objs)
-		return response.Must(objs, err)
+		err := this.Model.GetsByPage(page, limit, datas)
+		return response.Must(datas, err)
 	} else {
-		err := this.Model.GetsById(lastId, limit, objs)
-		return response.Must(objs, err)
+		err := this.Model.GetsById(lastId, limit, datas)
+		return response.Must(datas, err)
 	}
 }
 
 func (this *Restful) Get(param martini.Params) (int, []byte) {
-	obj := this.Model.NewObj()
-	err := this.Model.Get(param["id"], obj)
-	return response.Must(obj, err)
+	data := this.Model.NewData()
+	err := this.Model.Get(param["id"], data)
+	return response.Must(data, err)
 }
 
 func (this *Restful) Add(req *http.Request) (int, []byte) {
+	data := this.Model.NewDataWithId()
 	// 参数解析到结构体
-	if err := model.Parse(this.Model, req); err != nil {
+	if err := model.Parse(data, req); err != nil {
 		return response.Error(err.Error())
 	}
 
-	if err := this.Model.Add(this.Model); err != nil {
+	if err := this.Model.Add(data); err != nil {
 		return response.Error(err.Error())
 	}
 
-	return response.Success(this.Model)
+	return response.Success(data)
 }
 
 func (this *Restful) Update(param martini.Params, req *http.Request) (int, []byte) {
-	opts := model.ParseTo(this.Model, req)
+	data := this.Model.NewData()
+	opts := model.ParseTo(data, req)
 	err := this.Model.Update(param["id"], opts)
-	return response.Must("", err)
+	return response.Must("更新成功", err)
 }
 
 func (this *Restful) Delete(params martini.Params) (int, []byte) {
-	return response.Must(nil, this.Model.Delete(params["id"]))
+	return response.Must("删除成功", this.Model.Delete(params["id"]))
 }

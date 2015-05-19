@@ -13,8 +13,7 @@ import (
 	"time"
 )
 
-type Model struct {
-	models.Base   `bson:"-" json:"-"`
+type Data struct {
 	Id            bson.ObjectId `bson:"_id" json:"id"`           // 主键
 	Nickname      string        `bson:"n" json:"nickname"`       // 昵称
 	Password      string        `bson:"p" json:"-"`              // 密码
@@ -39,7 +38,7 @@ type Model struct {
 }
 
 func New() *Model {
-	model := &Model{Id: bson.NewObjectId()}
+	model := &Model{}
 	model.Collection = models.Db.C("users")
 
 	if err := model.Collection.EnsureIndex(mgo.Index{
@@ -51,12 +50,18 @@ func New() *Model {
 	return model
 }
 
-func (this *Model) NewObj() interface{} {
-	var r *Model
+func (this *Model) NewData() interface{} {
+	var r Data
 	return &r
 }
 
-func (this *Model) NewSlice() interface{} {
-	var r []*Model
+func (this *Model) NewDataWithId() interface{} {
+	var r Data
+	r.Id = bson.NewObjectId()
+	return &r
+}
+
+func (this *Model) NewDatas() interface{} {
+	var r []*Data
 	return &r
 }

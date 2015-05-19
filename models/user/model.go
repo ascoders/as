@@ -9,13 +9,18 @@ package user
 import (
 	"errors"
 	"gopkg.in/mgo.v2/bson"
+	"newWoku/models"
 	"strconv"
 	"time"
 )
 
+type Model struct {
+	models.Base
+}
+
 // 授权令牌是否有效（用户登陆成功）
-func (this *Model) Authentication(account string, password string) (*Model, error) {
-	user := &Model{}
+func (this *Model) Authentication(account string, password string) (*Data, error) {
+	user := &Data{}
 	// 根据邮箱查找用户
 	if err := this.Collection.Find(bson.M{"e": account}).One(user); err != nil {
 		return nil, errors.New("账号不存在")
@@ -52,8 +57,8 @@ func (this *Model) Authentication(account string, password string) (*Model, erro
 }
 
 // 创建一个授权令牌（用户注册）
-func (this *Model) CreateAuthentication(account string, password string) (*Model, error) {
-	user := &Model{}
+func (this *Model) CreateAuthentication(account string, password string) (*Data, error) {
+	user := &Data{}
 	// 创建密码
 	user.Password = EncodePassword(password)
 	return nil, nil

@@ -131,5 +131,5 @@ func (this *User) Before(w http.ResponseWriter) {
 书写注释路由时，使用 `(captcha)` 关键字，可以开启验证码校验功能：
 
 ~~~go
-@router /example (csrf,captcha)
+// @router /example (csrf,captcha)
 ~~~

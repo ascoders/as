@@ -7,7 +7,6 @@
 package user
 
 import (
-	"github.com/go-martini/martini"
 	"newWoku/controllers"
 	"newWoku/models/user"
 )
@@ -25,9 +24,4 @@ func New() *Controller {
 	Model = user.New()
 	controller.NewModel(Model)
 	return controller
-}
-
-// @router /users/:id (csrf) [get]
-func (this *Controller) Get(param martini.Params) (int, []byte) {
-	return this.Restful.Get(param)
 }

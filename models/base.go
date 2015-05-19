@@ -40,8 +40,9 @@ type BaseModel interface {
 	Get(id string, obj interface{}) error
 	Update(id string, update map[string]interface{}) error
 	Delete(id string) error
-	NewObj() interface{}
-	NewSlice() interface{}
+	NewData() interface{}
+	NewDataWithId() interface{}
+	NewDatas() interface{}
 }
 
 // 新增资源

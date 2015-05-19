@@ -7,10 +7,18 @@
 package user
 
 import (
+	"math/rand"
 	"newWoku/lib"
+	"strconv"
+	"time"
 )
 
 // 密码加密（两次md5）
 func EncodePassword(password string) string {
 	return lib.Md5(lib.Md5(password))
+}
+
+// 生成token
+func CreateToken() string {
+	return strconv.Itoa(int(rand.New(rand.NewSource(time.Now().UnixNano())).Uint32()))
 }
