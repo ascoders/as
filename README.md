@@ -158,7 +158,7 @@ func (this *User) Before(w http.ResponseWriter) {
 `Disabled`				不允许用户对此字段的修改
 
 > 特别说明：(POST)新增数据时会检查结构体中所有被标识为`required`的字段，而局部更新时(PATCH)只会对提交的属性进行验证。
-
+~~~
 # 其它`tag`功能说明
 
 `tag`属性：`bson`：
@@ -170,3 +170,4 @@ func (this *User) Before(w http.ResponseWriter) {
 
 `someValue`	与客户端交互时`json`的`key`
 `-`			这个字段不会发送到客户端
+~~~
