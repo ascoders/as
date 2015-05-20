@@ -133,3 +133,40 @@ func (this *User) Before(w http.ResponseWriter) {
 ~~~go
 // @router /example (csrf,captcha)
 ~~~
+
+# 自动验证
+
+使用`this.Parse`解析表单时，如果数据`struct`按照规范书写了验证`tag`，将会自动按照规范进行验证。
+
+`tag`属性：`valid`：
+
+`Required`				字符串不为空
+`Min(min int)` 			最小值
+`Max(max int)` 			最大值
+`Range(min, max int)` 	数值的范围
+`MinSize(min int)` 		最小长度
+`MaxSize(max int)` 		最大长度
+`Length(length int)`	长度
+`AlphaNumeric` 			alpha字符或数字
+`Email` 				邮箱格式
+`IP` 					IP格式
+`Base64` 				base64编码
+`Mobile` 				手机号
+`Tel` 					固定电话号
+`Phone` 				手机号或固定电话号
+`ZipCode` 				邮政编码
+`Disabled`				不允许用户对此字段的修改
+
+> 特别说明：(POST)新增数据时会检查结构体中所有被标识为`required`的字段，而局部更新时(PATCH)只会对提交的属性进行验证。
+
+# 其它`tag`功能说明
+
+`tag`属性：`bson`：
+
+`someValue` 写入数据库时的`key`
+`-`			这个字段不会写入数据库
+
+`tag`属性：`json`：
+
+`someValue`	与客户端交互时`json`的`key`
+`-`			这个字段不会发送到客户端

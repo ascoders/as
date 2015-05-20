@@ -7,6 +7,7 @@
 package model
 
 import (
+	"errors"
 	"net/http"
 	"reflect"
 	"strconv"
@@ -17,6 +18,7 @@ import (
 // 解析url参数
 // @param {interface{}} obj 被解析的结构体
 // @param {http.Request} req 客户端请求
+// 用于添加
 func Parse(obj interface{}, req *http.Request) error {
 	objT := reflect.TypeOf(obj).Elem()
 	objV := reflect.ValueOf(obj).Elem()
@@ -30,7 +32,7 @@ func Parse(obj interface{}, req *http.Request) error {
 			continue
 		}
 
-		// 从标签获取到json字段名
+		// 从标签获json参数
 		fieldT := objT.Field(i)
 		tags := strings.Split(fieldT.Tag.Get("json"), ",")
 		var tag string
@@ -43,12 +45,32 @@ func Parse(obj interface{}, req *http.Request) error {
 			tag = tags[0]
 		}
 
-		// 跳过url不存在的参数
+		// 从标签获取valid参数
+		valids := strings.Split(fieldT.Tag.Get("valid"), ";")
+
+		// 不能存在disabled属性
+		if stringInSlice("disabled", valids) {
+			return errors.New(tag + "不可修改")
+		}
+
+		// 结构体的参数在提交参数不存在，则跳过
 		value := req.PostForm.Get(tag)
 		if len(value) == 0 {
+			// 如果跳过的参数是required的，则返回一个错误
+			if stringInSlice("required", valids) {
+				return errors.New("缺少" + tag + "参数")
+			}
 			continue
 		}
 
+		// 自定义验证
+		for k, _ := range valids {
+			if err := validKey(valids[k], value); err != nil {
+				return errors.New(tag + err.Error())
+			}
+		}
+
+		// 解析到结构体
 		switch fieldT.Type.Kind() {
 		case reflect.Bool:
 			if strings.ToLower(value) == "on" || strings.ToLower(value) == "1" || strings.ToLower(value) == "yes" {
@@ -107,11 +129,12 @@ func Parse(obj interface{}, req *http.Request) error {
 	return nil
 }
 
-// 根据struct和req.form解析
+// 在Parse基础上返回用于更新的map
 // @param {interface{}} obj 被解析的结构体
 // @param {http.Request} req 客户端请求
 // @return map[string]interface{}
-func ParseTo(obj interface{}, req *http.Request) map[string]interface{} {
+// 用于更新
+func ParseTo(obj interface{}, req *http.Request) (error, map[string]interface{}) {
 	opts := make(map[string]interface{})
 
 	objT := reflect.TypeOf(obj).Elem()
@@ -148,6 +171,22 @@ func ParseTo(obj interface{}, req *http.Request) map[string]interface{} {
 			continue
 		}
 
+		// 从标签获取valid参数
+		valids := strings.Split(fieldT.Tag.Get("valid"), ";")
+
+		// 不能存在disabled属性
+		if stringInSlice("disabled", valids) {
+			return errors.New(tag + "不可修改"), nil
+		}
+
+		// 自定义验证
+		for k, _ := range valids {
+			if err := validKey(valids[k], value); err != nil {
+				return errors.New(tag + err.Error()), nil
+			}
+		}
+
+		// 解析到结构体
 		switch fieldT.Type.Kind() {
 		case reflect.Bool:
 			if strings.ToLower(value) == "on" || strings.ToLower(value) == "1" || strings.ToLower(value) == "yes" {
@@ -160,25 +199,25 @@ func ParseTo(obj interface{}, req *http.Request) map[string]interface{} {
 			}
 			b, err := strconv.ParseBool(value)
 			if err != nil {
-				return nil
+				return errors.New(tag + "类型错误"), nil
 			}
 			opts[bson] = b
 		case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
 			x, err := strconv.ParseInt(value, 10, 64)
 			if err != nil {
-				return nil
+				return errors.New(tag + "类型错误"), nil
 			}
 			opts[bson] = x
 		case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
 			x, err := strconv.ParseUint(value, 10, 64)
 			if err != nil {
-				return nil
+				return errors.New(tag + "类型错误"), nil
 			}
 			opts[bson] = x
 		case reflect.Float32, reflect.Float64:
 			x, err := strconv.ParseFloat(value, 64)
 			if err != nil {
-				return nil
+				return errors.New(tag + "类型错误"), nil
 			}
 			opts[bson] = x
 		case reflect.Interface:
@@ -196,12 +235,83 @@ func ParseTo(obj interface{}, req *http.Request) map[string]interface{} {
 				}
 				t, err := time.Parse(format, value)
 				if err != nil {
-					return nil
+					return errors.New(tag + "类型错误"), nil
 				}
 				opts[bson] = reflect.ValueOf(t)
 			}
 		}
 	}
 
-	return opts
+	return nil, opts
+}
+
+// 判断字符串是否在数组中
+func stringInSlice(str string, array []string) bool {
+	for _, v := range array {
+		if strings.ToLower(v) == strings.ToLower(str) {
+			return true
+		}
+	}
+	return false
+}
+
+// 验证
+func validKey(key string, value string) error {
+	// 排除空规则
+	if key == "" {
+		return nil
+	}
+
+	// 解析key
+	var method string
+	var number1, number2 int
+	keySlice := strings.Split(key, "(")
+	method = keySlice[0]
+
+	if len(keySlice) >= 2 {
+		paramSlice := strings.Split(strings.Trim(keySlice[1], ")"), ",")
+		if len(paramSlice) >= 1 {
+			number1, _ = strconv.Atoi(paramSlice[0])
+		}
+		if len(paramSlice) >= 2 {
+			number2, _ = strconv.Atoi(paramSlice[1])
+		}
+	}
+
+	valid := Valid{}
+
+	switch strings.ToLower(method) {
+	case "required":
+		return valid.Required(value)
+	case "min":
+		return valid.Min(value, number1)
+	case "max":
+		return valid.Max(value, number1)
+	case "range":
+		return valid.Range(value, number1, number2)
+	case "minlength":
+		return valid.MinLength(value, number1)
+	case "maxlength":
+		return valid.MaxLength(value, number1)
+	case "length":
+		return valid.Length(value, number1)
+	case "alphanumeric":
+		return valid.AlphaNumeric(value)
+	case "email":
+		return valid.Email(value)
+	case "ip":
+		return valid.IP(value)
+	case "base64":
+		return valid.Base64(value)
+	case "mobile":
+		return valid.Mobile(value)
+	case "tel":
+		return valid.Tel(value)
+	case "mobileortel":
+		return valid.MobileOrTel(value)
+	case "zipcode":
+		return valid.ZipCode(value)
+	}
+
+	return nil
 }

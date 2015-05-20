@@ -6,12 +6,8 @@
 
 package user
 
-import (
-	"newWoku/lib/validation"
-)
+import ()
 
 func (this *Model) Validation(data *Data) bool {
-	valid := &validation.Valid{}
-
-	return valid.HasError()
+	return false
 }

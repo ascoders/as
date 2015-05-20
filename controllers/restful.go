@@ -7,7 +7,6 @@
 package controllers
 
 import (
-	"fmt"
 	"github.com/go-martini/martini"
 	"net/http"
 	"newWoku/lib/model"
@@ -22,8 +21,6 @@ type Restful struct {
 
 func (this *Restful) Gets(req *http.Request) (int, []byte) {
 	datas := this.Model.NewDatas()
-	fmt.Println(datas)
-
 	req.ParseForm()
 	lastId := req.Form.Get("lastId")
 	page, _ := strconv.Atoi(req.Form.Get("page"))
@@ -61,9 +58,12 @@ func (this *Restful) Add(req *http.Request) (int, []byte) {
 
 func (this *Restful) Update(param martini.Params, req *http.Request) (int, []byte) {
 	data := this.Model.NewData()
-	opts := model.ParseTo(data, req)
-	err := this.Model.Update(param["id"], opts)
-	return response.Must("更新成功", err)
+	if err, opts := model.ParseTo(data, req); err == nil {
+		err := this.Model.Update(param["id"], opts)
+		return response.Must("更新成功", err)
+	} else {
+		return response.Error(err.Error())
+	}
 }
 
 func (this *Restful) Delete(params martini.Params) (int, []byte) {
