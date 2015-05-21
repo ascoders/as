@@ -21,8 +21,8 @@ func (this *Base) ParseToUpdateMap(obj interface{}, params map[string]string) (e
 	return model.ParseToUpdateMap(obj, params)
 }
 
-func (this *Base) ReqFormToMap(req *http.Request) map[string]string {
-	return _http.ReqFormToMap(req)
+func (this *Base) ReqFormToMap(req *http.Request, limit ...string) map[string]string {
+	return _http.ReqFormToMap(req, limit)
 }
 
 func (this *Base) Success(data interface{}) (int, []byte) {

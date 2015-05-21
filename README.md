@@ -251,4 +251,13 @@ if err, opts := this.ParseToUpdateMap(data, params, "password", "nickname"); err
 }
 ~~~
 
+使用豁免模块时，如果不希望用户修改其他可任意修改的字段（虽然没有逾越权限，但修改密码的api却不该更新你的用户名），可以在解析`resquest`参数时指定解析的参数，没有指定的参数不会被放到`map`中：
+
+~~~go
+// 将req.form转换为map
+// 只解析password字段，抛弃其他请求字段
+// @return map[string]string
+params := this.ReqFormToMap(req, "password")
+~~~
+
 自动生成的`restful api`符合此规则。
