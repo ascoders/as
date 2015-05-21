@@ -9,6 +9,7 @@ package controllers
 import (
 	"github.com/go-martini/martini"
 	"net/http"
+	_http "newWoku/lib/http"
 	"newWoku/lib/model"
 	"newWoku/lib/response"
 	"newWoku/models"
@@ -44,8 +45,10 @@ func (this *Restful) Get(param martini.Params) (int, []byte) {
 
 func (this *Restful) Add(req *http.Request) (int, []byte) {
 	data := this.Model.NewDataWithId()
+	params := _http.ReqFormToMap(req)
+
 	// 参数解析到结构体
-	if err := model.Parse(data, req); err != nil {
+	if err := model.Parse(data, params); err != nil {
 		return response.Error(err.Error())
 	}
 
@@ -58,7 +61,9 @@ func (this *Restful) Add(req *http.Request) (int, []byte) {
 
 func (this *Restful) Update(param martini.Params, req *http.Request) (int, []byte) {
 	data := this.Model.NewData()
-	if err, opts := model.ParseTo(data, req); err == nil {
+	params := _http.ReqFormToMap(req)
+
+	if err, opts := model.ParseToUpdateMap(data, params); err == nil {
 		err := this.Model.Update(param["id"], opts)
 		return response.Must("更新成功", err)
 	} else {

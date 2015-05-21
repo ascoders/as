@@ -21,9 +21,10 @@ func (this *Controller) Authentication(req *http.Request) (int, []byte) {
 // 注册（创建授权令牌）
 // @router /users/authentication (captcha) [post]
 func (this *Controller) CreateAuthentication(req *http.Request) (int, []byte) {
-	// 解析表单
 	user := &user.Data{}
-	if err := this.Parse(user, req); err != nil {
+	params := this.ReqFormToMap(req)
+
+	if err := this.Parse(user, params); err != nil {
 		return this.Error(err.Error())
 	}
 	// 验证数据

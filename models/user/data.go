@@ -14,17 +14,17 @@ import (
 )
 
 type Data struct {
-	Id            bson.ObjectId `bson:"_id" json:"id" valid:"disabled"`        // 主键
+	Id            bson.ObjectId `bson:"_id" json:"id" valid:"-"`               // 主键
 	Nickname      string        `bson:"n" json:"nickname" valid:"required"`    // 昵称
 	Password      string        `bson:"p" json:"-"`                            // 密码
 	Email         string        `bson:"e" json:"email" valid:"required;email"` // 电子邮箱
-	Money         float32       `bson:"mo" json:"money" valid:"disabled"`      // 账户余额
+	Money         float32       `bson:"mo" json:"money" valid:"-"`             // 账户余额
 	Free          int           `bson:"f" json:"free"`                         // 每月免费额度 !!!!!!!!mf
 	LogCount      uint16        `bson:"l" json:"logCount"`                     // 登陆次数
 	LastTime      time.Time     `bson:"la" json:"lastTime"`                    // 最后操作时间
 	ErrorChance   uint8         `bson:"er" json:"errorChance"`                 // 账号输错机会次数
 	StopTime      time.Time     `bson:"st" json:"stopTime"`                    // 账号封停截至时间
-	Type          uint8         `bson:"t" json:"type"`                         // 账号类型 0:超级管理员/董事长 1:会员 2:高级会员 3:白金会员
+	Type          uint8         `bson:"t" json:"type" valid:"range(0,3)"`      // 账号类型 0:超级管理员/董事长 1:会员 2:高级会员 3:白金会员
 	Power         []string      `bson:"po" json:"power"`                       // 模块权限
 	UploadSize    int           `bson:"u" json:"uploadSize"`                   // 今天上传大小
 	UploadTime    time.Time     `bson:"ut" json:"uploadTime"`                  // 最后上传文件的时间 !!!!!!!!ud

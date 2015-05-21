@@ -4,7 +4,7 @@
 	Copyright (c) 2015 翱翔大空 and other contributors
  ==================================================*/
 
-package model
+package validation
 
 import (
 	"errors"
@@ -71,7 +71,7 @@ func (this *Valid) MinLength(value string, min int) error {
 
 // 最大长度
 func (this *Valid) MaxLength(value string, max int) error {
-	if len([]rune(value)) > max {
+	if len([]rune(value)) <= max {
 		return nil
 	}
 	return errors.New("最大长度为" + strconv.Itoa(max))
@@ -79,7 +79,7 @@ func (this *Valid) MaxLength(value string, max int) error {
 
 // 长度范围
 func (this *Valid) Length(value string, length int) error {
-	if len([]rune(value)) != length {
+	if len([]rune(value)) == length {
 		return nil
 	}
 	return errors.New("长度应为" + strconv.Itoa(length))
@@ -88,11 +88,11 @@ func (this *Valid) Length(value string, length int) error {
 // 字母或数字的组合
 func (this *Valid) AlphaNumeric(value string) error {
 	for _, v := range value {
-		if (v >= 'A' && v <= 'Z') || (v >= 'a' && v <= 'z') || (v >= '0' && v <= '9') {
-			return nil
+		if ('Z' < v || v < 'A') && ('z' < v || v < 'a') && ('9' < v || v < '0') {
+			return errors.New("只能为字母或数字")
 		}
 	}
-	return errors.New("只能为字母或数字")
+	return nil
 }
 
 // 电子邮箱
@@ -105,7 +105,7 @@ func (this *Valid) Email(value string) error {
 
 // IP地址
 func (this *Valid) IP(value string) error {
-	if !ipPattern.MatchString(value) {
+	if ipPattern.MatchString(value) {
 		return nil
 	}
 	return errors.New("格式为IP地址")
@@ -113,7 +113,7 @@ func (this *Valid) IP(value string) error {
 
 // Base64编码
 func (this *Valid) Base64(value string) error {
-	if !base64Pattern.MatchString(value) {
+	if base64Pattern.MatchString(value) {
 		return nil
 	}
 	return errors.New("格式为Base64编码")
@@ -121,7 +121,7 @@ func (this *Valid) Base64(value string) error {
 
 // 手机号
 func (this *Valid) Mobile(value string) error {
-	if !mobilePattern.MatchString(value) {
+	if mobilePattern.MatchString(value) {
 		return nil
 	}
 	return errors.New("格式为手机号")
@@ -129,7 +129,7 @@ func (this *Valid) Mobile(value string) error {
 
 // 固话
 func (this *Valid) Tel(value string) error {
-	if !telPattern.MatchString(value) {
+	if telPattern.MatchString(value) {
 		return nil
 	}
 	return errors.New("格式为固话")
@@ -137,7 +137,7 @@ func (this *Valid) Tel(value string) error {
 
 // 手机号或固话
 func (this *Valid) MobileOrTel(value string) error {
-	if !mobilePattern.MatchString(value) && !telPattern.MatchString(value) {
+	if mobilePattern.MatchString(value) || telPattern.MatchString(value) {
 		return nil
 	}
 	return errors.New("格式为手机号或固话")
@@ -145,7 +145,7 @@ func (this *Valid) MobileOrTel(value string) error {
 
 // 邮政编码
 func (this *Valid) ZipCode(value string) error {
-	if !zipCodePattern.MatchString(value) {
+	if zipCodePattern.MatchString(value) {
 		return nil
 	}
 	return errors.New("格式为邮政编码")

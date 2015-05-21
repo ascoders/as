@@ -155,7 +155,7 @@ func (this *User) Before(w http.ResponseWriter) {
 - `Tel` 					固定电话号
 - `Phone` 					手机号或固定电话号
 - `ZipCode` 				邮政编码
-- `Disabled`				不允许用户对此字段的修改
+- `-`						解析请求时会忽略此字段（用户无法通过提交参数修改此字段）
 
 > 特别说明：(POST)新增数据时会检查结构体中所有被标识为`required`的字段，而局部更新时(PATCH)只会对提交的属性进行验证。
 
@@ -170,3 +170,85 @@ func (this *User) Before(w http.ResponseWriter) {
 
 - `someValue`	与客户端交互时`json`的`key`
 - `-`			这个字段不会发送到客户端
+
+# 增改最佳实践
+
+**新增一条记录**
+
+用户需要提交所有记录应该包含的字段，**服务器*需要验证*全部`required`的字段**以避免非空字段出现空值。同时通过设置`valid:"-"`对不应由用户设置的字段进行屏蔽（例如账户余额），而在业务逻辑中添加：
+
+~~~go
+func (this *Controller) Add(req *http.Request) (int, []byte) {
+	// 实例化用户表结构体
+	// @return type struct
+	user := &user.Data{}
+	
+	// 将req.form转换为map
+	// @return map[string]string
+	params := this.ReqFormToMap(req)
+	
+	// 根据用户表结构体的设置，将params参数解析到结构体中，参数类型错误返回error
+	// 同时进行自动验证，验证失败返回error
+	// 如果提交参数包含valid:"-"的，会返回禁止修改的error
+	if err := this.Parse(user, params); err != nil {
+		return this.Error(err.Error())
+	}
+	
+	// 手动设置敏感字段，例如给新注册用户送10元现金
+	// user.Money = 10
+	
+	// 添加用户
+	if err := this.Model.Add(data); err != nil {
+		return response.Error(err.Error())
+	}
+}
+~~~
+
+**更新一条记录**
+
+用户需要提交条目的`id`以及需要修改的所有字段，**此时*不会验证*全部`required`的字段**，而是仅仅对提交的字段做验证（因为未改动的字段符合过滤规范），同时也适用`valid:"-"`规则：
+
+~~~go
+func (this *Controller) Add(req *http.Request) (int, []byte) {
+	// 实例化用户表结构体
+	// @return type struct
+	user := &user.Data{}
+	
+	// 将req.form转换为map
+	// @return map[string]string
+	params := this.ReqFormToMap(req)
+	
+	// 将用户提交参数转换为可以执行update命令的参数
+	// 例如nickname字段设置了bson:"n"，会将提交的nickname参数修改为n
+	// 同时进行自动验证，验证失败返回error
+	// 如果提交参数包含valid:"-"的，会返回禁止修改的error
+	// @return map[string]string
+	if err, opts := this.ParseToUpdateMap(data, params); err == nil {
+		// 手动设置敏感字段，例如刷新用户操作时间
+		// user.LastOperate = time.Now()
+		
+		// 更新用户
+		err := this.Model.Update(param["id"], opts)
+		return response.Must("更新成功", err)
+	} else {
+		return response.Error(err.Error())
+	}
+}
+~~~
+
+有时会进行特殊更新，即只更新指定的字段（用户无法通过指定任意字段来更新任意字段，或某个字段的更新要经过特殊的过滤逻辑）例如修改密码。为了避免任意更新，这些字段一般会被设置`valid:"-"`规则，无法通过`this.ParseToUpdateMap`的验证，此时可以通过传入额外参数豁免`valid:"-"`的规则：
+
+~~~go
+// 用户通过邮箱验证，才有修改密码的权限
+// if bla..bla..bla
+// return "token验证失败"
+
+// 为password和nickname字段豁免valid:"-"的验证
+// 用户可能通过了更高级别的验证，而获取了对这些“敏感”字段的修改权
+// 但同样会根据valid的设置验证字段格式
+if err, opts := this.ParseToUpdateMap(data, params, "password", "nickname"); err == nil {
+	// success!
+}
+~~~
+
+自动生成的`restful api`符合此规则。

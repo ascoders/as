@@ -8,7 +8,7 @@ package model
 
 import (
 	"errors"
-	"net/http"
+	"newWoku/lib/validation"
 	"reflect"
 	"strconv"
 	"strings"
@@ -19,12 +19,9 @@ import (
 // @param {interface{}} obj 被解析的结构体
 // @param {http.Request} req 客户端请求
 // 用于添加
-func Parse(obj interface{}, req *http.Request) error {
+func Parse(obj interface{}, params map[string]string) error {
 	objT := reflect.TypeOf(obj).Elem()
 	objV := reflect.ValueOf(obj).Elem()
-
-	// 解析表单
-	req.ParseForm()
 
 	for i := 0; i < objT.NumField(); i++ {
 		fieldV := objV.Field(i)
@@ -48,14 +45,14 @@ func Parse(obj interface{}, req *http.Request) error {
 		// 从标签获取valid参数
 		valids := strings.Split(fieldT.Tag.Get("valid"), ";")
 
-		// 不能存在disabled属性
-		if stringInSlice("disabled", valids) {
+		// valid不能存在-属性
+		if stringInSlice("-", valids) {
 			return errors.New(tag + "不可修改")
 		}
 
 		// 结构体的参数在提交参数不存在，则跳过
-		value := req.PostForm.Get(tag)
-		if len(value) == 0 {
+		value, ok := params[tag]
+		if !ok {
 			// 如果跳过的参数是required的，则返回一个错误
 			if stringInSlice("required", valids) {
 				return errors.New("缺少" + tag + "参数")
@@ -134,14 +131,10 @@ func Parse(obj interface{}, req *http.Request) error {
 // @param {http.Request} req 客户端请求
 // @return map[string]interface{}
 // 用于更新
-func ParseTo(obj interface{}, req *http.Request) (error, map[string]interface{}) {
+func ParseToUpdateMap(obj interface{}, params map[string]string, exempts ...string) (error, map[string]interface{}) {
 	opts := make(map[string]interface{})
-
 	objT := reflect.TypeOf(obj).Elem()
 	objV := reflect.ValueOf(obj).Elem()
-
-	// 解析表单
-	req.ParseForm()
 
 	for i := 0; i < objT.NumField(); i++ {
 		fieldV := objV.Field(i)
@@ -166,16 +159,16 @@ func ParseTo(obj interface{}, req *http.Request) (error, map[string]interface{})
 		bson := fieldT.Tag.Get("bson")
 
 		// 跳过url不存在的参数
-		value := req.PostForm.Get(tag)
-		if len(value) == 0 {
+		value, ok := params[tag]
+		if !ok {
 			continue
 		}
 
 		// 从标签获取valid参数
 		valids := strings.Split(fieldT.Tag.Get("valid"), ";")
 
-		// 不能存在disabled属性
-		if stringInSlice("disabled", valids) {
+		// 如果该字段没有被豁免，且valid存在-属性，返回一个错误
+		if !stringInSlice(tag, exempts) && stringInSlice("-", valids) {
 			return errors.New(tag + "不可修改"), nil
 		}
 
@@ -191,10 +184,12 @@ func ParseTo(obj interface{}, req *http.Request) (error, map[string]interface{})
 		case reflect.Bool:
 			if strings.ToLower(value) == "on" || strings.ToLower(value) == "1" || strings.ToLower(value) == "yes" {
 				opts[bson] = true
+				fieldV.SetBool(true)
 				continue
 			}
 			if strings.ToLower(value) == "off" || strings.ToLower(value) == "0" || strings.ToLower(value) == "no" {
 				opts[bson] = false
+				fieldV.SetBool(false)
 				continue
 			}
 			b, err := strconv.ParseBool(value)
@@ -202,28 +197,34 @@ func ParseTo(obj interface{}, req *http.Request) (error, map[string]interface{})
 				return errors.New(tag + "类型错误"), nil
 			}
 			opts[bson] = b
+			fieldV.SetBool(b)
 		case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
 			x, err := strconv.ParseInt(value, 10, 64)
 			if err != nil {
 				return errors.New(tag + "类型错误"), nil
 			}
 			opts[bson] = x
+			fieldV.SetInt(x)
 		case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
 			x, err := strconv.ParseUint(value, 10, 64)
 			if err != nil {
 				return errors.New(tag + "类型错误"), nil
 			}
 			opts[bson] = x
+			fieldV.SetUint(x)
 		case reflect.Float32, reflect.Float64:
 			x, err := strconv.ParseFloat(value, 64)
 			if err != nil {
 				return errors.New(tag + "类型错误"), nil
 			}
 			opts[bson] = x
+			fieldV.SetFloat(x)
 		case reflect.Interface:
 			opts[bson] = reflect.ValueOf(value)
+			fieldV.Set(reflect.ValueOf(value))
 		case reflect.String:
 			opts[bson] = value
+			fieldV.SetString(value)
 		case reflect.Slice:
 			// 数组型 :TODO
 		case reflect.Struct:
@@ -238,6 +239,7 @@ func ParseTo(obj interface{}, req *http.Request) (error, map[string]interface{})
 					return errors.New(tag + "类型错误"), nil
 				}
 				opts[bson] = reflect.ValueOf(t)
+				fieldV.Set(reflect.ValueOf(t))
 			}
 		}
 	}
@@ -278,7 +280,7 @@ func validKey(key string, value string) error {
 		}
 	}
 
-	valid := Valid{}
+	valid := validation.Valid{}
 
 	switch strings.ToLower(method) {
 	case "required":

@@ -8,12 +8,21 @@ package controllers
 
 import (
 	"net/http"
+	_http "newWoku/lib/http"
 	"newWoku/lib/model"
 	"newWoku/lib/response"
 )
 
-func (this *Base) Parse(obj interface{}, req *http.Request) error {
-	return model.Parse(obj, req)
+func (this *Base) Parse(obj interface{}, params map[string]string) error {
+	return model.Parse(obj, params)
+}
+
+func (this *Base) ParseToUpdateMap(obj interface{}, params map[string]string) (error, map[string]interface{}) {
+	return model.ParseToUpdateMap(obj, params)
+}
+
+func (this *Base) ReqFormToMap(req *http.Request) map[string]string {
+	return _http.ReqFormToMap(req)
 }
 
 func (this *Base) Success(data interface{}) (int, []byte) {
