@@ -22,7 +22,7 @@ func (this *Base) ParseToUpdateMap(obj interface{}, params map[string]string) (e
 }
 
 func (this *Base) ReqFormToMap(req *http.Request, limit ...string) map[string]string {
-	return _http.ReqFormToMap(req, limit)
+	return _http.ReqFormToMap(req, limit...)
 }
 
 func (this *Base) Success(data interface{}) (int, []byte) {
