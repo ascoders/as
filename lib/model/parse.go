@@ -45,11 +45,6 @@ func Parse(obj interface{}, params map[string]string) error {
 		// 从标签获取valid参数
 		valids := strings.Split(fieldT.Tag.Get("valid"), ";")
 
-		// valid不能存在-属性
-		if stringInSlice("-", valids) {
-			return errors.New(tag + "不可修改")
-		}
-
 		// 结构体的参数在提交参数不存在，则跳过
 		value, ok := params[tag]
 		if !ok {
@@ -58,6 +53,11 @@ func Parse(obj interface{}, params map[string]string) error {
 				return errors.New("缺少" + tag + "参数")
 			}
 			continue
+		} else {
+			// 参数存在，则valid不能存在-属性
+			if stringInSlice("-", valids) {
+				return errors.New(tag + "不可修改")
+			}
 		}
 
 		// 自定义验证
@@ -160,6 +160,8 @@ func ParseToUpdateMap(obj interface{}, params map[string]string, exempts ...stri
 
 		// 跳过url不存在的参数
 		value, ok := params[tag]
+
+		// 跳过参数中结构体不存在的参数
 		if !ok {
 			continue
 		}
@@ -167,8 +169,8 @@ func ParseToUpdateMap(obj interface{}, params map[string]string, exempts ...stri
 		// 从标签获取valid参数
 		valids := strings.Split(fieldT.Tag.Get("valid"), ";")
 
-		// 如果该字段没有被豁免，且valid存在-属性，返回一个错误
-		if !stringInSlice(tag, exempts) && stringInSlice("-", valids) {
+		// valid不能存在-属性（除非被豁免）
+		if stringInSlice("-", valids) && !stringInSlice(tag, exempts) {
 			return errors.New(tag + "不可修改"), nil
 		}
 

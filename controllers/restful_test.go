@@ -1,11 +1,9 @@
 package controllers
 
 import (
-	"github.com/go-martini/martini"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 	"net/http"
-	"net/http/httptest"
 	"newWoku/models"
 	"testing"
 	"time"
@@ -20,12 +18,8 @@ type RestfulTestController struct {
 type RestfulTestData struct {
 	Id       bson.ObjectId `bson:"_id" json:"id" valid:"-"`               // 主键
 	Nickname string        `bson:"n" json:"nickname" valid:"required"`    // 昵称
-	Password string        `bson:"p" json:"-"`                            // 密码
 	Email    string        `bson:"e" json:"email" valid:"required;email"` // 电子邮箱
 	Money    float32       `bson:"mo" json:"money" valid:"-"`             // 账户余额
-	Free     int           `bson:"f" json:"free"`                         // 每月免费额度 !!!!!!!!mf
-	LogCount uint16        `bson:"l" json:"logCount"`                     // 登陆次数
-	LastTime time.Time     `bson:"la" json:"lastTime"`                    // 最后操作时间
 }
 
 // 测试表操作模型
@@ -72,13 +66,28 @@ func TestAdd(t *testing.T) {
 	Model := New()
 	controller.NewModel(Model)
 
-	m := martini.Classic()
-	m.Post("/api/restful_test/users", controller.Add)
-	m.RunOnAddr(":80")
+	req1 := &http.Request{}
+	req1.ParseForm()
+	req1.Form.Set("nickname", "testName")
+	if status, message := controller.Add(req1); status != 400 {
+		t.Error("add方法缺少required参数未提示", string(message))
+	}
 
-	r, _ := http.NewRequest("GET", "/api/restful_test/users", nil)
-	w := httptest.NewRecorder()
-	t.Error(r, w)
+	req2 := &http.Request{}
+	req2.ParseForm()
+	req2.Form.Set("nickname", "testName")
+	req2.Form.Set("email", "test")
+	if status, message := controller.Add(req2); status != 400 {
+		t.Error("email格式错误未报错", string(message))
+	}
+
+	req3 := &http.Request{}
+	req3.ParseForm()
+	req3.Form.Set("nickname", "testName")
+	req3.Form.Set("email", "123@qq.com")
+	if status, message := controller.Add(req3); status != 200 {
+		t.Error("add方法即使required参数全也报错", string(message))
+	}
 
 	// 删除数据库
 	models.Db.C("restful_test_data").DropCollection()
