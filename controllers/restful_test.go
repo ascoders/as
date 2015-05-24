@@ -5,8 +5,8 @@ import (
 	"gopkg.in/mgo.v2/bson"
 	"net/http"
 	"newWoku/models"
+	"strconv"
 	"testing"
-	"time"
 )
 
 // 测试表控制器
@@ -87,6 +87,31 @@ func TestAdd(t *testing.T) {
 	req3.Form.Set("email", "123@qq.com")
 	if status, message := controller.Add(req3); status != 200 {
 		t.Error("add方法即使required参数全也报错", string(message))
+	}
+
+	// 删除数据库
+	models.Db.C("restful_test_data").DropCollection()
+}
+
+func TestGets(t *testing.T) {
+	controller := &RestfulTestController{}
+	Model := New()
+	controller.NewModel(Model)
+
+	for v := 0; v <= 10; v++ {
+		req := &http.Request{}
+		req.ParseForm()
+		req.Form.Set("nickname", "testName")
+		req.Form.Set("email", "123@qq.com"+strconv.Itoa(v))
+		if status, message := controller.Add(req); status != 200 {
+			t.Error("add方法错误", string(message))
+		}
+	}
+
+	req2 := &http.Request{}
+	req2.ParseForm()
+	if status, message := controller.Gets(req2); status != 200 {
+		t.Error("gets方法错误", string(message))
 	}
 
 	// 删除数据库

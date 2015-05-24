@@ -16,18 +16,14 @@ func ReqFormToMap(req *http.Request, limit ...string) map[string]string {
 	// 解析请求
 	req.ParseForm()
 
-ParseForm:
-	for k, _ := range req.Form {
-		// 如果指定了限制参数，只解析指定参数
-		if len(limit) > 0 {
-			for lk, _ := range limit {
-				if k == limit[lk] {
-					continue ParseForm
-				}
-			}
+	if len(limit) == 0 {
+		for k, _ := range req.Form {
+			params[k] = req.Form.Get(k)
 		}
-
-		params[k] = req.Form.Get(k)
+	} else {
+		for k, _ := range limit {
+			params[limit[k]] = req.Form.Get(limit[k])
+		}
 	}
 
 	return params
