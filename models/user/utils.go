@@ -14,11 +14,12 @@ import (
 )
 
 // 密码加密（两次md5）
+// @params password string 加密的密码
 func EncodePassword(password string) string {
 	return lib.Md5(lib.Md5(password))
 }
 
-// 生成token
+// 生成随机token
 func CreateToken() string {
 	return strconv.Itoa(int(rand.New(rand.NewSource(time.Now().UnixNano())).Uint32()))
 }

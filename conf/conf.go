@@ -31,7 +31,7 @@ const (
 	CACHE_EXPIRE int64 = 60 * 60
 
 	// 是否开启默认csrf
-	AUTO_SCRF = false
+	AUTO_SCRF = true
 
 	// 错误类型
 	ERROR_TYPE string = "类型错误"

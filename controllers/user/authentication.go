@@ -8,6 +8,7 @@ package user
 
 import (
 	"net/http"
+	//	"newWoku/lib/redis"
 	"newWoku/models/user"
 )
 
@@ -19,6 +20,7 @@ func (this *Controller) Authentication(req *http.Request) (int, []byte) {
 }
 
 // 注册（创建授权令牌）
+// 并不会注册用户，只会发邮件
 // @router /users/authentication (captcha) [post]
 func (this *Controller) CreateAuthentication(req *http.Request) (int, []byte) {
 	user := &user.Data{}
@@ -27,8 +29,14 @@ func (this *Controller) CreateAuthentication(req *http.Request) (int, []byte) {
 	if err := this.Parse(user, params); err != nil {
 		return this.Error(err.Error())
 	}
-	// 验证数据
-	Model.Validation(user)
-	//return this.Must(Model.Authentication(req.Form.Get("account"), req.Form.Get("password")))
+
+	//	expire := 30
+	// 获得安全令牌
+
+	// 保存有效令牌到缓存
+	// redis.SetWithExpire(token, []byte("213"), expire)
+
+	// 发送邮件
+
 	return this.Success("123")
 }
