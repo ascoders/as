@@ -28,3 +28,4 @@ static
 npm-debug.log
 *.exe
 newWoku
+conf/secret.go

@@ -14,6 +14,7 @@ func AutoRoute(r martini.Router) {
     user := user.New()
     r.Get("/api/users/authentication", user.Authentication)
     r.Post("/api/users/authentication", captcha.Check, user.CreateAuthentication)
+    r.Post("/api/users/authentication/email", user.CreateEmailAuthentication)
     r.Get("/api/users", user.Gets)
     r.Get("/api/users/:id", user.Get)
     r.Post("/api/users", csrf.Validate, user.Add)

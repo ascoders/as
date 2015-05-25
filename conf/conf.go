@@ -33,6 +33,12 @@ const (
 	// 是否开启默认csrf
 	AUTO_SCRF = true
 
+	// 邮箱
+	EMAIL_HOST     = SECERT_EMAIL_HOST
+	EMAIL_FROM     = SECERT_EMAIL_FROM
+	EMAIL_PORT     = SECERT_EMAIL_PORT
+	EMAIL_PASSWORD = SECERT_EMAIL_PASSWORD
+
 	// 错误类型
 	ERROR_TYPE string = "类型错误"
 )

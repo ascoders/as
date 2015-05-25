@@ -16,7 +16,7 @@ import (
 type Data struct {
 	Id            bson.ObjectId `bson:"_id" json:"id" valid:"-"`                                       // 主键
 	Nickname      string        `bson:"n" json:"nickname" valid:"required;minLength(1);maxLength(10)"` // 昵称
-	Password      string        `bson:"p" json:"-" valid:"required;minLength(6);maxLength(30)"`        // 密码
+	Password      string        `bson:"p" json:"password" valid:"required;minLength(6);maxLength(30)"` // 密码
 	Email         string        `bson:"e" json:"email" valid:"required;email"`                         // 电子邮箱
 	Image         string        `bson:"i" json:"image"`                                                // 头像地址
 	Money         float32       `bson:"mo" json:"money" valid:"-"`                                     // 账户余额
@@ -29,7 +29,7 @@ type Data struct {
 	Power         []string      `bson:"po" json:"power" valid:"-"`                                     // 模块权限
 	UploadSize    int           `bson:"u" json:"uploadSize" valid:"-"`                                 // 今天上传大小
 	UploadTime    time.Time     `bson:"ut" json:"uploadTime" valid:"-"`                                // 最后上传文件的时间 !!!!!!!!ud
-	LockVersion   int           `bson:"lv" json:"-" valid:"-"`                                         // 乐观锁
+	LockVersion   int           `bson:"lv" json:"lockVersion" valid:"-"`                               // 乐观锁
 	HasOrder      bool          `bson:"h" json:"hasOrder" valid:"-"`                                   // 是否有未处理的账单
 	Token         string        `bson:"tk" json:"token" valid:"-"`                                     // 每个账号的密钥
 	MessageNumber uint16        `bson:"mn" json:"messageNumber" valid:"-"`                             // 未读消息数量
