@@ -11,6 +11,7 @@ import (
 )
 
 // 解析请求参数到map
+// @params limit ...string 仅解析提供的参数
 func ReqFormToMap(req *http.Request, limit ...string) map[string]string {
 	params := make(map[string]string)
 	// 解析请求
