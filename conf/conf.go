@@ -33,6 +33,10 @@ const (
 	// 是否开启默认csrf
 	AUTO_SCRF = true
 
+	// Session
+	SESSION_SECERT = "vpahHL29ajXuTY0RNhf1VYTHvRIJxX"
+	SESSION_EXPIRE = 60 * 60 * 24 * 14
+
 	// 邮箱
 	EMAIL_HOST     = SECERT_EMAIL_HOST
 	EMAIL_FROM     = SECERT_EMAIL_FROM

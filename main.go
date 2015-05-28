@@ -38,8 +38,15 @@ func NewClassic() *martini.ClassicMartini {
 	}))
 
 	// Session
-	store, _ := sessions.NewRediStore(10, "tcp", "127.0.0.1:6379", "")
-	m.Use(sessions.Sessions("sessionStore", store))
+	store, _ := sessions.NewRediStore(10, "tcp", "127.0.0.1:6379", "", []byte(conf.SESSION_SECERT))
+	store.Options(sessions.Options{
+		Path:     "/",
+		Domain:   "",
+		MaxAge:   conf.SESSION_EXPIRE,
+		Secure:   false,
+		HttpOnly: true,
+	})
+	m.Use(sessions.Sessions("woku_id", store))
 
 	// csrf
 	m.Use(csrf.Generate(&csrf.Options{

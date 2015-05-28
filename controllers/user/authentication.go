@@ -22,7 +22,6 @@ import (
 // 登陆（获取授权令牌）
 // @router /users/authentication [get]
 func (this *Controller) Authentication(req *http.Request, session sessions.Session) (int, []byte) {
-	fmt.Println(session.Get("id"))
 	req.ParseForm()
 	return this.Must(Model.Authentication(req.Form.Get("account"), req.Form.Get("password")))
 }
@@ -75,7 +74,7 @@ func (this *Controller) CreateEmailAuthentication(req *http.Request, session ses
 	var err error
 	if token, err = redis.Get(req.Form.Get("sign")); err != nil {
 		// 没有通过邮箱注册生成的缓存
-		return this.Error("不存在的用户")
+		return this.Error("签名已失效")
 	}
 
 	// 删除缓存
@@ -100,24 +99,7 @@ func (this *Controller) CreateEmailAuthentication(req *http.Request, session ses
 	}
 
 	// 生成session
-	session.Set("id", user.Id)
+	session.Set("id", user.Id.Hex())
 
-	/*
-		cookie := &http.Cookie{
-						Name:       opts.Cookie,
-						Value:      x.Token,
-						Path:       "/",
-						Domain:     "",
-						Expires:    time.Now().AddDate(0, 0, 1),
-						RawExpires: "",
-						MaxAge:     86400,
-						Secure:     opts.Secure,
-						HttpOnly:   false,
-						Raw:        fmt.Sprintf("%s=%s", opts.Cookie, x.Token),
-						Unparsed:   []string{fmt.Sprintf("token=%s", x.Token)},
-					}
-					http.SetCookie(w, cookie)
-	*/
-
-	return this.Success("ok！")
+	return this.Success(user)
 }
