@@ -262,3 +262,5 @@ params := this.ReqFormToMap(req, "password")
 ~~~
 
 自动生成的`restful api`符合此规则。
+
+# Session功能
