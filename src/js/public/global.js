@@ -172,7 +172,6 @@ wk.ajax = function (method, opts) {
 	}
 	opts = $.extend(defaultOpts, opts)
 
-
 	require(['jquery', 'jquery.cookie'], function ($) {
 		var csrf = $.cookie("_csrf") || ''
 
@@ -195,6 +194,7 @@ wk.ajax = function (method, opts) {
 					message = xhr.responseText
 				}
 				wk.notice(message, 'red')
+
 				opts.error()
 			});
 	})
@@ -585,30 +585,56 @@ require(['jquery'], function ($) {
 
 var global = avalon.define({
 	$id: "global",
-	my: {}, // 我的信息
-	myLogin: false, // 是否已登陆
+
+	// 当前登录账号
+	my: {
+		// 信息
+		info: {},
+
+		// 设置信息
+		setInfo: function (val) {
+			val.image = wk.userImage(val.image)
+			global.my.info = val
+			global.my.isLogin = true
+
+			// 信息获取完毕
+			global.temp.myDeferred.resolve()
+		},
+
+		// 是否已登陆
+		isLogin: false,
+
+		//退出登陆
+		signout: function () {
+			wk.delete({
+				url: '/api/users/authentication',
+				data: {
+					id: global.my.id
+				},
+				success: function (data) {
+					global.my.isLogin = false;
+					global.my.info = {};
+
+					wk.notice('账号已登出', 'green');
+
+					//如果用户在用户信息后台则返回首页
+					if (mmState.currentState.stateName.indexOf('user') > -1) {
+						avalon.router.navigate('/');
+					}
+				}
+			})
+		},
+	},
+
+	// 获取消息盒子信息
+	getMessage: function () {},
+
+	// 缓存
 	temp: {
-		myDeferred: null // 我的信息执行状态
-	}, // 缓存
-	emptyObject: function (obj) { //判断对象是否为空
-		require(['jquery'], function ($) {
-			return $.isEmptyObject(obj);
-		});
+		myDeferred: null
 	},
-	getMessage: function () { //获取用户消息
-		console.log('get message');
-	},
-	signout: function () { //退出登陆
-		post('/api/check/signout', null, '已退出', null, function (data) {
-			global.myLogin = false;
-			global.my = {};
-			//如果用户在用户信息后台则返回首页
-			if (mmState.currentState.stateName.indexOf('user') > -1) {
-				avalon.router.navigate('/');
-			}
-		});
-	},
-	$skipArray: ['emptyObject', 'temp']
+
+	$skipArray: ['temp']
 });
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -620,11 +646,12 @@ require(['jquery', 'mmState'], function ($) {
 	global.temp.myDeferred = $.Deferred();
 	wk.get({
 		url: '/api/users/current',
-		success: function () {
-			data.image = userImage(data.image);
-			global.my = data;
-			global.myLogin = true;
-			global.temp.myDeferred.resolve(); // 已登录
+		success: function (data) {
+			if (data === false) {
+				return
+			}
+
+			global.my.setInfo(data)
 		},
 		error: function () {
 			global.temp.myDeferred.resolve(); // 未登录

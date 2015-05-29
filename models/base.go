@@ -108,7 +108,7 @@ func (this *Base) Update(id string, update map[string]interface{}) error {
 		return errors.New("id" + conf.ERROR_TYPE)
 	}
 
-	return this.Collection.UpdateId(bson.ObjectIdHex(id), update)
+	return this.Collection.UpdateId(bson.ObjectIdHex(id), bson.M{"$set": update})
 }
 
 // 根据id删除某个资源

@@ -9,6 +9,7 @@ package user
 import (
 	"errors"
 	"gopkg.in/mgo.v2/bson"
+	"math/rand"
 	"newWoku/models"
 	"strconv"
 	"time"
@@ -50,16 +51,24 @@ func (this *Model) Authentication(account string, password string) (*Data, error
 			return nil, errors.New("密码错误，您还有 " + strconv.Itoa(int(user.ErrorChance)) + " 次机会")
 		}
 	}
-	// this.Token = strconv.Itoa(int(rand.New(rand.NewSource(time.Now().UnixNano())).Uint32()))
+
 	// 重置验证次数
 	this.Collection.UpdateId(user.Id, bson.M{"$set": bson.M{"er": 6}})
 	return user, nil
 }
 
-// 创建一个授权令牌（用户注册）
-func (this *Model) CreateAuthentication(account string, password string) (*Data, error) {
+// 设置初始值（新增用户时）
+func (this *Model) SetDefaults(user *Data) {
+	user.Id = bson.NewObjectId()
+	user.Password = EncodePassword(user.Password)
+	user.Token = CreateToken()
+	//随机分配头像
+	user.Image = strconv.Itoa(rand.Intn(9))
+}
+
+// 根据邮箱查询用户信息
+func (this *Model) FindByEmail(email string) error {
+	// 根据邮箱查找用户
 	user := &Data{}
-	// 创建密码
-	user.Password = EncodePassword(password)
-	return nil, nil
+	return this.Collection.Find(bson.M{"e": email}).One(user)
 }

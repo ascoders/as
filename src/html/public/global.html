@@ -92,7 +92,7 @@
               </li>
             </ul>
           </li>
-          <li class='j-drop' ms-if='myLogin'>
+          <li class='j-drop' ms-if='my.isLogin'>
             <a href="#">
               <i class="fa fa-tasks f-mt12"></i>
             </a>
@@ -100,7 +100,7 @@
               <li>
                 <a class='pro-label'>
                   本日已用上传流量
-                  <span class='f-fr' id='j-upload'>{[{my.uploadSize / 1024 / 1024 | toFixed(1)}]}M</span>
+                  <span class='f-fr' id='j-upload'>{[{my.info.uploadSize / 1024 / 1024 | toFixed(1)}]}M</span>
                 </a>
               </li>
               <li class='pro'>
@@ -126,17 +126,17 @@
               </li>
             </ul>
           </li>
-          <li class='j-drop f-pr' ms-if='myLogin' ms-mouseenter='getMessage'>
+          <li class='j-drop f-pr' ms-if='my.isLogin' ms-mouseenter='getMessage'>
             <a href="#">
               <i class="fa fa-info-circle f-mt12"></i>
             </a>
             <ul class="j-drop-content f-pa f-dn f-z3 f-r0 msg"></ul>
             <span class='u-info f-pa info-number f-dn'></span>
           </li>
-          <li class='j-drop' ms-if='myLogin'>
+          <li class='j-drop' ms-if='my.isLogin'>
             <a href="#">
-              <img class='user-image' ms-src='my.image'>	
-              <span class='user-name'>{[{my.nickName}]}</span> 	
+              <img class='user-image' ms-src='my.info.image'>	
+              <span class='user-name'>{[{my.info.nickname}]}</span> 	
               <i class="fa fa-caret-down"></i>
             </a>
             <ul class="j-drop-content f-pa f-z3 f-r0 f-dn">
@@ -146,16 +146,16 @@
                 </a>
               </li>
               <li>
-                <a ms-click='signout'>
+                <a ms-click='my.signout'>
                   <i class='fa fa-external-link f-mr5'></i>退出
                 </a>
               </li>
             </ul>
           </li>
-          <li id='j-login' ms-if='!myLogin'>
+          <li id='j-login' ms-if='!my.isLogin'>
             <a href='#!/login'>登录</a>
           </li>
-          <li id='j-register' ms-if='!myLogin'>
+          <li id='j-register' ms-if='!my.isLogin'>
             <a href='#!/register'>注册</a>
           </li>
         </ul>

@@ -11,6 +11,7 @@ import (
 	"net/http"
 	"newWoku/lib"
 	"newWoku/lib/sort"
+	"newWoku/models/user"
 	"strconv"
 	"time"
 )
@@ -57,4 +58,16 @@ func CheckSign(token string, req *http.Request) error {
 	}
 
 	return nil
+}
+
+// 用户注册&登陆 统一返回的信息格式
+func AuthenticationInfo(user *user.Data) map[string]interface{} {
+	return map[string]interface{}{
+		"id":          user.Id.Hex(),
+		"email":       user.Email,
+		"nickname":    user.Nickname,
+		"money":       user.Money,
+		"lastLogTime": user.LastLogTime,
+		"image":       user.Image,
+	}
 }

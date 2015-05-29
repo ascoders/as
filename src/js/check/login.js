@@ -28,26 +28,21 @@ define("checkLogin", ['jquery'], function ($) {
 			});
 		},
 		submit: function () { //点击登陆按钮
-			if (avalon.vmodels.checkLogin.account == '') {
+			if (vm.account == '') {
 				return wk.notice('账号不能为空', 'red')
 			}
-			if (avalon.vmodels.checkLogin.password == '') {
+			if (vm.password == '') {
 				return wk.notice('密码不能为空', 'red')
 			}
 
 			wk.get({
 				url: '/api/users/authentication',
 				data: {
-					account: avalon.vmodels.checkLogin.account,
-					password: avalon.vmodels.checkLogin.password
+					account: vm.account,
+					password: vm.password
 				},
 				success: function (data) {
-					data.image = userImage(data.image)
-					avalon.vmodels.global.my = data
-					avalon.vmodels.global.myLogin = true
-
-					// 信息获取完毕
-					avalon.vmodels.global.temp.myDeferred.resolve()
+					avalon.vmodels.global.my.setInfo(data)
 
 					// 跳回上个页面
 					avalon.router.navigate(avalon.router.getLastPath())
@@ -76,7 +71,7 @@ define("checkLogin", ['jquery'], function ($) {
 			// Enter提交表单
 			$('#check-login').bind('keyup', function (event) {
 				if (event.keyCode == 13) { //按下Enter
-					avalon.vmodels.checkLogin.submit()
+					vm.submit()
 				}
 			})
 

@@ -22,7 +22,7 @@ type Data struct {
 	Money         float32       `bson:"mo" json:"money" valid:"-"`                                     // 账户余额
 	Free          int           `bson:"f" json:"free" valid:"-"`                                       // 每月免费额度 !!!!!!!!mf
 	LogCount      uint16        `bson:"l" json:"logCount" valid:"-"`                                   // 登陆次数
-	LastTime      time.Time     `bson:"la" json:"lastTime" valid:"-"`                                  // 最后操作时间
+	LastLogTime   time.Time     `bson:"la" json:"lastTime" valid:"-"`                                  // 最后登陆时间
 	ErrorChance   uint8         `bson:"er" json:"errorChance" valid:"-"`                               // 账号输错机会次数
 	StopTime      time.Time     `bson:"st" json:"stopTime" valid:"-"`                                  // 账号封停截至时间
 	Type          uint8         `bson:"t" json:"type" valid:"-"`                                       // 账号类型 0:超级管理员/董事长 1:会员 2:高级会员 3:白金会员
