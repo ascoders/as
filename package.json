@@ -34,7 +34,8 @@
 		"gulp-rename": "1.2.0",
 		"gulp-replace": "0.5.2",
 		"gulp-sass": "",
-		"gulp-uglify": "1.1.0"
+		"gulp-uglify": "1.1.0",
+		"gulp-compass": ""
 	},
 	"scripts": {
 		"build": "npm install && gulp"
