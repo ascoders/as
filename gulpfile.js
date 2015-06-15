@@ -6,7 +6,7 @@
  * 目录安装
  * npm install gulp --save-dev
  * 组件安装
- * npm install gulp-util gulp-imagemin gulp-sass gulp-htmlmin gulp-minify-css gulp-jshint gulp-uglify gulp-rename gulp-concat del gulp-livereload tiny-lr --save-dev
+ * npm install gulp-util gulp-rename gulp-imagemin gulp-sass gulp-htmlmin gulp-minify-css gulp-jshint gulp-uglify gulp-rename gulp-concat del gulp-livereload tiny-lr --save-dev
  */
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -21,6 +21,7 @@ var gulp = require('gulp'), //基础库
 	uglify = require('gulp-uglify'), //js压缩
 	rename = require('gulp-rename'), //重命名
 	concat = require('gulp-concat'), //合并文件
+	path = require('path'), // node Path
 	del = require('del'); //删除文件
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -28,15 +29,15 @@ var gulp = require('gulp'), //基础库
 ///////////////////////////////////////////////////////////////////////////////////////////////
 var paths = {
 	src: {
-		html: 'src/html/**/*.html',
-		css: 'src/scss/**/*.scss',
-		js: 'src/js/**/*.js',
+		html: 'src/**/*.html',
+		css: 'src/**/*.scss',
+		js: 'src/**/*.js',
 		image: 'src/img/**/*'
 	},
 	dist: {
-		html: 'static/html',
-		css: 'static/css',
-		js: 'static/js',
+		html: 'static',
+		css: 'static',
+		js: 'static',
 		image: 'static/img'
 	}
 };
@@ -48,6 +49,10 @@ gulp.task('html', function () {
 	return gulp.src(paths.src.html)
 		.pipe(htmlmin({
 			collapseWhitespace: true
+		}))
+		.pipe(rename(function (filepath) {
+			// 向上移动一层
+			filepath.dirname = path.dirname(filepath.dirname);
 		}))
 		.pipe(gulp.dest(paths.dist.html));
 });
@@ -68,8 +73,10 @@ gulp.task('css', function () {
 ///////////////////////////////////////////////////////////////////////////////////////////////
 gulp.task('js', function () {
 	return gulp.src(paths.src.js)
-		//.pipe(jshint())
-		//.pipe(jshint.reporter('default'))
+		.pipe(rename(function (filepath) {
+			// 向上移动一层
+			filepath.dirname = path.dirname(filepath.dirname);
+		}))
 		.pipe(gulp.dest(paths.dist.js));
 });
 
@@ -77,6 +84,10 @@ gulp.task('js', function () {
 gulp.task('jsDest', function () {
 	return gulp.src(paths.src.js)
 		.pipe(uglify())
+		.pipe(rename(function (filepath) {
+			// 向上移动一层
+			filepath.dirname = path.dirname(filepath.dirname);
+		}))
 		.pipe(gulp.dest(paths.dist.js));
 });
 

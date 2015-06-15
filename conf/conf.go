@@ -19,7 +19,7 @@ const (
 	STATIC_DIR string = "static"
 
 	// 全局文件路径
-	GLOBAL_PATH string = "static/html/public/global.html"
+	GLOBAL_PATH string = "static/public/global.html"
 
 	// redis地址
 	REDIS_ADDRESS string = "127.0.0.1:6379"

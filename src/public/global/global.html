@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name='format-detection' content='telephone=no'>
+<link href="http://cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.css" rel="stylesheet">
+<link href="/static/all.css" rel='stylesheet'>
+<link href='/static/img/favicon.ico' rel='shortcut icon'>
+<title>我酷游戏</title>
+<meta name='keywords' content=''>
+<meta name='description' content=''>
+<meta property="qc:admins" content="53260245576773571556375" />
+
+<body ms-controller='global'>
+  <!-- 导航条 -->
+  <div class='g-doc'>
+    <div class='m-nav-empty'></div>
+    <div class='m-nav'>
+      <div class='f-ct f-cb '>
+        <a class='header f-fl' href='#!//'>
+          <img src='/static/img/logo.png'></a>
+        <ul class='f-fl'>
+          <li>
+            <a href='#!/games'><i class="fa fa-rocket f-mr5"></i>浏览</a>
+          </li>
+          <li>
+            <a href="#!/g/doc/api/doc"><i class="fa fa-book f-mr5"></i>开发手册</a>
+          </li>
+          <li class="j-drop">
+            <a href="#">
+              其他<i class="fa fa-caret-down f-ml5"></i>
+            </a>
+            <ul class="j-drop-content f-pa f-dn f-z3">
+              <li class='j-right-drop'>
+                <a href="#">归类文档<i class="fa fa-caret-right f-ml5"></i></a>
+                <ul class="j-right-drop-content f-pa f-dn f-z3">
+                  <li>
+                    <a href="#!/g/blog">博客</a>
+                  </li>
+                  <li>
+                    <a href="#!/g/design">游戏设计</a>
+                  </li>
+                </ul>
+              </li>
+              <li class='j-right'>
+                <a href="#!/yuqing">舆情分析</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+        <ul class='f-fr'>
+          <li>
+            <form action="http://zhannei.baidu.com/cse/search" method="get" target="_blank" class="bdcs-search-form" id="bdcs-search-form">
+              <input type="hidden" name="s" value="11980850384642570746">
+              <input type="hidden" name="entry" value="1">
+              <input type="text" name="q" class="bdcs-search-form-input f-fl" id="bdcs-search-form-input" placeholder="请输入关键词" autocomplete="off">
+              <input type="submit" class="bdcs-search-form-submit btn btn-default f-fl f-ml-1" id="bdcs-search-form-submit" value="搜索">
+            </form>
+          </li>
+          <li class='j-drop'>
+            <a href="#"> <i class="fa fa-cog f-mt12"></i>
+              
+            </a>
+            <ul class="j-drop-content f-pa f-dn f-z3 f-r0">
+              <li>
+                <a class='pro-label f-tac'>页面宽度</a>
+              </li>
+              <li class='f-cb'>
+                <div class='f-w6 f-tac header-button'>
+                  <input type='radio' name='windowsize' id='j-window-df'>
+                  <label class='f-ml5' for='j-window-df'>标准</label>
+                </div>
+                <div class='f-w6 f-tac header-button'>
+                  <input type='radio' name='windowsize' id='j-window-lg'>
+                  <label class='f-ml5' for='j-window-lg'>宽屏</label>
+                </div>
+              </li>
+              <li class='cut'></li>
+              <li>
+                <a class='pro-label f-tac'>颜色风格</a>
+              </li>
+              <li class='f-cb'>
+                <div class='f-w6 f-tac header-button'>
+                  <input type='radio' name='colorstyle' id='j-color-df'>
+                  <label class='f-ml5' for='j-color-df'>标准</label>
+                </div>
+                <div class='f-w6 f-tac header-button'>
+                  <input type='radio' name='colorstyle' id='j-color-dk'>
+                  <label class='f-ml5' for='j-color-dk'>暗系</label>
+                </div>
+              </li>
+            </ul>
+          </li>
+          <li class='j-drop' ms-if='my.isLogin'>
+            <a href="#">
+              <i class="fa fa-tasks f-mt12"></i>
+            </a>
+            <ul class="j-drop-content f-pa f-dn f-z3 f-r0">
+              <li>
+                <a class='pro-label'>
+                  本日已用上传流量
+                  <span class='f-fr' id='j-upload'>{[{my.info.uploadSize / 1024 / 1024 | toFixed(1)}]}M</span>
+                </a>
+              </li>
+              <li class='pro'>
+                <div class="progress">
+                  <div class="progress-bar progress-bar-success progress-bar-striped active" id='j-upload-progress'></div>
+                </div>
+              </li>
+              <li class='cut'></li>
+              <li>
+                <a class='pro-label'>
+                  本月已用免费额度
+                  <span class='f-fr' id='j-money'>0元</span>
+                </a>
+              </li>
+              <li class='pro'>
+                <div class="progress">
+                  <div class="progress-bar progress-bar-success progress-bar-striped active" id='j-money-progress'></div>
+                </div>
+              </li>
+              <li class='cut'></li>
+              <li>
+                <a class='f-tac' href="/user.html">查看详情</a>
+              </li>
+            </ul>
+          </li>
+          <li class='j-drop f-pr' ms-if='my.isLogin' ms-mouseenter='getMessage'>
+            <a href="#">
+              <i class="fa fa-info-circle f-mt12"></i>
+            </a>
+            <ul class="j-drop-content f-pa f-dn f-z3 f-r0 msg"></ul>
+            <span class='u-info f-pa info-number f-dn'></span>
+          </li>
+          <li class='j-drop' ms-if='my.isLogin'>
+            <a href="#">
+              <img class='user-image' ms-src='my.info.image'>	
+              <span class='user-name'>{[{my.info.nickname}]}</span> 	
+              <i class="fa fa-caret-down"></i>
+            </a>
+            <ul class="j-drop-content f-pa f-z3 f-r0 f-dn">
+              <li>
+                <a href="#!/user/account/base">
+                  <i class='fa fa-cog f-mr5'></i>我的账号
+                </a>
+              </li>
+              <li>
+                <a ms-click='my.signout'>
+                  <i class='fa fa-external-link f-mr5'></i>退出
+                </a>
+              </li>
+            </ul>
+          </li>
+          <li id='j-login' ms-if='!my.isLogin'>
+            <a href='#!/login'>登录</a>
+          </li>
+          <li id='j-register' ms-if='!my.isLogin'>
+            <a href='#!/register'>注册</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 页中部位置，引入子元素模版 -->
+    <div ms-view='container'></div>
+  </div>
+
+  <div class='g-ft f-fs14 f-tac'>
+    &copy; 2015 合肥我酷网络科技有限公司 All Rights Reserved
+    <a class='f-ml20' href='http://www.miitbeian.gov.cn/' target='_blank'>皖ICP备14002099号-1</a>
+  </div>
+</body>
+
+<script src='http://cdn.bootcss.com/store.js/1.3.14/store.min.js'></script>
+<script src='/static/plugin/base64.js'></script>
+<script src='/static/plugin/avalon.js' data-main='/static/public/global.js'></script>
