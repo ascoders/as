@@ -257,11 +257,11 @@ func genRouterCode(opts Options) {
 	}
 
 	if useCsrf {
-		packageInfo += `"newWoku/lib/csrf"
+		packageInfo += `"github.com/ascoders/as/lib/csrf"
 	`
 	}
 	if useCaptcha {
-		packageInfo += `"newWoku/lib/captcha"
+		packageInfo += `"github.com/ascoders/as/lib/captcha"
 	`
 	}
 

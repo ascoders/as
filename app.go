@@ -4,27 +4,25 @@
 	Copyright (c) 2015 翱翔大空 and other contributors
  ==================================================*/
 
-package main
+package as
 
 import (
+	"github.com/ascoders/as/lib/csrf"
+	_http "github.com/ascoders/as/lib/http"
+	"github.com/ascoders/as/lib/redis"
 	"github.com/go-martini/martini"
 	"github.com/martini-contrib/sessions"
 	"net/http"
-	"newWoku/conf"
-	"newWoku/lib/csrf"
-	_http "newWoku/lib/http"
-	"newWoku/lib/redis"
-	"newWoku/router"
 	"strconv"
 	"strings"
 )
 
-func NewClassic() *martini.ClassicMartini {
+func newClassic() *martini.ClassicMartini {
 	r := martini.NewRouter()
 	m := martini.New()
 
 	// 日志
-	if conf.DEBUG {
+	if Conf.Debug {
 		m.Use(martini.Logger())
 	}
 
@@ -32,28 +30,15 @@ func NewClassic() *martini.ClassicMartini {
 	m.Use(martini.Recovery())
 
 	// 静态处理
-	m.Use(martini.Static(conf.STATIC_DIR, martini.StaticOptions{
-		Prefix:      "/static/",
-		SkipLogging: true,
-	}))
+	m.Use(martini.Static(Conf.StaticDir, Conf.StaticOptions))
 
 	// Session
-	store, _ := sessions.NewRediStore(10, "tcp", "127.0.0.1:6379", "", []byte(conf.SESSION_SECERT))
-	store.Options(sessions.Options{
-		Path:     "/",
-		Domain:   "",
-		MaxAge:   conf.SESSION_EXPIRE,
-		Secure:   false,
-		HttpOnly: true,
-	})
-	m.Use(sessions.Sessions("woku_id", store))
+	store, _ := sessions.NewRediStore(10, "tcp", Conf.RedisAddress, "", []byte(Conf.SessionSecret))
+	store.Options(Conf.SessionOptions)
+	m.Use(sessions.Sessions(Conf.SessionName, store))
 
 	// csrf
-	m.Use(csrf.Generate(&csrf.Options{
-		Secret:     "V&2Xa6IAKZg5QjX8",
-		SessionKey: "id", // 根据用户id，为每个用户设置不同的csrf
-		SetCookie:  true,
-	}))
+	m.Use(csrf.Generate(Conf.CsrfOptions))
 
 	// 缓存中间件
 	m.Use(func(c martini.Context, req *http.Request, w http.ResponseWriter) {
@@ -66,7 +51,7 @@ func NewClassic() *martini.ClassicMartini {
 			// 响应类型：Json
 			w.Header().Set("Content-Type", "application/json; charset=utf-8")
 			// GET请求读取缓存
-			if !conf.DEBUG && req.Method == "GET" {
+			if !Conf.Debug && req.Method == "GET" {
 				// 缓存没过期
 				if cache, err := redis.Get("url-" + req.URL.String()); err == nil {
 					w.Write(cache)
@@ -86,12 +71,12 @@ func NewClassic() *martini.ClassicMartini {
 	return &martini.ClassicMartini{m, r}
 }
 
-func main() {
-	m := NewClassic()
+func Run() {
+	m := newClassic()
 
-	// 启用路由
-	m.Action(router.Route().Handle)
+	// 加载路由规则
+	m.Action(Routers.Handle)
 
 	// 监听端口
-	m.RunOnAddr(":" + strconv.Itoa(int(conf.PORT)))
+	m.RunOnAddr(":" + strconv.Itoa(int(Conf.Port)))
 }

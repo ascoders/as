@@ -1,15 +1,16 @@
 package email
 
 import (
+	"github.com/ascoders/as"
 	"github.com/jordan-wright/email"
 	"net/smtp"
-	"newWoku/conf"
+	"strconv"
 )
 
 // 发送
 func Send(address []string, title string, html string) error {
 	e := email.NewEmail()
-	e.From = conf.EMAIL_FROM
+	e.From = as.Conf.EmailFrom
 	e.To = address
 	e.Subject = title
 	e.Text = []byte("邮件无法显示")
@@ -25,5 +26,6 @@ func Send(address []string, title string, html string) error {
 			</div>
 		</div>
 	`)
-	return e.Send(conf.EMAIL_HOST+":"+conf.EMAIL_PORT, smtp.PlainAuth("", conf.EMAIL_FROM, conf.EMAIL_PASSWORD, conf.EMAIL_HOST))
+	return e.Send(as.Conf.EmailHost+":"+strconv.Itoa(as.Conf.EmailPort),
+		smtp.PlainAuth("", as.Conf.EmailFrom, as.Conf.EmailPassword, strconv.Itoa(as.Conf.EmailPort)))
 }
