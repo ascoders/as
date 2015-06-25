@@ -7,12 +7,12 @@
 package controllers
 
 import (
+	_http "github.com/ascoders/as/lib/http"
+	"github.com/ascoders/as/lib/model"
+	"github.com/ascoders/as/lib/response"
+	"github.com/ascoders/as/models"
 	"github.com/go-martini/martini"
 	"net/http"
-	_http "newWoku/lib/http"
-	"newWoku/lib/model"
-	"newWoku/lib/response"
-	"newWoku/models"
 	"strconv"
 )
 

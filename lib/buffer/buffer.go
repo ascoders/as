@@ -12,8 +12,10 @@ import (
 	"encoding/gob"
 )
 
+type Buffer struct{}
+
 // 编码为字节流
-func Encode(data interface{}) []byte {
+func (this *Buffer) Encode(data interface{}) []byte {
 	buf := bytes.NewBuffer(nil)
 	enc := gob.NewEncoder(buf)
 	err := enc.Encode(data)
@@ -24,7 +26,7 @@ func Encode(data interface{}) []byte {
 }
 
 // 字节流解码
-func Decode(data []byte) interface{} {
+func (this *Buffer) Decode(data []byte) interface{} {
 	var r interface{}
 
 	buf := bytes.NewBuffer(data)

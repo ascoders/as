@@ -14,7 +14,9 @@ import (
 	"time"
 )
 
-func Run(hour int, minute int, second int, callback func()) {
+type Scheduled struct{}
+
+func (this *Scheduled) Run(hour int, minute int, second int, callback func()) {
 	go runningRoutine(hour, minute, second, callback)
 }
 

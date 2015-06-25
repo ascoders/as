@@ -10,22 +10,24 @@ import (
 	"github.com/martini-contrib/encoder"
 )
 
-func Success(data interface{}) (int, []byte) {
+type Response struct{}
+
+func (this *Response) Success(data interface{}) (int, []byte) {
 	enc := encoder.JsonEncoder{}
 	return 200, encoder.Must(enc.Encode(data))
 }
 
-func Error(message string) (int, []byte) {
+func (this *Response) Error(message string) (int, []byte) {
 	enc := encoder.JsonEncoder{}
 	return 400, encoder.Must(enc.Encode(map[string]interface{}{
 		"message": message,
 	}))
 }
 
-func Must(data interface{}, err error) (int, []byte) {
+func (this *Response) Must(data interface{}, err error) (int, []byte) {
 	if err == nil {
-		return Success(data)
+		return this.Success(data)
 	} else {
-		return Error(err.Error())
+		return this.Error(err.Error())
 	}
 }

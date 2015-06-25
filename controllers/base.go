@@ -7,9 +7,9 @@
 package controllers
 
 import (
+	"github.com/ascoders/as/models"
 	"github.com/go-martini/martini"
 	"net/http"
-	"newWoku/models"
 )
 
 type Base struct {

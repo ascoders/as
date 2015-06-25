@@ -8,26 +8,10 @@ package models
 
 import (
 	"errors"
+	"github.com/ascoders/as/conf"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
-	"newWoku/conf"
 )
-
-var (
-	Db *mgo.Database // 数据库连接池
-)
-
-func init() {
-	//获取数据库连接
-	session, err := mgo.Dial(conf.MONGODB_ADDRESS)
-
-	if err != nil {
-		panic(err)
-	}
-
-	session.SetMode(mgo.Monotonic, true)
-	Db = session.DB("woku")
-}
 
 type Base struct {
 	Collection *mgo.Collection
@@ -96,7 +80,7 @@ func (this *Base) GetsByPage(page int, limit int, obj interface{}) error {
 // @param {string} id 资源id
 func (this *Base) Get(id string, obj interface{}) error {
 	if !bson.IsObjectIdHex(id) {
-		return errors.New("id" + conf.ERROR_TYPE)
+		return errors.New("id" + conf.Conf.ErrorType)
 	}
 
 	return this.Collection.FindId(bson.ObjectIdHex(id)).One(obj)
@@ -105,7 +89,7 @@ func (this *Base) Get(id string, obj interface{}) error {
 // 根据id更新某个资源
 func (this *Base) Update(id string, update map[string]interface{}) error {
 	if !bson.IsObjectIdHex(id) {
-		return errors.New("id" + conf.ERROR_TYPE)
+		return errors.New("id" + conf.Conf.ErrorType)
 	}
 
 	return this.Collection.UpdateId(bson.ObjectIdHex(id), bson.M{"$set": update})
@@ -114,7 +98,7 @@ func (this *Base) Update(id string, update map[string]interface{}) error {
 // 根据id删除某个资源
 func (this *Base) Delete(id string) error {
 	if !bson.IsObjectIdHex(id) {
-		return errors.New("id" + conf.ERROR_TYPE)
+		return errors.New("id" + conf.Conf.ErrorType)
 	}
 
 	return this.Collection.RemoveId(bson.ObjectIdHex(id))

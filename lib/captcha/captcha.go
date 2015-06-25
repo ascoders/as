@@ -21,18 +21,18 @@ type Captcha struct {
 }
 
 // 验证图片
-func Image(params martini.Params, w http.ResponseWriter) {
+func (this *Captcha) Image(params martini.Params, w http.ResponseWriter) {
 	w.Header().Set("Content-Type", "image/png")
 	captcha.WriteImage(w, params["id"], 240, 80)
 }
 
 // 获取验证代码
-func Code() string {
+func (this *Captcha) Code() string {
 	return captcha.NewLen(6)
 }
 
 // 校验验证码
-func Check(req *http.Request, res http.ResponseWriter) {
+func (this *Captcha) Check(req *http.Request, res http.ResponseWriter) {
 	req.ParseForm()
 	if ok := captcha.VerifyString(req.Form.Get("capid"), req.Form.Get("cap")); !ok {
 		res.WriteHeader(400)

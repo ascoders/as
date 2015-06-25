@@ -22,6 +22,8 @@ import (
 	"strings"
 )
 
+type Router struct{}
+
 var (
 	workPath, _          = os.Getwd()
 	globalRouterTemplate = `package router
@@ -36,10 +38,6 @@ func AutoRoute(r martini.Router) {
 }
 `
 )
-
-type Options struct {
-	AutoCsrf bool
-}
 
 // store the comment for the controller method
 type ControllerComments struct {
@@ -62,7 +60,7 @@ func init() {
 }
 
 // 自动路由解析入口
-func Auto(opts Options, controls ...interface{}) {
+func (this *Router) Auto(controls ...interface{}) {
 	for _, c := range controls {
 		skip := make(map[string]bool, 10)
 		reflectVal := reflect.ValueOf(c)
@@ -85,15 +83,15 @@ func Auto(opts Options, controls ...interface{}) {
 		if pkgpath != "" {
 			if _, ok := skip[pkgpath]; !ok {
 				skip[pkgpath] = true
-				parserPkg(pkgpath, t.PkgPath())
+				this.parserPkg(pkgpath, t.PkgPath())
 			}
 		}
 	}
 
-	genRouterCode(opts)
+	this.genRouterCode()
 }
 
-func parserPkg(pkgRealpath string, pkgpath string) error {
+func (this *Router) parserPkg(pkgRealpath string, pkgpath string) error {
 	commentFilename = "auto.go"
 
 	fileSet := token.NewFileSet()
@@ -112,7 +110,7 @@ func parserPkg(pkgRealpath string, pkgpath string) error {
 				switch specDecl := d.(type) {
 				case *ast.FuncDecl:
 					if specDecl.Recv != nil {
-						parserComments(specDecl.Doc, specDecl.Name.String(),
+						this.parserComments(specDecl.Doc, specDecl.Name.String(),
 							fmt.Sprint(specDecl.Recv.List[0].Type.(*ast.StarExpr).X), pkgpath)
 					}
 				}
@@ -123,7 +121,7 @@ func parserPkg(pkgRealpath string, pkgpath string) error {
 	return nil
 }
 
-func parserComments(comments *ast.CommentGroup, funcName, controllerName, pkgpath string) error {
+func (this *Router) parserComments(comments *ast.CommentGroup, funcName, controllerName, pkgpath string) error {
 	if comments != nil && comments.List != nil {
 		for _, c := range comments.List {
 			t := strings.TrimSpace(strings.TrimLeft(c.Text, "//"))
@@ -169,7 +167,7 @@ func parserComments(comments *ast.CommentGroup, funcName, controllerName, pkgpat
 
 }
 
-func genRouterCode(opts Options) {
+func (this *Router) genRouterCode() {
 	os.Mkdir(path.Join(workPath, "router"), 0755)
 
 	var globalInfo string
@@ -177,11 +175,11 @@ func genRouterCode(opts Options) {
 
 	var useCsrf bool
 	var useCaptcha bool
-
-	if opts.AutoCsrf {
-		useCsrf = true
-	}
-
+	/*
+		if opts.AutoCsrf {
+			useCsrf = true
+		}
+	*/
 	for k, cList := range genInfoList {
 		pathAndControllerName := strings.Split(k, ":")
 		packagePathArr := strings.Split(pathAndControllerName[0], "/")
@@ -242,7 +240,7 @@ func genRouterCode(opts Options) {
 			var prefix = ""
 
 			// 默认开启csrf，只对非get方法有效
-			if opts.AutoCsrf && rest[0] != "Get" {
+			if useCsrf && rest[0] != "Get" {
 				prefix += "csrf.Validate, "
 			}
 

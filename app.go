@@ -7,8 +7,7 @@
 package as
 
 import (
-	"github.com/ascoders/as/lib/csrf"
-	_http "github.com/ascoders/as/lib/http"
+	//"github.com/ascoders/as/lib/csrf"
 	"github.com/ascoders/as/lib/redis"
 	"github.com/go-martini/martini"
 	"github.com/martini-contrib/sessions"
@@ -38,12 +37,12 @@ func newClassic() *martini.ClassicMartini {
 	m.Use(sessions.Sessions(Conf.SessionName, store))
 
 	// csrf
-	m.Use(csrf.Generate(Conf.CsrfOptions))
+	//m.Use(csrf.Generate(Conf.CsrfOptions))
 
 	// 缓存中间件
 	m.Use(func(c martini.Context, req *http.Request, w http.ResponseWriter) {
 		// 覆写ResponseWriter接口
-		res := _http.NewResponseWriter(req, w)
+		res := Lib.Http.NewResponseWriter(req, w)
 		c.MapTo(res, (*http.ResponseWriter)(nil))
 
 		// Api请求

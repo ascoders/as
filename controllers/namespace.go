@@ -7,10 +7,10 @@
 package controllers
 
 import (
+	_http "github.com/ascoders/as/lib/http"
+	"github.com/ascoders/as/lib/model"
+	"github.com/ascoders/as/lib/response"
 	"net/http"
-	_http "newWoku/lib/http"
-	"newWoku/lib/model"
-	"newWoku/lib/response"
 )
 
 func (this *Base) Parse(obj interface{}, params map[string]string) error {

@@ -4,22 +4,24 @@
 	Copyright (c) 2015 翱翔大空 and other contributors
  ==================================================*/
 
-package model
+package parse
 
 import (
 	"errors"
-	"newWoku/lib/validation"
+	"github.com/ascoders/as/lib/validation"
 	"reflect"
 	"strconv"
 	"strings"
 	"time"
 )
 
+type Parse struct{}
+
 // 解析url参数
 // @param {interface{}} obj 被解析的结构体
 // @param {http.Request} req 客户端请求
 // 用于添加
-func Parse(obj interface{}, params map[string]string) error {
+func (this *Parse) Struct(obj interface{}, params map[string]string) error {
 	objT := reflect.TypeOf(obj).Elem()
 	objV := reflect.ValueOf(obj).Elem()
 
@@ -131,7 +133,7 @@ func Parse(obj interface{}, params map[string]string) error {
 // @param {http.Request} req 客户端请求
 // @return map[string]interface{}
 // 用于更新
-func ParseToUpdateMap(obj interface{}, params map[string]string, exempts ...string) (error, map[string]interface{}) {
+func (this *Parse) StructToUpdateMap(obj interface{}, params map[string]string, exempts ...string) (error, map[string]interface{}) {
 	opts := make(map[string]interface{})
 	objT := reflect.TypeOf(obj).Elem()
 	objV := reflect.ValueOf(obj).Elem()

@@ -1,10 +1,10 @@
 package controllers
 
 import (
+	"github.com/ascoders/as/models"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 	"net/http"
-	"newWoku/models"
 	"strconv"
 	"testing"
 )

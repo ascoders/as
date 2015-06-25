@@ -5,9 +5,11 @@ import (
 	"sort"
 )
 
+type Sort struct{}
+
 // 将map按照key，字母大小顺序排序
 // @return []string
-func MapToSlice(params map[string]string) []string {
+func (this *Sort) MapToSlice(params map[string]string) []string {
 	var keys []string
 	for k := range params {
 		keys = append(keys, k)
@@ -24,7 +26,7 @@ func MapToSlice(params map[string]string) []string {
 
 // 将http.request按照key，字母大小顺序排序
 // @return []string
-func FormToSlice(req *http.Request, ignore ...string) []string {
+func (this *Sort) FormToSlice(req *http.Request, ignore ...string) []string {
 	req.ParseForm()
 	params := make(map[string]string)
 FormLoop:
@@ -37,5 +39,5 @@ FormLoop:
 		params[k] = req.Form.Get(k)
 	}
 
-	return MapToSlice(params)
+	return this.MapToSlice(params)
 }

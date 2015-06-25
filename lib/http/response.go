@@ -7,12 +7,14 @@
 package http
 
 import (
-	"net/http"
-	"newWoku/lib/redis"
+	"github.com/ascoders/as/lib/redis"
+	_http "net/http"
 	"strings"
 )
 
-func NewResponseWriter(req *http.Request, res http.ResponseWriter) *ResponseWriter {
+type Http struct{}
+
+func (this *Http) NewResponseWriter(req *_http.Request, res _http.ResponseWriter) *ResponseWriter {
 	return &ResponseWriter{
 		Req: req,
 		Res: res,
@@ -20,18 +22,19 @@ func NewResponseWriter(req *http.Request, res http.ResponseWriter) *ResponseWrit
 }
 
 type ResponseWriter struct {
-	Req *http.Request
-	Res http.ResponseWriter
+	Req *_http.Request
+	Res _http.ResponseWriter
 }
 
-func (this *ResponseWriter) Header() http.Header {
+func (this *ResponseWriter) Header() _http.Header {
 	return this.Res.Header()
 }
 
 func (this *ResponseWriter) Write(c []byte) (int, error) {
 	// GET请求写入缓存
 	if strings.HasPrefix(this.Req.URL.String(), "/api") && this.Req.Method == "GET" {
-		redis.Set("url-"+this.Req.URL.String(), c)
+		_redis := redis.Redis{}
+		_redis.Set("url-"+this.Req.URL.String(), c)
 	}
 
 	return this.Res.Write(c)
