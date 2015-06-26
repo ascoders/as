@@ -14,6 +14,14 @@ import (
 
 type Buffer struct{}
 
+var (
+	BufferInstance *Buffer
+)
+
+func init() {
+	BufferInstance = &Buffer{}
+}
+
 // 编码为字节流
 func (this *Buffer) Encode(data interface{}) []byte {
 	buf := bytes.NewBuffer(nil)

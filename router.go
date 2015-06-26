@@ -1,7 +1,6 @@
 package as
 
 import (
-	"fmt"
 	//"github.com/ascoders/as/lib/captcha"
 	"github.com/ascoders/as/lib/response"
 	"github.com/go-martini/martini"
@@ -37,7 +36,7 @@ func init() {
 		Routers.Get("/api/captcha/:id", captcha.Image)
 		// 创建验证码
 		Routers.Post("/api/captcha", func() (int, []byte) {
-			return response.Success(map[string]interface{}{
+			return response.ResponseInstance.Success(map[string]interface{}{
 				"captchaCode": captcha.Code(),
 			})
 		})
@@ -47,11 +46,10 @@ func init() {
 
 	// 匹配未定义的api
 	Routers.Any("/api/**", func() (int, []byte) {
-		return response.Error("Api Not Found")
+		return response.ResponseInstance.Error("Api Not Found")
 	})
 
 	// 全局模版文件
-	fmt.Println("xxxxxxxx", Conf.GlobalPath)
 	if Conf.GlobalPath != "" {
 		globalFile, err := os.Open(Conf.GlobalPath)
 		if err != nil {

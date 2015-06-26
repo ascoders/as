@@ -17,6 +17,14 @@ import (
 
 type Parse struct{}
 
+var (
+	ParseInstance *Parse
+)
+
+func init() {
+	ParseInstance = &Parse{}
+}
+
 // 解析url参数
 // @param {interface{}} obj 被解析的结构体
 // @param {http.Request} req 客户端请求
@@ -284,39 +292,37 @@ func validKey(key string, value string) error {
 		}
 	}
 
-	valid := validation.Valid{}
-
 	switch strings.ToLower(method) {
 	case "required":
-		return valid.Required(value)
+		return validation.ValidInstance.Required(value)
 	case "min":
-		return valid.Min(value, number1)
+		return validation.ValidInstance.Min(value, number1)
 	case "max":
-		return valid.Max(value, number1)
+		return validation.ValidInstance.Max(value, number1)
 	case "range":
-		return valid.Range(value, number1, number2)
+		return validation.ValidInstance.Range(value, number1, number2)
 	case "minlength":
-		return valid.MinLength(value, number1)
+		return validation.ValidInstance.MinLength(value, number1)
 	case "maxlength":
-		return valid.MaxLength(value, number1)
+		return validation.ValidInstance.MaxLength(value, number1)
 	case "length":
-		return valid.Length(value, number1)
+		return validation.ValidInstance.Length(value, number1)
 	case "alphanumeric":
-		return valid.AlphaNumeric(value)
+		return validation.ValidInstance.AlphaNumeric(value)
 	case "email":
-		return valid.Email(value)
+		return validation.ValidInstance.Email(value)
 	case "ip":
-		return valid.IP(value)
+		return validation.ValidInstance.IP(value)
 	case "base64":
-		return valid.Base64(value)
+		return validation.ValidInstance.Base64(value)
 	case "mobile":
-		return valid.Mobile(value)
+		return validation.ValidInstance.Mobile(value)
 	case "tel":
-		return valid.Tel(value)
+		return validation.ValidInstance.Tel(value)
 	case "mobileortel":
-		return valid.MobileOrTel(value)
+		return validation.ValidInstance.MobileOrTel(value)
 	case "zipcode":
-		return valid.ZipCode(value)
+		return validation.ValidInstance.ZipCode(value)
 	}
 
 	return nil

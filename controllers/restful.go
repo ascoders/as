@@ -8,7 +8,7 @@ package controllers
 
 import (
 	_http "github.com/ascoders/as/lib/http"
-	"github.com/ascoders/as/lib/model"
+	"github.com/ascoders/as/lib/parse"
 	"github.com/ascoders/as/lib/response"
 	"github.com/ascoders/as/models"
 	"github.com/go-martini/martini"
@@ -30,47 +30,48 @@ func (this *Restful) Gets(req *http.Request) (int, []byte) {
 	// 优先使用lastId查询
 	if page > 0 && lastId == "" {
 		err := this.Model.GetsByPage(page, limit, datas)
-		return response.Must(datas, err)
+		return response.ResponseInstance.Must(datas, err)
 	} else {
 		err := this.Model.GetsById(lastId, limit, datas)
-		return response.Must(datas, err)
+		return response.ResponseInstance.Must(datas, err)
 	}
 }
 
 func (this *Restful) Get(param martini.Params) (int, []byte) {
 	data := this.Model.NewData()
 	err := this.Model.Get(param["id"], data)
-	return response.Must(data, err)
+
+	return response.ResponseInstance.Must(data, err)
 }
 
 func (this *Restful) Add(req *http.Request) (int, []byte) {
 	data := this.Model.NewDataWithId()
-	params := _http.ReqFormToMap(req)
+	params := _http.HttpInstance.ReqFormToMap(req)
 
 	// 参数解析到结构体
-	if err := model.Parse(data, params); err != nil {
-		return response.Error(err.Error())
+	if err := parse.ParseInstance.Struct(data, params); err != nil {
+		return response.ResponseInstance.Error(err.Error())
 	}
 
 	if err := this.Model.Add(data); err != nil {
-		return response.Error(err.Error())
+		return response.ResponseInstance.Error(err.Error())
 	}
 
-	return response.Success(data)
+	return response.ResponseInstance.Success(data)
 }
 
 func (this *Restful) Update(param martini.Params, req *http.Request) (int, []byte) {
 	data := this.Model.NewData()
-	params := _http.ReqFormToMap(req)
+	params := _http.HttpInstance.ReqFormToMap(req)
 
-	if err, opts := model.ParseToUpdateMap(data, params); err == nil {
+	if err, opts := parse.ParseInstance.StructToUpdateMap(data, params); err == nil {
 		err := this.Model.Update(param["id"], opts)
-		return response.Must("更新成功", err)
+		return response.ResponseInstance.Must("更新成功", err)
 	} else {
-		return response.Error(err.Error())
+		return response.ResponseInstance.Error(err.Error())
 	}
 }
 
 func (this *Restful) Delete(params martini.Params) (int, []byte) {
-	return response.Must("删除成功", this.Model.Delete(params["id"]))
+	return response.ResponseInstance.Must("删除成功", this.Model.Delete(params["id"]))
 }

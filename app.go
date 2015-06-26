@@ -7,7 +7,7 @@
 package as
 
 import (
-	//"github.com/ascoders/as/lib/csrf"
+	"github.com/ascoders/as/lib/csrf"
 	"github.com/ascoders/as/lib/redis"
 	"github.com/go-martini/martini"
 	"github.com/martini-contrib/sessions"
@@ -37,7 +37,7 @@ func newClassic() *martini.ClassicMartini {
 	m.Use(sessions.Sessions(Conf.SessionName, store))
 
 	// csrf
-	//m.Use(csrf.Generate(Conf.CsrfOptions))
+	m.Use(csrf.CsrfInstance.Generate(Conf.CsrfOptions))
 
 	// 缓存中间件
 	m.Use(func(c martini.Context, req *http.Request, w http.ResponseWriter) {
@@ -52,7 +52,7 @@ func newClassic() *martini.ClassicMartini {
 			// GET请求读取缓存
 			if !Conf.Debug && req.Method == "GET" {
 				// 缓存没过期
-				if cache, err := redis.Get("url-" + req.URL.String()); err == nil {
+				if cache, err := redis.RedisInstance.Get("url-" + req.URL.String()); err == nil {
 					w.Write(cache)
 					return
 				}

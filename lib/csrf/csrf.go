@@ -12,6 +12,16 @@ import (
 	"github.com/martini-contrib/sessions"
 )
 
+type Csrf struct{}
+
+var (
+	CsrfInstance *Csrf
+)
+
+func init() {
+	CsrfInstance = &Csrf{}
+}
+
 // CSRF is used to get the current token and validate a suspect token.
 type CSRF interface {
 	// Return HTTP header to search for token.
@@ -106,7 +116,7 @@ const domainReg = `^\.?[a-z\d]+(?:(?:[a-z\d]*)|(?:[a-z\d\-]*[a-z\d]))(?:\.[a-z\d
 
 // Generate maps CSRF to each request. If this request is a Get request, it will generate a new token.
 // Additionally, depending on options set, generated tokens will be sent via Header and/or Cookie.
-func Generate(opts *Options) martini.Handler {
+func (this *Csrf) Generate(opts *Options) martini.Handler {
 	return func(s sessions.Session, c martini.Context, r *http.Request, w http.ResponseWriter) {
 		if opts.Header == "" {
 			opts.Header = "X-CSRFToken"
@@ -198,7 +208,7 @@ func Generate(opts *Options) martini.Handler {
 // HTTP header and then a "_csrf" form value. If one of these is found, the token will be validated
 // using ValidToken. If this validation fails, custom Error is sent in the reply.
 // If neither a header or form value is found, http.StatusBadRequest is sent.
-func Validate(r *http.Request, w http.ResponseWriter, x CSRF) {
+func (this *Csrf) Validate(r *http.Request, w http.ResponseWriter, x CSRF) {
 	// request.header 获取xsrf
 	if token := r.Header.Get(x.GetHeaderName()); token != "" {
 		if !x.ValidToken(token) {

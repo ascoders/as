@@ -14,12 +14,15 @@ import (
 type Redis struct{}
 
 var (
-	client redis.Client
+	client        redis.Client
+	RedisInstance *Redis
 )
 
 func init() {
 	//初始化redis数据库
 	client.Addr = conf.Conf.RedisAddress
+
+	RedisInstance = &Redis{}
 }
 
 // 设置缓存

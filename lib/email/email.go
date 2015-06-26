@@ -9,6 +9,14 @@ import (
 
 type Email struct{}
 
+var (
+	EmailInstance *Email
+)
+
+func init() {
+	EmailInstance = &Email{}
+}
+
 // 发送
 func (this *Email) Send(address []string, title string, html string) error {
 	e := email.NewEmail()

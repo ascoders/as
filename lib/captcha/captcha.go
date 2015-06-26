@@ -20,6 +20,14 @@ type Captcha struct {
 	Solution string
 }
 
+var (
+	CaptchaInstance *Captcha
+)
+
+func init() {
+	CaptchaInstance = &Captcha{}
+}
+
 // 验证图片
 func (this *Captcha) Image(params martini.Params, w http.ResponseWriter) {
 	w.Header().Set("Content-Type", "image/png")

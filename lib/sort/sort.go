@@ -7,6 +7,14 @@ import (
 
 type Sort struct{}
 
+var (
+	SortInstance *Sort
+)
+
+func init() {
+	SortInstance = &Sort{}
+}
+
 // 将map按照key，字母大小顺序排序
 // @return []string
 func (this *Sort) MapToSlice(params map[string]string) []string {

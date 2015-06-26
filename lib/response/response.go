@@ -12,6 +12,14 @@ import (
 
 type Response struct{}
 
+var (
+	ResponseInstance *Response
+)
+
+func init() {
+	ResponseInstance = &Response{}
+}
+
 func (this *Response) Success(data interface{}) (int, []byte) {
 	enc := encoder.JsonEncoder{}
 	return 200, encoder.Must(enc.Encode(data))

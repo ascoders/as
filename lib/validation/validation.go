@@ -23,6 +23,14 @@ var (
 
 type Valid struct{}
 
+var (
+	ValidInstance *Valid
+)
+
+func init() {
+	ValidInstance = &Valid{}
+}
+
 // 字符串不能为空
 func (this *Valid) Required(value string) error {
 	if value != "" {

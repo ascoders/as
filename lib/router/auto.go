@@ -37,7 +37,12 @@ func AutoRoute(r martini.Router) {
     {{.globalInfo}}
 }
 `
+	RouterInstance *Router
 )
+
+func init() {
+	RouterInstance = &Router{}
+}
 
 // store the comment for the controller method
 type ControllerComments struct {

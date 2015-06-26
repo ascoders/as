@@ -5,7 +5,7 @@ import (
 )
 
 var (
-	Lib *lib.LibStruct
+	Lib *lib.LibInstance
 )
 
 func init() {

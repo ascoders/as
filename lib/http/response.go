@@ -14,6 +14,14 @@ import (
 
 type Http struct{}
 
+var (
+	HttpInstance *Http
+)
+
+func init() {
+	HttpInstance = &Http{}
+}
+
 func (this *Http) NewResponseWriter(req *_http.Request, res _http.ResponseWriter) *ResponseWriter {
 	return &ResponseWriter{
 		Req: req,
@@ -33,8 +41,7 @@ func (this *ResponseWriter) Header() _http.Header {
 func (this *ResponseWriter) Write(c []byte) (int, error) {
 	// GET请求写入缓存
 	if strings.HasPrefix(this.Req.URL.String(), "/api") && this.Req.Method == "GET" {
-		_redis := redis.Redis{}
-		_redis.Set("url-"+this.Req.URL.String(), c)
+		redis.RedisInstance.Set("url-"+this.Req.URL.String(), c)
 	}
 
 	return this.Res.Write(c)
