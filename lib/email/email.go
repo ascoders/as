@@ -20,7 +20,7 @@ func init() {
 // 发送
 func (this *Email) Send(address []string, title string, html string) error {
 	e := email.NewEmail()
-	e.From = conf.Conf.EmailFrom
+	e.From = conf.ConfInstance.EmailFrom
 	e.To = address
 	e.Subject = title
 	e.Text = []byte("邮件无法显示")
@@ -36,6 +36,6 @@ func (this *Email) Send(address []string, title string, html string) error {
 			</div>
 		</div>
 	`)
-	return e.Send(conf.Conf.EmailHost+":"+strconv.Itoa(conf.Conf.EmailPort),
-		smtp.PlainAuth("", conf.Conf.EmailFrom, conf.Conf.EmailPassword, strconv.Itoa(conf.Conf.EmailPort)))
+	return e.Send(conf.ConfInstance.EmailHost+":"+strconv.Itoa(conf.ConfInstance.EmailPort),
+		smtp.PlainAuth("", conf.ConfInstance.EmailFrom, conf.ConfInstance.EmailPassword, strconv.Itoa(conf.ConfInstance.EmailPort)))
 }

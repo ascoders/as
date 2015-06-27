@@ -18,16 +18,16 @@ var (
 	RedisInstance *Redis
 )
 
-func init() {
+func Connect() {
 	//初始化redis数据库
-	client.Addr = conf.Conf.RedisAddress
+	client.Addr = conf.ConfInstance.RedisAddress
 
 	RedisInstance = &Redis{}
 }
 
 // 设置缓存
 func (this *Redis) Set(key string, val []byte) {
-	client.Setex(key, conf.Conf.CacheExpire, val)
+	client.Setex(key, conf.ConfInstance.CacheExpire, val)
 }
 
 // 设置缓存（包含时间）

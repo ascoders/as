@@ -1,20 +1,27 @@
-package as
+package router
 
 import (
 	//"github.com/ascoders/as/lib/captcha"
+	"github.com/ascoders/as/conf"
 	"github.com/ascoders/as/lib/response"
 	"github.com/go-martini/martini"
 	"io/ioutil"
 	"os"
 )
 
+type Router struct{}
+
 var (
-	Routers martini.Router
+	RouterInstance *Router
+	Routers        martini.Router // 所有路由规则表
 )
 
 func init() {
+	RouterInstance = &Router{}
 	Routers = martini.NewRouter()
+}
 
+func RouterListen() {
 	// 生成注解路由
 	/*
 		if Conf.Debug {
@@ -50,8 +57,8 @@ func init() {
 	})
 
 	// 全局模版文件
-	if Conf.GlobalPath != "" {
-		globalFile, err := os.Open(Conf.GlobalPath)
+	if conf.ConfInstance.GlobalPath != "" {
+		globalFile, err := os.Open(conf.ConfInstance.GlobalPath)
 		if err != nil {
 			panic(err)
 		}

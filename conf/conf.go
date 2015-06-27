@@ -7,10 +7,10 @@ import (
 )
 
 var (
-	Conf *Config // 基础配置
+	ConfInstance *Conf // 基础配置
 )
 
-type Config struct {
+type Conf struct {
 	Debug          bool                  // 是否开启调试模式
 	Host           string                // 本机地址
 	Port           uint8                 // 运行端口
@@ -35,41 +35,41 @@ type Config struct {
 }
 
 func init() {
-	Conf = &Config{}
+	ConfInstance = &Conf{}
 
 	// 设置默认值
-	Conf.Debug = true
-	Conf.Host = "127.0.0.1"
-	Conf.Port = 80
+	ConfInstance.Debug = true
+	ConfInstance.Host = "127.0.0.1"
+	ConfInstance.Port = 80
 
-	Conf.StaticDir = "static"
-	Conf.StaticOptions = martini.StaticOptions{
+	ConfInstance.StaticDir = "static"
+	ConfInstance.StaticOptions = martini.StaticOptions{
 		Prefix:      "/static/",
 		SkipLogging: true,
 	}
 
-	Conf.GlobalPath = ""
-	Conf.RedisAddress = "127.0.0.1:6379"
-	Conf.MongodbAddress = "127.0.0.1:27017"
-	Conf.CacheExpire = 60 * 60
+	ConfInstance.GlobalPath = ""
+	ConfInstance.RedisAddress = "127.0.0.1:6379"
+	ConfInstance.MongodbAddress = "127.0.0.1:27017"
+	ConfInstance.CacheExpire = 60 * 60
 
-	Conf.CsrfAuto = true
-	Conf.CsrfOptions = &csrf.Options{
+	ConfInstance.CsrfAuto = true
+	ConfInstance.CsrfOptions = &csrf.Options{
 		Secret:     "507dQJpITMRungvQ5kh2fiGVRWLqFg",
 		SessionKey: "id", // 根据用户id，为每个用户设置不同的csrf
 		SetCookie:  true,
 	}
 
-	Conf.SessionName = "asSession"
-	Conf.SessionSecret = "vpahHL29ajXuTY0RNhf1VYTHvRIJxX"
-	Conf.SessionExpire = 60 * 60 * 24 * 14
-	Conf.SessionOptions = sessions.Options{
+	ConfInstance.SessionName = "asSession"
+	ConfInstance.SessionSecret = "vpahHL29ajXuTY0RNhf1VYTHvRIJxX"
+	ConfInstance.SessionExpire = 60 * 60 * 24 * 14
+	ConfInstance.SessionOptions = sessions.Options{
 		Path:     "/",
 		Domain:   "",
-		MaxAge:   Conf.SessionExpire,
+		MaxAge:   ConfInstance.SessionExpire,
 		Secure:   false,
 		HttpOnly: true,
 	}
 
-	Conf.ErrorType = "类型错误"
+	ConfInstance.ErrorType = "类型错误"
 }

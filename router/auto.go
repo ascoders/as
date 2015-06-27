@@ -1,11 +1,3 @@
-/*==================================================
-	注解路由
-	根据控制器的注释自动生成路由文件
-	router/auto.go
-
-	Copyright (c) 2015 翱翔大空 and other contributors
- ==================================================*/
-
 package router
 
 import (
@@ -22,8 +14,6 @@ import (
 	"strings"
 )
 
-type Router struct{}
-
 var (
 	workPath, _          = os.Getwd()
 	globalRouterTemplate = `package router
@@ -37,12 +27,7 @@ func AutoRoute(r martini.Router) {
     {{.globalInfo}}
 }
 `
-	RouterInstance *Router
 )
-
-func init() {
-	RouterInstance = &Router{}
-}
 
 // store the comment for the controller method
 type ControllerComments struct {
@@ -93,7 +78,7 @@ func (this *Router) Auto(controls ...interface{}) {
 		}
 	}
 
-	this.genRouterCode()
+	genRouterCode()
 }
 
 func (this *Router) parserPkg(pkgRealpath string, pkgpath string) error {
@@ -115,7 +100,7 @@ func (this *Router) parserPkg(pkgRealpath string, pkgpath string) error {
 				switch specDecl := d.(type) {
 				case *ast.FuncDecl:
 					if specDecl.Recv != nil {
-						this.parserComments(specDecl.Doc, specDecl.Name.String(),
+						parserComments(specDecl.Doc, specDecl.Name.String(),
 							fmt.Sprint(specDecl.Recv.List[0].Type.(*ast.StarExpr).X), pkgpath)
 					}
 				}
@@ -126,7 +111,7 @@ func (this *Router) parserPkg(pkgRealpath string, pkgpath string) error {
 	return nil
 }
 
-func (this *Router) parserComments(comments *ast.CommentGroup, funcName, controllerName, pkgpath string) error {
+func parserComments(comments *ast.CommentGroup, funcName, controllerName, pkgpath string) error {
 	if comments != nil && comments.List != nil {
 		for _, c := range comments.List {
 			t := strings.TrimSpace(strings.TrimLeft(c.Text, "//"))
@@ -172,7 +157,7 @@ func (this *Router) parserComments(comments *ast.CommentGroup, funcName, control
 
 }
 
-func (this *Router) genRouterCode() {
+func genRouterCode() {
 	os.Mkdir(path.Join(workPath, "router"), 0755)
 
 	var globalInfo string

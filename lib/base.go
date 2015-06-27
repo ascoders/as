@@ -10,13 +10,12 @@ import (
 	"github.com/ascoders/as/lib/parse"
 	"github.com/ascoders/as/lib/redis"
 	"github.com/ascoders/as/lib/response"
-	"github.com/ascoders/as/lib/router"
 	"github.com/ascoders/as/lib/scheduled"
 	"github.com/ascoders/as/lib/sort"
 	"github.com/ascoders/as/lib/validation"
 )
 
-type LibInstance struct {
+type Lib struct {
 	Buffer    buffer.Buffer
 	Captcha   captcha.Captcha
 	Email     email.Email
@@ -26,16 +25,15 @@ type LibInstance struct {
 	Parse     parse.Parse
 	Redis     redis.Redis
 	Response  response.Response
-	Router    router.Router
 	Scheduled scheduled.Scheduled
 	Sort      sort.Sort
 	Csrf      csrf.Csrf
 }
 
 var (
-	Lib *LibInstance
+	LibInstance *Lib
 )
 
 func init() {
-	Lib = &LibInstance{}
+	LibInstance = &Lib{}
 }

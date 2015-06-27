@@ -80,7 +80,7 @@ func (this *Base) GetsByPage(page int, limit int, obj interface{}) error {
 // @param {string} id 资源id
 func (this *Base) Get(id string, obj interface{}) error {
 	if !bson.IsObjectIdHex(id) {
-		return errors.New("id" + conf.Conf.ErrorType)
+		return errors.New("id" + conf.ConfInstance.ErrorType)
 	}
 
 	return this.Collection.FindId(bson.ObjectIdHex(id)).One(obj)
@@ -89,7 +89,7 @@ func (this *Base) Get(id string, obj interface{}) error {
 // 根据id更新某个资源
 func (this *Base) Update(id string, update map[string]interface{}) error {
 	if !bson.IsObjectIdHex(id) {
-		return errors.New("id" + conf.Conf.ErrorType)
+		return errors.New("id" + conf.ConfInstance.ErrorType)
 	}
 
 	return this.Collection.UpdateId(bson.ObjectIdHex(id), bson.M{"$set": update})
@@ -98,7 +98,7 @@ func (this *Base) Update(id string, update map[string]interface{}) error {
 // 根据id删除某个资源
 func (this *Base) Delete(id string) error {
 	if !bson.IsObjectIdHex(id) {
-		return errors.New("id" + conf.Conf.ErrorType)
+		return errors.New("id" + conf.ConfInstance.ErrorType)
 	}
 
 	return this.Collection.RemoveId(bson.ObjectIdHex(id))

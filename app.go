@@ -7,8 +7,10 @@
 package as
 
 import (
+	"github.com/ascoders/as/db"
 	"github.com/ascoders/as/lib/csrf"
 	"github.com/ascoders/as/lib/redis"
+	"github.com/ascoders/as/router"
 	"github.com/go-martini/martini"
 	"github.com/martini-contrib/sessions"
 	"net/http"
@@ -71,10 +73,19 @@ func newClassic() *martini.ClassicMartini {
 }
 
 func Run() {
+	// 实例化martini对象
 	m := newClassic()
 
-	// 加载路由规则
-	m.Action(Routers.Handle)
+	// 初始化并加载路由规则
+	router.RouterListen()
+
+	m.Action(router.Routers.Handle)
+
+	// 初始化数据库链接
+	db.Connect()
+
+	// 初始化redis链接
+	redis.Connect()
 
 	// 监听端口
 	m.RunOnAddr(":" + strconv.Itoa(int(Conf.Port)))
