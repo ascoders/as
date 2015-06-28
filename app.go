@@ -79,7 +79,7 @@ func Run() {
 	// 初始化并加载路由规则
 	router.RouterListen()
 
-	m.Action(router.Routers.Handle)
+	m.Action(router.RouterInstance.Routes.Handle)
 
 	// 初始化数据库链接
 	db.Connect()

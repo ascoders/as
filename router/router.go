@@ -9,16 +9,17 @@ import (
 	"os"
 )
 
-type Router struct{}
+type Router struct {
+	Routes martini.Router // 所有路由规则表
+}
 
 var (
 	RouterInstance *Router
-	Routers        martini.Router // 所有路由规则表
 )
 
 func init() {
 	RouterInstance = &Router{}
-	Routers = martini.NewRouter()
+	RouterInstance.Routes = martini.NewRouter()
 }
 
 func RouterListen() {
@@ -36,23 +37,23 @@ func RouterListen() {
 	*/
 
 	// 添加注解路由
-	// AutoRoute(Routers)
+	// AutoRoute(RouterInstance.Routes)
 
 	// 获取验证码
 	/*
-		Routers.Get("/api/captcha/:id", captcha.Image)
+		RouterInstance.Routes.Get("/api/captcha/:id", captcha.Image)
 		// 创建验证码
-		Routers.Post("/api/captcha", func() (int, []byte) {
+		RouterInstance.Routes.Post("/api/captcha", func() (int, []byte) {
 			return response.ResponseInstance.Success(map[string]interface{}{
 				"captchaCode": captcha.Code(),
 			})
 		})
 		// 验证验证码
-		Routers.Get("/api/captcha", captcha.Check)
+		RouterInstance.Routes.Get("/api/captcha", captcha.Check)
 	*/
 
 	// 匹配未定义的api
-	Routers.Any("/api/**", func() (int, []byte) {
+	RouterInstance.Routes.Any("/api/**", func() (int, []byte) {
 		return response.ResponseInstance.Error("Api Not Found")
 	})
 
@@ -64,7 +65,7 @@ func RouterListen() {
 		}
 		globalFileText, err := ioutil.ReadAll(globalFile)
 		globalFile.Close()
-		Routers.Get("/**", func() (int, []byte) {
+		RouterInstance.Routes.Get("/**", func() (int, []byte) {
 			return 200, globalFileText
 		})
 	}
