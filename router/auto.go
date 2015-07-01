@@ -19,11 +19,11 @@ var (
 	globalRouterTemplate = `package router
 
 import (
-    "github.com/go-martini/martini"
-    {{.packageInfo}}
+	"github.com/ascoders/as"
+	{{.packageInfo}}
 )
 
-func AutoRoute(r martini.Router) {
+func init() {
     {{.globalInfo}}
 }
 `
@@ -164,7 +164,6 @@ func genRouterCode() {
 	var packageInfo string
 
 	var useCsrf bool
-	var useCaptcha bool
 	/*
 		if opts.AutoCsrf {
 			useCsrf = true
@@ -189,11 +188,10 @@ func genRouterCode() {
 				for pk, _ := range c.PrefixMethods {
 					switch strings.ToLower(c.PrefixMethods[pk]) {
 					case "csrf":
-						prefix += "csrf.Validate, "
+						prefix += "as.lib.CsrfInstance.Validate, "
 						useCsrf = true
 					case "captcha":
-						prefix += "captcha.Check, "
-						useCaptcha = true
+						prefix += "as.lob.CaptchaInstance.Check, "
 					default:
 						prefix += packageName + "." + strings.Title(strings.ToLower(c.PrefixMethods[pk])) + ", "
 					}
@@ -202,7 +200,7 @@ func genRouterCode() {
 				// add func
 				for _, m := range c.AllowHTTPMethods {
 					globalInfo = globalInfo + `
-    r.` + strings.Title(strings.ToLower(strings.TrimSpace(m))) + `("/api` + c.Router + `", ` +
+    as.Router.Routes.` + strings.Title(strings.ToLower(strings.TrimSpace(m))) + `("/api` + c.Router + `", ` +
 						prefix +
 						packageName + `.` + strings.TrimSpace(c.Method) + `)`
 				}
@@ -231,25 +229,16 @@ func genRouterCode() {
 
 			// 默认开启csrf，只对非get方法有效
 			if useCsrf && rest[0] != "Get" {
-				prefix += "csrf.Validate, "
+				prefix += "as.lib.CsrfInstance.Validate, "
 			}
 
 			globalInfo = globalInfo + `
-    r.` + rest[0] + `("/api/` + packageName + `s` + rest[1] + `", ` +
+    as.Router.Routes.` + rest[0] + `("/api/` + packageName + `s` + rest[1] + `", ` +
 				prefix +
 				packageName + `.` + rest[2] + `)`
 		}
 
 		globalInfo = globalInfo + `
-	`
-	}
-
-	if useCsrf {
-		packageInfo += `"github.com/ascoders/as/lib/csrf"
-	`
-	}
-	if useCaptcha {
-		packageInfo += `"github.com/ascoders/as/lib/captcha"
 	`
 	}
 

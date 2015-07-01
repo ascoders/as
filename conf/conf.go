@@ -31,6 +31,7 @@ type Conf struct {
 	EmailFrom      string                // 邮箱发送方
 	EmailPort      int                   // 邮箱端口
 	EmailPassword  string                // 邮箱密码
+	CaptchaUrl     string                // 验证码地址
 	ErrorType      string                // 类型错误提示
 }
 

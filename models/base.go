@@ -15,6 +15,8 @@ import (
 
 type Base struct {
 	Collection *mgo.Collection
+	Table      string      // 表名
+	Indexs     []mgo.Index // 表设置
 }
 
 type BaseModel interface {
