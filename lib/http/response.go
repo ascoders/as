@@ -7,7 +7,7 @@
 package http
 
 import (
-	"github.com/ascoders/as/lib/redis"
+	"github.com/ascoders/as/redis"
 	_http "net/http"
 	"strings"
 )

@@ -8,7 +8,7 @@ package as
 
 import (
 	"github.com/ascoders/as/db"
-	"github.com/ascoders/as/lib/redis"
+	"github.com/ascoders/as/redis"
 	"github.com/ascoders/as/router"
 	"strconv"
 )

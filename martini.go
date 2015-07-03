@@ -2,7 +2,7 @@ package as
 
 import (
 	"github.com/ascoders/as/lib/csrf"
-	"github.com/ascoders/as/lib/redis"
+	"github.com/ascoders/as/redis"
 	"github.com/go-martini/martini"
 	"github.com/martini-contrib/sessions"
 	"net/http"

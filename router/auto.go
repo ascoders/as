@@ -188,10 +188,10 @@ func genRouterCode() {
 				for pk, _ := range c.PrefixMethods {
 					switch strings.ToLower(c.PrefixMethods[pk]) {
 					case "csrf":
-						prefix += "as.lib.CsrfInstance.Validate, "
+						prefix += "as.Lib.Csrf.Validate, "
 						useCsrf = true
 					case "captcha":
-						prefix += "as.lob.CaptchaInstance.Check, "
+						prefix += "as.Lib.Captcha.Check, "
 					default:
 						prefix += packageName + "." + strings.Title(strings.ToLower(c.PrefixMethods[pk])) + ", "
 					}
@@ -229,7 +229,7 @@ func genRouterCode() {
 
 			// 默认开启csrf，只对非get方法有效
 			if useCsrf && rest[0] != "Get" {
-				prefix += "as.lib.CsrfInstance.Validate, "
+				prefix += "as.Lib.Csrf.Validate, "
 			}
 
 			globalInfo = globalInfo + `
