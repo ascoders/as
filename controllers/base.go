@@ -13,8 +13,9 @@ import (
 )
 
 type Base struct {
-	Restful // restful api
-	Model   models.BaseModel
+	Restful    // restful api
+	Model      models.BaseModel
+	UseRestful bool // 是否自动启用restful路由
 }
 
 func (this *Base) NewModel(model models.BaseModel) {

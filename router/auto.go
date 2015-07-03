@@ -163,12 +163,6 @@ func genRouterCode() {
 	var globalInfo string
 	var packageInfo string
 
-	var useCsrf bool
-	/*
-		if opts.AutoCsrf {
-			useCsrf = true
-		}
-	*/
 	for k, cList := range genInfoList {
 		pathAndControllerName := strings.Split(k, ":")
 		packagePathArr := strings.Split(pathAndControllerName[0], "/")
@@ -189,7 +183,6 @@ func genRouterCode() {
 					switch strings.ToLower(c.PrefixMethods[pk]) {
 					case "csrf":
 						prefix += "as.Lib.Csrf.Validate, "
-						useCsrf = true
 					case "captcha":
 						prefix += "as.Lib.Captcha.Check, "
 					default:
@@ -208,38 +201,38 @@ func genRouterCode() {
 		}
 
 		// restful api （最后匹配 且设置了自动restful）
-		restful := [][]string{
-			[]string{"Get", "", "Gets"},
-			[]string{"Get", "/:id", "Get"},
-			[]string{"Post", "", "Add"},
-			[]string{"Patch", "/:id", "Update"},
-			[]string{"Delete", "/:id", "Delete"},
-		}
-	restfulLoop:
-		for _, rest := range restful {
-			// 跳过手动复写的方法
-			for _, c := range cList {
-				if strings.ToLower(rest[2]) == strings.ToLower(c.Method) {
-					continue restfulLoop
-				}
-			}
+		/*
+					restful := [][]string{
+						[]string{"Get", "", "Gets"},
+						[]string{"Get", "/:id", "Get"},
+						[]string{"Post", "", "Add"},
+						[]string{"Patch", "/:id", "Update"},
+						[]string{"Delete", "/:id", "Delete"},
+					}
 
-			// 解析前缀路由
-			var prefix = ""
+				restfulLoop:
+					for _, rest := range restful {
+						// 跳过手动复写的方法
+						for _, c := range cList {
+							if strings.ToLower(rest[2]) == strings.ToLower(c.Method) {
+								continue restfulLoop
+							}
+						}
 
-			// 默认开启csrf，只对非get方法有效
-			if useCsrf && rest[0] != "Get" {
-				prefix += "as.Lib.Csrf.Validate, "
-			}
+						// 解析前缀路由
+						var prefix = ""
 
-			globalInfo = globalInfo + `
-    as.Router.Routes.` + rest[0] + `("/api/` + packageName + `s` + rest[1] + `", ` +
-				prefix +
-				packageName + `.` + rest[2] + `)`
-		}
+						// 默认开启csrf，只对非get方法有效
+						if useCsrf && rest[0] != "Get" {
+							prefix += "as.Lib.Csrf.Validate, "
+						}
 
-		globalInfo = globalInfo + `
-	`
+						globalInfo = globalInfo + `
+			    as.Router.Routes.` + rest[0] + `("/api/` + packageName + `s` + rest[1] + `", ` +
+							prefix +
+							packageName + `.` + rest[2] + `)`
+					}
+		*/
 	}
 
 	if globalInfo != "" && packageInfo != "" {
