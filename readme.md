@@ -19,7 +19,7 @@ func main() {
 
 # 配置
 
-可以通过`as.Conf.*`配置任意参数，请注意将它放在`as.Run()`之前。同时你也可以单独写在一个配置文件中，查看<a href='/ascoders/as/conf/readme.md'>配置列表</a>。
+可以通过`as.Conf.*`配置任意参数，请注意将它放在`as.Run()`之前。同时你也可以单独写在一个配置文件中，查看<a href='/ascoders/as/conf'>配置列表</a>。
 
 ~~~go
 func main() {
