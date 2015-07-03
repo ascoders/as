@@ -200,6 +200,9 @@ func genRouterCode() {
 			}
 		}
 
+		globalInfo = globalInfo + `
+		`
+
 		// restful api （最后匹配 且设置了自动restful）
 		/*
 					restful := [][]string{

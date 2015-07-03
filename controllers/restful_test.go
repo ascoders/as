@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"github.com/ascoders/as/db"
 	"github.com/ascoders/as/models"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
@@ -29,7 +30,8 @@ type RestfulTestModel struct {
 
 func New() *RestfulTestModel {
 	model := &RestfulTestModel{}
-	model.Collection = models.Db.C("restful_test_data")
+	db.Connect()
+	model.Collection = db.DbInstance.DataBase.C("restful_test_data")
 
 	if err := model.Collection.EnsureIndex(mgo.Index{
 		Key:    []string{"e"},
@@ -52,14 +54,6 @@ func (this *RestfulTestModel) NewDatas() interface{} {
 	var r []*RestfulTestData
 	return &r
 }
-
-/*
-r.Get("/api/users", user.Gets)
-r.Get("/api/users/:id", user.Get)
-r.Post("/api/users", user.Add)
-r.Patch("/api/users/:id", user.Update)
-r.Delete("/api/users/:id", user.Delete)
-*/
 
 func TestAdd(t *testing.T) {
 	controller := &RestfulTestController{}
@@ -90,7 +84,7 @@ func TestAdd(t *testing.T) {
 	}
 
 	// 删除数据库
-	models.Db.C("restful_test_data").DropCollection()
+	db.DbInstance.DataBase.C("restful_test_data").DropCollection()
 }
 
 func TestGets(t *testing.T) {
@@ -115,5 +109,5 @@ func TestGets(t *testing.T) {
 	}
 
 	// 删除数据库
-	models.Db.C("restful_test_data").DropCollection()
+	db.DbInstance.DataBase.C("restful_test_data").DropCollection()
 }

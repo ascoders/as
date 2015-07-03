@@ -13,7 +13,7 @@ func TestMapToSlice(t *testing.T) {
 		"c":  "3",
 	}
 
-	result := MapToSlice(params)
+	result := SortInstance.MapToSlice(params)
 	if len(result) != 4 {
 		t.Error("长度和输入不一致")
 	}
@@ -31,7 +31,7 @@ func TestFormToSlice(t *testing.T) {
 	req.Form.Set("c", "3")
 	req.Form.Set("sign", "s4se4rfse13f")
 
-	result := FormToSlice(req, "sign")
+	result := SortInstance.FormToSlice(req, "sign")
 	if len(result) != 4 {
 		t.Error("长度和输入不一致")
 	}

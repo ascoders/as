@@ -7,7 +7,7 @@ import (
 )
 
 type Db struct {
-	dataBase *mgo.Database // 数据库连接池
+	DataBase *mgo.Database // 数据库连接池
 }
 
 var (
@@ -27,11 +27,11 @@ func Connect() {
 	}
 
 	session.SetMode(mgo.Monotonic, true)
-	DbInstance.dataBase = session.DB("woku")
+	DbInstance.DataBase = session.DB("woku")
 
 	// 实例化各个表
 	for _, v := range models.BaseLists {
-		v.Collection = DbInstance.dataBase.C(v.Table)
+		v.Collection = DbInstance.DataBase.C(v.Table)
 
 		for k, _ := range v.Indexs {
 			if err := v.Collection.EnsureIndex(v.Indexs[k]); err != nil {
