@@ -19,6 +19,7 @@ type Conf struct {
 	GlobalPath     string                // 全局文件路径
 	RedisAddress   string                // redis地址
 	MongodbAddress string                // mongodb地址
+	MongodbDbName  string                // 数据库名称
 	CacheExpire    int64                 // 缓存时间
 	CsrfAuto       bool                  // 是否开启默认csrf
 	CsrfOptions    *csrf.Options         // scrf加盐

@@ -27,7 +27,7 @@ func Connect() {
 	}
 
 	session.SetMode(mgo.Monotonic, true)
-	DbInstance.DataBase = session.DB("woku")
+	DbInstance.DataBase = session.DB(conf.ConfInstance.MongodbDbName)
 
 	// 实例化各个表
 	for _, v := range models.BaseLists {
