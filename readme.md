@@ -59,6 +59,14 @@ func New() *Controller {
 
 # 模型
 
+模型同样内嵌`as.Model`，查看[模型设计](models)。
+
+~~~go
+type Model struct {
+	as.Model
+}
+~~~
+
 # 路由
 
 as框架使用了注释路由，如下写法可以注册一个`/apps`url下的路由，响应`get`方法的请求，并返回ok，响应号为200.
