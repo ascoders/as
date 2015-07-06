@@ -8,6 +8,7 @@ package parse
 
 import (
 	"errors"
+	"fmt"
 	"github.com/ascoders/as/lib/validation"
 	"reflect"
 	"strconv"
@@ -29,7 +30,7 @@ func init() {
 // @param {interface{}} obj 被解析的结构体
 // @param {http.Request} req 客户端请求
 // 用于添加
-func (this *Parse) Struct(obj interface{}, params map[string]string) error {
+func (this *Parse) Struct(obj interface{}, params map[string]interface{}) error {
 	objT := reflect.TypeOf(obj).Elem()
 	objV := reflect.ValueOf(obj).Elem()
 
@@ -56,7 +57,8 @@ func (this *Parse) Struct(obj interface{}, params map[string]string) error {
 		valids := strings.Split(fieldT.Tag.Get("valid"), ";")
 
 		// 结构体的参数在提交参数不存在，则跳过
-		value, ok := params[tag]
+		valueInterface, ok := params[tag]
+		value := fmt.Sprint(valueInterface)
 		if !ok {
 			// 如果跳过的参数是required的，则返回一个错误
 			if stringInSlice("required", valids) {
@@ -136,12 +138,12 @@ func (this *Parse) Struct(obj interface{}, params map[string]string) error {
 	return nil
 }
 
-// 在Parse基础上返回用于更新的map
+// 在Parse基础上返回用于更新的map 用于更新
 // @param {interface{}} obj 被解析的结构体
-// @param {http.Request} req 客户端请求
+// @param {map[string]string} params 完整参数和值
+// @param {string} exempts 豁免（不参与验证的字段）
 // @return map[string]interface{}
-// 用于更新
-func (this *Parse) StructToUpdateMap(obj interface{}, params map[string]string, exempts ...string) (error, map[string]interface{}) {
+func (this *Parse) StructToUpdateMap(obj interface{}, params map[string]interface{}, exempts ...string) (error, map[string]interface{}) {
 	opts := make(map[string]interface{})
 	objT := reflect.TypeOf(obj).Elem()
 	objV := reflect.ValueOf(obj).Elem()
@@ -169,12 +171,15 @@ func (this *Parse) StructToUpdateMap(obj interface{}, params map[string]string, 
 		bson := fieldT.Tag.Get("bson")
 
 		// 跳过url不存在的参数
-		value, ok := params[tag]
+		valueInterface, ok := params[tag]
 
 		// 跳过参数中结构体不存在的参数
 		if !ok {
 			continue
 		}
+
+		// value由interface{}转化为string，便于赋值
+		value := fmt.Sprint(valueInterface)
 
 		// 从标签获取valid参数
 		valids := strings.Split(fieldT.Tag.Get("valid"), ";")

@@ -12,8 +12,8 @@ import (
 
 // 解析请求参数到map
 // @params limit ...string 仅解析提供的参数
-func (this *Http) ReqFormToMap(req *_http.Request, limit ...string) map[string]string {
-	params := make(map[string]string)
+func (this *Http) ReqFormToMap(req *_http.Request, limit ...string) map[string]interface{} {
+	params := make(map[string]interface{})
 	// 解析请求
 	req.ParseForm()
 

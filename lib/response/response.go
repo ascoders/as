@@ -25,7 +25,7 @@ func (this *Response) Success(data interface{}) (int, []byte) {
 	return 200, encoder.Must(enc.Encode(data))
 }
 
-func (this *Response) Error(message string) (int, []byte) {
+func (this *Response) Error(message interface{}) (int, []byte) {
 	enc := encoder.JsonEncoder{}
 	return 400, encoder.Must(enc.Encode(map[string]interface{}{
 		"message": message,
@@ -38,4 +38,9 @@ func (this *Response) Must(data interface{}, err error) (int, []byte) {
 	} else {
 		return this.Error(err.Error())
 	}
+}
+
+// 输出空
+func (this *Response) Empty() (int, []byte) {
+	return 200, nil
 }

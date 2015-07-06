@@ -37,5 +37,5 @@ func (this *Email) Send(address []string, title string, html string) error {
 		</div>
 	`)
 	return e.Send(conf.ConfInstance.EmailHost+":"+strconv.Itoa(conf.ConfInstance.EmailPort),
-		smtp.PlainAuth("", conf.ConfInstance.EmailFrom, conf.ConfInstance.EmailPassword, strconv.Itoa(conf.ConfInstance.EmailPort)))
+		smtp.PlainAuth("", conf.ConfInstance.EmailFrom, conf.ConfInstance.EmailPassword, conf.ConfInstance.EmailHost))
 }
