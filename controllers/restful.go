@@ -21,6 +21,11 @@ type Restful struct {
 }
 
 func (this *Restful) Gets(req *http.Request) (int, []byte) {
+	return this.GetsCustom(req, nil, nil)
+}
+
+// 自定义配置的Gets
+func (this *Restful) GetsCustom(req *http.Request, finder map[string]interface{}, selecter map[string]interface{}) (int, []byte) {
 	datas := this.Model.NewDatas()
 	req.ParseForm()
 	lastId := req.Form.Get("lastId")
@@ -29,10 +34,10 @@ func (this *Restful) Gets(req *http.Request) (int, []byte) {
 
 	// 优先使用lastId查询
 	if page > 0 && lastId == "" {
-		err := this.Model.GetsByPage(page, limit, datas)
+		err := this.Model.GetsByPage(page, limit, datas, finder, selecter)
 		return response.ResponseInstance.Must(datas, err)
 	} else {
-		err := this.Model.GetsById(lastId, limit, datas)
+		err := this.Model.GetsById(lastId, limit, datas, finder, selecter)
 		return response.ResponseInstance.Must(datas, err)
 	}
 }
