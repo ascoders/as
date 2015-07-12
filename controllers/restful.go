@@ -32,14 +32,22 @@ func (this *Restful) GetsCustom(req *http.Request, finder map[string]interface{}
 	page, _ := strconv.Atoi(req.Form.Get("page"))
 	limit, _ := strconv.Atoi(req.Form.Get("limit"))
 
-	// 优先使用lastId查询
+	var err error
+
+	// 查询lists列表，优先使用lastId
 	if page > 0 && lastId == "" {
-		err := this.Model.GetsByPage(page, limit, datas, finder, selecter)
-		return response.ResponseInstance.Must(datas, err)
+		err = this.Model.GetsByPage(page, limit, datas, finder, selecter)
 	} else {
-		err := this.Model.GetsById(lastId, limit, datas, finder, selecter)
-		return response.ResponseInstance.Must(datas, err)
+		err = this.Model.GetsById(lastId, limit, datas, finder, selecter)
 	}
+
+	// 查询总数
+	count := this.Model.Count(finder)
+
+	return response.ResponseInstance.Must(map[string]interface{}{
+		"list":  datas,
+		"count": count,
+	}, err)
 }
 
 func (this *Restful) Get(param martini.Params) (int, []byte) {

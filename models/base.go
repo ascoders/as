@@ -23,6 +23,7 @@ type BaseModel interface {
 	Add(obj interface{}) error
 	GetsById(lastId string, limit int, obj interface{}, finder map[string]interface{}, selecter map[string]interface{}) error
 	GetsByPage(page int, limit int, obj interface{}, finder map[string]interface{}, selecter map[string]interface{}) error
+	Count(finder map[string]interface{}) int
 	Get(id string, obj interface{}) error
 	Update(id string, update map[string]interface{}) error
 	Delete(id string) error
@@ -78,6 +79,17 @@ func (this *Base) GetsByPage(page int, limit int, obj interface{}, finder map[st
 	}
 
 	return this.Collection.Find(finder).Select(selecter).Sort("_id").Skip((page - 1) * limit).Limit(limit).All(obj)
+}
+
+// 获取总数
+func (this *Base) Count(finder map[string]interface{}) int {
+	count, err := this.Collection.Find(finder).Count()
+
+	if err != nil {
+		return 0
+	}
+
+	return count
 }
 
 // 获取某个资源
