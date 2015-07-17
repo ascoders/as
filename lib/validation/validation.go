@@ -10,6 +10,7 @@ import (
 	"errors"
 	"regexp"
 	"strconv"
+	"strings"
 )
 
 var (
@@ -157,4 +158,16 @@ func (this *Valid) ZipCode(value string) error {
 		return nil
 	}
 	return errors.New("格式为邮政编码")
+}
+
+// 指定字符串
+func (this *Valid) Enum(value string, enums string) error {
+	// 拆分字符串
+	each := strings.Split(enums, ",")
+	for k, _ := range each {
+		if value == strings.TrimSpace(each[k]) {
+			return nil
+		}
+	}
+	return errors.New("不在指定范围内")
 }

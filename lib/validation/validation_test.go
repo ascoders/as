@@ -237,3 +237,22 @@ func TestZipCode(t *testing.T) {
 		t.Error("ZipCode方法失败")
 	}
 }
+
+func TestEnum(t *testing.T) {
+	valid := Valid{}
+	if err := valid.Enum("a", "a"); err != nil {
+		t.Error("Enum方法失败")
+	}
+	if err := valid.Enum("b", "a,b"); err != nil {
+		t.Error("Enum方法失败")
+	}
+	if err := valid.Enum("b", "a, b"); err != nil {
+		t.Error("Enum方法失败")
+	}
+	if err := valid.Enum("b", " a , b "); err != nil {
+		t.Error("Enum方法失败")
+	}
+	if err := valid.Enum("c", "a,b"); err == nil {
+		t.Error("Enum方法失败")
+	}
+}

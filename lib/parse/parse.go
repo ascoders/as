@@ -58,6 +58,7 @@ func (this *Parse) Struct(obj interface{}, params map[string]interface{}) error 
 
 		// 结构体的参数在提交参数不存在，则跳过
 		valueInterface, ok := params[tag]
+
 		value := fmt.Sprint(valueInterface)
 		if !ok {
 			// 如果跳过的参数是required的，则返回一个错误
@@ -328,6 +329,8 @@ func validKey(key string, value string) error {
 		return validation.ValidInstance.MobileOrTel(value)
 	case "zipcode":
 		return validation.ValidInstance.ZipCode(value)
+	case "enum":
+		return validation.ValidInstance.Enum(value, keySlice[1])
 	}
 
 	return nil
