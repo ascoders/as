@@ -7,6 +7,7 @@
 package captcha
 
 import (
+	"github.com/ascoders/as/conf"
 	"github.com/dchest/captcha"
 	"github.com/go-martini/martini"
 	"net/http"
@@ -42,7 +43,7 @@ func (this *Captcha) Code() string {
 // 校验验证码
 func (this *Captcha) Check(req *http.Request, res http.ResponseWriter) {
 	req.ParseForm()
-	if ok := captcha.VerifyString(req.Form.Get("capid"), req.Form.Get("cap")); !ok {
+	if ok := captcha.VerifyString(req.Form.Get(conf.ConfInstance.CaptchaIdName), req.Form.Get(conf.ConfInstance.CaptchaName)); !ok {
 		res.WriteHeader(400)
 		res.Write([]byte("验证码错误"))
 	}

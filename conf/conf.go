@@ -33,6 +33,8 @@ type Conf struct {
 	EmailPort      int                   // 邮箱端口
 	EmailPassword  string                // 邮箱密码
 	CaptchaUrl     string                // 验证码地址
+	CaptchaName    string                // 验证码内容校验key
+	CaptchaIdName  string                // 验证码id校验key
 	ErrorType      string                // 类型错误提示
 }
 
@@ -72,6 +74,9 @@ func init() {
 		Secure:   false,
 		HttpOnly: true,
 	}
+
+	ConfInstance.CaptchaName = "captcha"
+	ConfInstance.CaptchaIdName = "capid"
 
 	ConfInstance.ErrorType = "类型错误"
 }
