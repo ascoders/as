@@ -9,6 +9,7 @@ package models
 import (
 	//"github.com/ascoders/as/conf"
 	"github.com/ascoders/as/db"
+	"errors"
 )
 
 type Base struct{}
@@ -31,8 +32,6 @@ func (this *Base) Add(obj interface{}) error {
 	return db.Db.Create(obj).Error
 }
 
-/*
-
 // 获取资源集
 // @param {string} id 上一页最后一个id,没有填空
 // @param {Int} limit 显示数量
@@ -44,7 +43,8 @@ func (this *Base) GetsById(lastId string, limit int, obj interface{}, finder map
 	if limit < 0 || limit > 100 {
 		return errors.New("批量查询数量在1-100之间")
 	}
-
+	return nil
+	/*
 	if !bson.IsObjectIdHex(lastId) {
 		return this.Collection.Find(finder).Select(selecter).Sort("_id").Limit(limit).All(obj)
 	} else {
@@ -52,6 +52,7 @@ func (this *Base) GetsById(lastId string, limit int, obj interface{}, finder map
 		finder["_id"] = bson.M{"$gt": bson.ObjectIdHex(lastId)}
 		return this.Collection.Find(finder).Select(selecter).Sort("_id").Limit(limit).All(obj)
 	}
+	*/
 }
 
 // 获取资源集
@@ -74,11 +75,14 @@ func (this *Base) GetsByPage(page int, limit int, obj interface{}, finder map[st
 		return errors.New("批量查询数量在1-100之间")
 	}
 
-	return this.Collection.Find(finder).Select(selecter).Sort("_id").Skip((page - 1) * limit).Limit(limit).All(obj)
+	return nil
+	//return this.Collection.Find(finder).Select(selecter).Sort("_id").Skip((page - 1) * limit).Limit(limit).All(obj)
 }
 
 // 获取总数
 func (this *Base) Count(finder map[string]interface{}) int {
+	return 0
+	/*
 	count, err := this.Collection.Find(finder).Count()
 
 	if err != nil {
@@ -86,34 +90,42 @@ func (this *Base) Count(finder map[string]interface{}) int {
 	}
 
 	return count
+	*/
 }
 
 // 获取某个资源
 // @param {string} id 资源id
 func (this *Base) Get(id string, obj interface{}) error {
+	/*
 	if !bson.IsObjectIdHex(id) {
 		return errors.New("id" + conf.ConfInstance.ErrorType)
 	}
 
 	return this.Collection.FindId(bson.ObjectIdHex(id)).One(obj)
+	*/
+	return nil
 }
 
 // 根据id更新某个资源
 func (this *Base) Update(id string, update map[string]interface{}) error {
+	/*
 	if !bson.IsObjectIdHex(id) {
 		return errors.New("id" + conf.ConfInstance.ErrorType)
 	}
 
 	return this.Collection.UpdateId(bson.ObjectIdHex(id), bson.M{"$set": update})
+	*/
+	return nil
 }
 
 // 根据id删除某个资源
 func (this *Base) Delete(id string) error {
+	/*
 	if !bson.IsObjectIdHex(id) {
 		return errors.New("id" + conf.ConfInstance.ErrorType)
 	}
 
 	return this.Collection.RemoveId(bson.ObjectIdHex(id))
+	*/
+	return nil
 }
-
-*/
