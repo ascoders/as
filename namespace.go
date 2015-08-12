@@ -3,6 +3,7 @@ package as
 import (
 	"github.com/ascoders/as/conf"
 	"github.com/ascoders/as/controllers"
+	"github.com/ascoders/as/data"
 	"github.com/ascoders/as/db"
 	"github.com/ascoders/as/email"
 	"github.com/ascoders/as/lib"
@@ -27,6 +28,10 @@ type Controller struct {
 
 type Model struct {
 	models.Base
+}
+
+type Data struct {
+	data.Data
 }
 
 func init() {

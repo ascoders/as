@@ -8,8 +8,8 @@ package models
 
 import (
 	//"github.com/ascoders/as/conf"
-	"github.com/ascoders/as/db"
 	"errors"
+	"github.com/ascoders/as/db"
 )
 
 type Base struct{}
@@ -21,7 +21,7 @@ type BaseModel interface {
 	Count(finder map[string]interface{}) int
 	Get(id string, obj interface{}) error
 	Update(id string, update map[string]interface{}) error
-	Delete(id string) error
+	Delete(obj interface{}) error
 	NewData() interface{}
 	NewDataWithId() interface{}
 	NewDatas() interface{}
@@ -45,13 +45,13 @@ func (this *Base) GetsById(lastId string, limit int, obj interface{}, finder map
 	}
 	return nil
 	/*
-	if !bson.IsObjectIdHex(lastId) {
-		return this.Collection.Find(finder).Select(selecter).Sort("_id").Limit(limit).All(obj)
-	} else {
-		// finder增加id选项
-		finder["_id"] = bson.M{"$gt": bson.ObjectIdHex(lastId)}
-		return this.Collection.Find(finder).Select(selecter).Sort("_id").Limit(limit).All(obj)
-	}
+		if !bson.IsObjectIdHex(lastId) {
+			return this.Collection.Find(finder).Select(selecter).Sort("_id").Limit(limit).All(obj)
+		} else {
+			// finder增加id选项
+			finder["_id"] = bson.M{"$gt": bson.ObjectIdHex(lastId)}
+			return this.Collection.Find(finder).Select(selecter).Sort("_id").Limit(limit).All(obj)
+		}
 	*/
 }
 
@@ -80,28 +80,20 @@ func (this *Base) GetsByPage(page int, limit int, obj interface{}, finder map[st
 }
 
 // 获取总数
-func (this *Base) Count(finder map[string]interface{}) int {
+func (this *Base) Count(query map[string]interface{}) int {
+	//return db.Db.Where(query).Count()
 	return 0
-	/*
-	count, err := this.Collection.Find(finder).Count()
-
-	if err != nil {
-		return 0
-	}
-
-	return count
-	*/
 }
 
 // 获取某个资源
 // @param {string} id 资源id
 func (this *Base) Get(id string, obj interface{}) error {
 	/*
-	if !bson.IsObjectIdHex(id) {
-		return errors.New("id" + conf.ConfInstance.ErrorType)
-	}
+		if !bson.IsObjectIdHex(id) {
+			return errors.New("id" + conf.ConfInstance.ErrorType)
+		}
 
-	return this.Collection.FindId(bson.ObjectIdHex(id)).One(obj)
+		return this.Collection.FindId(bson.ObjectIdHex(id)).One(obj)
 	*/
 	return nil
 }
@@ -109,23 +101,16 @@ func (this *Base) Get(id string, obj interface{}) error {
 // 根据id更新某个资源
 func (this *Base) Update(id string, update map[string]interface{}) error {
 	/*
-	if !bson.IsObjectIdHex(id) {
-		return errors.New("id" + conf.ConfInstance.ErrorType)
-	}
+		if !bson.IsObjectIdHex(id) {
+			return errors.New("id" + conf.ConfInstance.ErrorType)
+		}
 
-	return this.Collection.UpdateId(bson.ObjectIdHex(id), bson.M{"$set": update})
+		return this.Collection.UpdateId(bson.ObjectIdHex(id), bson.M{"$set": update})
 	*/
 	return nil
 }
 
 // 根据id删除某个资源
-func (this *Base) Delete(id string) error {
-	/*
-	if !bson.IsObjectIdHex(id) {
-		return errors.New("id" + conf.ConfInstance.ErrorType)
-	}
-
-	return this.Collection.RemoveId(bson.ObjectIdHex(id))
-	*/
-	return nil
+func (this *Base) Delete(obj interface{}) error {
+	return db.Db.Delete(obj).Error
 }
