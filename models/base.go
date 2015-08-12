@@ -7,17 +7,11 @@
 package models
 
 import (
-	"errors"
-	"github.com/ascoders/as/conf"
-	"gopkg.in/mgo.v2"
-	"gopkg.in/mgo.v2/bson"
+	//"github.com/ascoders/as/conf"
+	"github.com/ascoders/as/db"
 )
 
-type Base struct {
-	Collection *mgo.Collection
-	Table      string      // 表名
-	Indexs     []mgo.Index // 表设置
-}
+type Base struct{}
 
 type BaseModel interface {
 	Add(obj interface{}) error
@@ -34,8 +28,10 @@ type BaseModel interface {
 
 // 新增资源
 func (this *Base) Add(obj interface{}) error {
-	return this.Collection.Insert(obj)
+	return db.Db.Create(obj).Error
 }
+
+/*
 
 // 获取资源集
 // @param {string} id 上一页最后一个id,没有填空
@@ -119,3 +115,5 @@ func (this *Base) Delete(id string) error {
 
 	return this.Collection.RemoveId(bson.ObjectIdHex(id))
 }
+
+*/

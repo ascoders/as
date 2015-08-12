@@ -18,6 +18,8 @@ type Conf struct {
 	StaticOptions  martini.StaticOptions // 静态文件配置参数
 	GlobalPath     string                // 全局文件路径
 	RedisAddress   string                // redis地址
+	DBMaxIdleConns int                   // 数据库最大空闲连接数
+	DBMaxOpenConns int                   // 数据库最大在线连接数
 	MongodbAddress string                // mongodb地址
 	MongodbDbName  string                // 数据库名称
 	CacheExpire    int64                 // 缓存时间
@@ -63,6 +65,9 @@ func init() {
 		SessionKey: "id", // 根据用户id，为每个用户设置不同的csrf
 		SetCookie:  true,
 	}
+
+	ConfInstance.DBMaxIdleConns = 10
+	ConfInstance.DBMaxOpenConns = 100
 
 	ConfInstance.SessionName = "asSession"
 	ConfInstance.SessionSecret = "vpahHL29ajXuTY0RNhf1VYTHvRIJxX"
