@@ -12,7 +12,7 @@ var (
 )
 
 func init() {
-	Db, _ = gorm.Open("mysql", "root:aaaa@/woku?charset=utf8&parseTime=True&loc=Local")
+	Db, _ = gorm.Open("mysql", "root:@/woku?charset=utf8&parseTime=True&loc=Local")
 
 	// 设置最大空闲连接数、最大连接数
 	Db.DB().SetMaxIdleConns(conf.ConfInstance.DBMaxIdleConns)
@@ -20,6 +20,9 @@ func init() {
 
 	// 禁止表名多元化
 	Db.SingularTable(true)
+	
+	// 不抛出log
+	Db.LogMode(false)
 }
 
 func Connect() {
