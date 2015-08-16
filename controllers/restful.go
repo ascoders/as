@@ -20,29 +20,15 @@ type Restful struct {
 	Model models.BaseModel
 }
 
-func (this *Restful) Gets(req *http.Request) (int, []byte) {
-	return this.GetsCustom(req, nil, nil)
-}
-
-// 自定义配置的Gets
-func (this *Restful) GetsCustom(req *http.Request, finder map[string]interface{}, selecter map[string]interface{}) (int, []byte) {
-	datas := this.Model.NewDatas()
+func (this *Restful) Gets(req *http.Request, where map[string]interface{}, selecter []string) (int, []byte) {
 	req.ParseForm()
-	lastId := req.Form.Get("lastId")
 	page, _ := strconv.Atoi(req.Form.Get("page"))
 	limit, _ := strconv.Atoi(req.Form.Get("limit"))
 
-	var err error
-
-	// 查询lists列表，优先使用lastId
-	if page > 0 && lastId == "" {
-		err = this.Model.GetsByPage(page, limit, datas, finder, selecter)
-	} else {
-		err = this.Model.GetsById(lastId, limit, datas, finder, selecter)
-	}
+	datas, err := this.Model.Gets(page, limit, where, selecter)
 
 	// 查询总数
-	count := this.Model.Count(finder)
+	count := this.Model.Count(where)
 
 	return response.ResponseInstance.Must(map[string]interface{}{
 		"list":  datas,
@@ -51,15 +37,12 @@ func (this *Restful) GetsCustom(req *http.Request, finder map[string]interface{}
 }
 
 func (this *Restful) Get(param martini.Params) (int, []byte) {
-	data := this.Model.NewData()
-	err := this.Model.Get(param["id"], data)
-
-	return response.ResponseInstance.Must(data, err)
+	return response.ResponseInstance.Must(this.Model.Get(param["id"]))
 }
 
 func (this *Restful) Add(req *http.Request) (int, []byte) {
-	data := this.Model.NewDataWithId()
 	params := _http.HttpInstance.ReqFormToMap(req)
+	data := this.Model.NewData()
 
 	// 参数解析到结构体
 	if err := parse.ParseInstance.Struct(data, params); err != nil {
@@ -77,12 +60,13 @@ func (this *Restful) Update(param martini.Params, req *http.Request) (int, []byt
 	data := this.Model.NewData()
 	params := _http.HttpInstance.ReqFormToMap(req)
 
-	if err, opts := parse.ParseInstance.StructToUpdateMap(data, params); err == nil {
-		err := this.Model.Update(param["id"], opts)
-		return response.ResponseInstance.Must("更新成功", err)
-	} else {
+	// 参数解析到结构体
+	if err := parse.ParseInstance.Struct(data, params); err != nil {
 		return response.ResponseInstance.Error(err.Error())
 	}
+
+	err := this.Model.Update(param["id"], data)
+	return response.ResponseInstance.Must("更新成功", err)
 }
 
 func (this *Restful) Delete(params martini.Params) (int, []byte) {

@@ -8,6 +8,7 @@ package as
 
 import (
 	"github.com/ascoders/as/db"
+	"github.com/ascoders/as/models"
 	"github.com/ascoders/as/redis"
 	"github.com/ascoders/as/router"
 	"strconv"
@@ -22,11 +23,14 @@ func Run() {
 
 	m.Action(router.RouterInstance.Routes.Handle)
 
-	// 初始化数据库链接
-	db.Connect()
-
 	// 初始化redis链接
 	redis.Connect()
+
+	// 初始化数据库
+	db.InitDatabase()
+
+	// 基础模型初始化注册
+	models.RegisterAll()
 
 	// 监听端口
 	m.RunOnAddr(":" + strconv.Itoa(int(Conf.Port)))

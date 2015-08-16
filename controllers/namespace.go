@@ -13,10 +13,6 @@ func (this *Base) Parse(obj interface{}, params map[string]interface{}) error {
 	return parse.ParseInstance.Struct(obj, params)
 }
 
-func (this *Base) ParseToUpdateMap(obj interface{}, params map[string]interface{}) (error, map[string]interface{}) {
-	return parse.ParseInstance.StructToUpdateMap(obj, params)
-}
-
 func (this *Base) ReqFormToMap(req *http.Request, limit ...string) map[string]interface{} {
 	return _http.HttpInstance.ReqFormToMap(req, limit...)
 }

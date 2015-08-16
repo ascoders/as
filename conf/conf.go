@@ -20,8 +20,10 @@ type Conf struct {
 	RedisAddress   string                // redis地址
 	DBMaxIdleConns int                   // 数据库最大空闲连接数
 	DBMaxOpenConns int                   // 数据库最大在线连接数
-	MongodbAddress string                // mongodb地址
-	MongodbDbName  string                // 数据库名称
+	DbAddress      string                // 数据库地址
+	DbUserName     string                // 数据库用户名
+	DbPassword     string                // 数据库密码
+	DbName         string                // 数据库名称
 	CacheExpire    int64                 // 缓存时间
 	CsrfAuto       bool                  // 是否开启默认csrf
 	CsrfOptions    *csrf.Options         // scrf加盐
@@ -56,7 +58,8 @@ func init() {
 
 	ConfInstance.GlobalPath = ""
 	ConfInstance.RedisAddress = "127.0.0.1:6379"
-	ConfInstance.MongodbAddress = "127.0.0.1:27017"
+	ConfInstance.DbAddress = "127.0.0.1:27017"
+	ConfInstance.DbUserName = "root"
 	ConfInstance.CacheExpire = 60 * 60
 
 	ConfInstance.CsrfAuto = true
