@@ -23,5 +23,5 @@ func InitDatabase() {
 	Orm.SingularTable(true)
 
 	// 不抛出log
-	Orm.LogMode(false)
+	Orm.LogMode(conf.ConfInstance.Debug)
 }
