@@ -27,9 +27,7 @@ func (this *Response) Success(data interface{}) (int, []byte) {
 
 func (this *Response) Error(message interface{}) (int, []byte) {
 	enc := encoder.JsonEncoder{}
-	return 400, encoder.Must(enc.Encode(map[string]interface{}{
-		"message": message,
-	}))
+	return 400, encoder.Must(enc.Encode(message))
 }
 
 func (this *Response) Must(data interface{}, err error) (int, []byte) {
