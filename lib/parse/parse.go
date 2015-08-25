@@ -29,7 +29,6 @@ func init() {
 // 解析url参数
 // @param {interface{}} obj 被解析的结构体
 // @param {http.Request} req 客户端请求
-// 用于添加
 func (this *Parse) Struct(obj interface{}, params map[string]interface{}) error {
 	objT := reflect.TypeOf(obj).Elem()
 	objV := reflect.ValueOf(obj).Elem()
@@ -59,18 +58,15 @@ func (this *Parse) Struct(obj interface{}, params map[string]interface{}) error 
 		// 结构体的参数在提交参数不存在，则跳过
 		valueInterface, ok := params[tag]
 
-		value := fmt.Sprint(valueInterface)
 		if !ok {
-			// 如果跳过的参数是required的，则返回一个错误
-			if stringInSlice("required", valids) {
-				return errors.New("缺少" + tag + "参数")
-			}
 			continue
-		} else {
-			// 参数存在，则valid不能存在-属性
-			if stringInSlice("-", valids) {
-				return errors.New(tag + "不可修改")
-			}
+		}
+
+		value := fmt.Sprint(valueInterface)
+
+		// valid不能存在-属性
+		if stringInSlice("-", valids) {
+			return errors.New(tag + "不可修改")
 		}
 
 		// 自定义验证
