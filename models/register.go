@@ -1,6 +1,7 @@
 package models
 
 import (
+	"fmt"
 	"github.com/ascoders/as/db"
 )
 
@@ -19,7 +20,10 @@ func (this *Base) Register(obj interface{}) {
 func RegisterAll() {
 	for _, v := range baseModels {
 		// 自动迁移
-		db.Orm.AutoMigrate(v.Data)
+		if err := db.Orm.AutoMigrate(v.Data).Error; err != nil {
+			fmt.Println("建表失败：", err)
+			return
+		}
 
 		// 设置db
 		v.Db = db.Orm.Model(v.Data)
