@@ -8,7 +8,6 @@ package models
 
 import (
 	"errors"
-	"fmt"
 	"github.com/jinzhu/gorm"
 )
 
@@ -23,7 +22,7 @@ type BaseModel interface {
 	Count(where map[string]interface{}) int
 	Get(id interface{}) (interface{}, error)
 	Update(id interface{}, update interface{}) error
-	UpdateMap(id interface{}, updateMap map[string]interface{}, obj ...interface{}) error
+	UpdateMap(id interface{}, update map[string]interface{}) error
 	Delete(id interface{}) error
 	NewData() interface{}
 }
@@ -87,25 +86,16 @@ func (this *Base) Update(id interface{}, update interface{}) error {
 }
 
 // 根据id更新某个资源『仅更新指定字段』
-func (this *Base) UpdateMap(id interface{}, updateMap map[string]interface{}, obj ...interface{}) error {
+func (this *Base) UpdateMap(id interface{}, updateMap map[string]interface{}) error {
 	// 生成需要更新的字符串
 	var selector []string
 	for k, _ := range updateMap {
 		selector = append(selector, k)
 	}
 
-	// 更新
-	if len(obj) == 0 {
-		return this.Db.Where(map[string]interface{}{
-			"id": parseInt(id),
-		}).Select(selector).Updates(updateMap).Error
-	}
-
-	fmt.Println(id, selector, obj)
-
 	return this.Db.Where(map[string]interface{}{
 		"id": parseInt(id),
-	}).Select(selector).Update(obj).Error
+	}).Select(selector).UpdateColumns(updateMap).Error
 }
 
 // 根据id删除某个资源
