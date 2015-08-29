@@ -2,7 +2,6 @@ package models
 
 import (
 	"reflect"
-	"strconv"
 )
 
 // 复制一个新实例
@@ -16,17 +15,4 @@ func (this *Base) NewDatas() interface{} {
 	datas := reflect.New(slice.Type())
 	datas.Elem().Set(slice)
 	return datas.Interface()
-}
-
-// 转化为int
-func parseInt(number interface{}) int {
-	result := 0
-	switch number.(type) {
-	case int: // good!
-		result = number.(int)
-	case string:
-		result, _ = strconv.Atoi(number.(string))
-	}
-
-	return result
 }

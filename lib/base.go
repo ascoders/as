@@ -9,6 +9,7 @@ import (
 	"github.com/ascoders/as/lib/response"
 	"github.com/ascoders/as/lib/scheduled"
 	"github.com/ascoders/as/lib/sort"
+	"github.com/ascoders/as/lib/strings"
 	"github.com/ascoders/as/lib/validation"
 )
 
@@ -22,6 +23,7 @@ type Lib struct {
 	Scheduled scheduled.Scheduled
 	Sort      sort.Sort
 	Csrf      csrf.Csrf
+	Strings   strings.Strings
 }
 
 var (

@@ -8,6 +8,7 @@ package models
 
 import (
 	"errors"
+	_strings "github.com/ascoders/as/lib/strings"
 	"github.com/jinzhu/gorm"
 )
 
@@ -74,27 +75,27 @@ func (this *Base) Count(where map[string]interface{}) int {
 // 获取某个资源
 func (this *Base) Get(id interface{}) (interface{}, error) {
 	obj := this.NewData()
-	err := this.Db.First(obj, parseInt(id)).Error
+	err := this.Db.First(obj, _strings.StringsInstance.ParseInt(id)).Error
 	return obj, err
 }
 
 // 根据id更新某个资源
 func (this *Base) Update(id interface{}, update interface{}) error {
 	return this.Db.Where(map[string]interface{}{
-		"id": parseInt(id),
+		"id": _strings.StringsInstance.ParseInt(id),
 	}).Update(update).Error
 }
 
 // 根据id更新某个资源『仅更新指定字段』
 func (this *Base) UpdateMap(id interface{}, updateMap map[string]interface{}) error {
 	return this.Db.Where(map[string]interface{}{
-		"id": parseInt(id),
+		"id": _strings.StringsInstance.ParseInt(id),
 	}).UpdateColumns(updateMap).Error
 }
 
 // 根据id删除某个资源
 func (this *Base) Delete(id interface{}) error {
 	return this.Db.Where(map[string]interface{}{
-		"id": parseInt(id),
+		"id": _strings.StringsInstance.ParseInt(id),
 	}).Delete(this.Data).Error
 }
