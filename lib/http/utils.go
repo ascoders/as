@@ -8,6 +8,7 @@ package http
 
 import (
 	"errors"
+	"html"
 	_http "net/http"
 )
 
@@ -43,6 +44,10 @@ func translateBool(value string) interface{} {
 	case "false":
 		return 0
 	}
+
+	// 同时html转义
+	value = html.EscapeString(value)
+
 	return value
 }
 

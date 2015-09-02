@@ -7,6 +7,7 @@
 package response
 
 import (
+	"fmt"
 	"github.com/martini-contrib/encoder"
 )
 
@@ -26,6 +27,7 @@ func (this *Response) Success(data interface{}) (int, []byte) {
 }
 
 func (this *Response) Error(message interface{}) (int, []byte) {
+	fmt.Println(message)
 	enc := encoder.JsonEncoder{}
 	return 400, encoder.Must(enc.Encode(message))
 }
